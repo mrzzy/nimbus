@@ -6,10 +6,6 @@
 
 on:
   push:
-    paths:
-      - "terraform/linode/**"
-    branches:
-      - main
 jobs:
   terraform-apply:
     name: "Terraform Apply: Linode Cloud"

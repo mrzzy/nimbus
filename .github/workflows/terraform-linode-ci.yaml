@@ -6,8 +6,6 @@
 
 on:
   push:
-    paths:
-      - "terraform/linode/**"
 jobs:
   terraform-lint-plan:
     name: "Terraform Lint & Plan: Linode Cloud"
