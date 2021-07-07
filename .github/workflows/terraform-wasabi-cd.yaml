@@ -1,0 +1,25 @@
+#
+# nimbus
+# terraform: wasabi storage
+# continous deployment pipeline
+#
+
+on:
+  push:
+    paths:
+      - terraform/wasabi
+    branches:
+      - main
+jobs:
+  terraform-apply:
+    name: "Terraform Apply: Wasabi Cloud Storage"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup Terraform CLI"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - name: "Terraform Apply"
+        run: terraform apply -auto-approve
