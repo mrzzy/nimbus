@@ -7,10 +7,10 @@
 on:
   push:
     paths:
-      - terraform/wasabi
+      - "terraform/wasabi/**"
   pull_request:
     paths:
-      - terraform/wasabi
+      - "terraform/wasabi/**"
 jobs:
   terraform-lint-plan:
     name: "Terraform Lint & Plan: Wasabi Cloud Storage "
