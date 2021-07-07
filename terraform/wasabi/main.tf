@@ -17,6 +17,7 @@ terraform {
       version = "4.1.1"
     }
   }
+  required_version = "1.0.1"
 }
 
 provider "wasabi" {
