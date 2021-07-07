@@ -7,7 +7,7 @@
 on:
   push:
     paths:
-      - terraform/wasabi
+      - "terraform/wasabi/**"
     branches:
       - main
 jobs:
