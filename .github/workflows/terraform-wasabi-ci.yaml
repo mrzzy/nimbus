@@ -8,13 +8,13 @@ on:
   push:
     paths:
       - "terraform/wasabi/**"
-  pull_request:
-    paths:
-      - "terraform/wasabi/**"
 jobs:
   terraform-lint-plan:
     name: "Terraform Lint & Plan: Wasabi Cloud Storage "
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: "terraform/wasabi"
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
