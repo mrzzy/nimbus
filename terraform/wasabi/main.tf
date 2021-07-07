@@ -13,11 +13,17 @@ terraform {
 }
 
 provider "wasabi" {
-  alias = "wasabi-eu"
+  alias  = "wasabi-eu"
   region = "eu-central-1"
+
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 provider "wasabi" {
-  alias = "wasabi-us"
+  alias  = "wasabi-us"
   region = "us-west-2"
+
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
