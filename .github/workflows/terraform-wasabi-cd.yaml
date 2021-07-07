@@ -6,7 +6,10 @@
 
 on:
   push:
-    branches: [main]
+    paths:
+      - terraform/wasabi
+    branches:
+      - main
 jobs:
   terraform-apply:
     name: "Terraform Apply: Wasabi Cloud Storage"
