@@ -1,21 +1,21 @@
 #
 # nimbus
-# terraform: wasabi storage
+# terraform linode cloud
 # continous integration pipeline
 #
 
-name: "CI/Terraform: Wasabi Cloud Storage"
+name: "CI/Terraform: Linode Cloud"
 on:
   push:
     paths:
-      - "terraform/wasabi/**"
+      - "terraform/linode/**"
 jobs:
   terraform-lint-plan:
-    name: "Terraform Lint & Plan: Wasabi Cloud Storage "
+    name: "Terraform Lint & Plan: Linode Cloud"
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: "terraform/wasabi"
+        working-directory: "terraform/linode"
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"

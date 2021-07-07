@@ -1,23 +1,23 @@
 #
 # nimbus
-# terraform: wasabi storage
-# continous deployment pipeline
+# terraform linode cloud
+# continuous deployment pipeline
 #
 
-name: "CD/Terraform: Wasabi Cloud Storage"
+name: "CD/Terraform: Linode Cloud"
 on:
   push:
     paths:
-      - "terraform/wasabi/**"
+      - "terraform/linode/**"
     branches:
       - main
 jobs:
   terraform-apply:
-    name: "Terraform Apply: Wasabi Cloud Storage"
+    name: "Terraform Apply: Linode Cloud"
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: "terraform/wasabi"
+        working-directory: "terraform/linode"
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
