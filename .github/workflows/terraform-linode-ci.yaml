@@ -4,6 +4,7 @@
 # continous integration pipeline
 #
 
+name: "CI/Terraform: Linode Cloud"
 on:
   push:
 jobs:

@@ -4,6 +4,7 @@
 # continous integration pipeline
 #
 
+name: "CI/Terraform: Wasabi Cloud Storage"
 on:
   push:
 jobs:

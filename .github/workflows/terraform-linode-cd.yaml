@@ -1,9 +1,10 @@
 #
 # nimbus
 # terraform linode cloud
-# continous deployment pipeline
+# continuous deployment pipeline
 #
 
+name: "CD/Terraform: Linode Cloud"
 on:
   push:
 jobs:

@@ -4,6 +4,7 @@
 # continous deployment pipeline
 #
 
+name: "CD/Terraform: Wasabi Cloud Storage"
 on:
   push:
 jobs:
