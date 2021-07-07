@@ -9,7 +9,6 @@ variable "access_key" {
   description = "ID of Access Key used to authenticate with Wasabi"
 }
 
-
 variable "secret_key" {
   type        = string
   description = "Secret Key used to authenticate with Wasabi"

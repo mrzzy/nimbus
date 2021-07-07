@@ -3,6 +3,7 @@
 # terraform deploy for wasabi storage
 #
 
+## Providers ##
 terraform {
   required_providers {
     wasabi = {
@@ -38,4 +39,25 @@ provider "wasabi" {
 
   access_key = var.access_key
   secret_key = var.secret_key
+}
+
+
+## Resources ##
+# bucket for storing nimbus terraform state
+# file structure should be the same as project structure
+# ie the .tfstate for teraform/ovh/global should be stored under wasabi
+resource "wasabi_bucket" "terraform_state" {
+  provider = wasabi.eu-central-1
+  bucket   = "mrzzy-co-nimbus-terraform-state"
+  acl      = "private"
+
+  # prevent accidental deletion
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  # enable versioning in case we need to rollback from a broken state file
+  versioning {
+    enabled = true
+  }
 }
