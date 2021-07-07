@@ -7,6 +7,10 @@
 name: "CD/Terraform: Linode Cloud"
 on:
   push:
+    paths:
+      - "terraform/linode/**"
+    branches:
+      - main
 jobs:
   terraform-apply:
     name: "Terraform Apply: Linode Cloud"
