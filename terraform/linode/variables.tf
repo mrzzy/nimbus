@@ -5,7 +5,7 @@
 #
 
 variable "linode_token" {
-  type = string
-  sensitive = true
+  type        = string
+  sensitive   = true
   description = "Linode Personal Access Token for authenticating with Linode"
 }
