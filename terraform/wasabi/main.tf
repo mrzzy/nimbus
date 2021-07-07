@@ -8,7 +8,7 @@ terraform {
   backend "remote" {
     organization = "mrzzy-co"
     workspaces {
-      name = "nimbus"
+      name = "nimbus-terraform-wasabi"
     }
   }
   required_providers {
