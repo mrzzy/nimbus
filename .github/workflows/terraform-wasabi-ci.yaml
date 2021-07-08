@@ -1,7 +1,7 @@
 #
 # nimbus
 # terraform: wasabi storage
-# continous integration pipeline
+# continuous integration pipeline
 #
 
 name: "CI/Terraform: Wasabi Cloud Storage"

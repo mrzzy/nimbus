@@ -1,7 +1,7 @@
 #
 # nimbus
 # terraform linode cloud
-# continous integration pipeline
+# continuous integration pipeline
 #
 
 name: "CI/Terraform: Linode Cloud"
