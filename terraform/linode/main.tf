@@ -24,3 +24,26 @@ terraform {
 provider "linode" {
   token = var.linode_token
 }
+
+## Resources ##
+resource "linode_sshkey" "mrzzy_ed25519" {
+  label   = "${var.prefix}-mrzzy-ed25519"
+  ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr zzy"
+}
+
+resource "linode_lke_cluster" "singapore" {
+  label       = "${var.prefix}-singapore-k8s"
+  region      = "ap-south"
+  k8s_version = "1.21"
+
+  # default node pool: 1vcpu, 2gb
+  pool {
+    type  = "g6-standard-1"
+    count = 1
+  }
+
+  tags = [
+    "terraform",
+    "sgp"
+  ]
+}
