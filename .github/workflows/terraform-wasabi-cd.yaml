@@ -1,7 +1,7 @@
 #
 # nimbus
 # terraform: wasabi storage
-# continous deployment pipeline
+# continuous deployment pipeline
 #
 
 name: "CD/Terraform: Wasabi Cloud Storage"
