@@ -10,7 +10,7 @@ on:
     #branches:
     #  - main
     #paths:
-    #  - "k8s/manifests/argocd/**"
+    #  - ".github/workflows/bootstrap-argocd-cd.yaml"
 jobs:
   # get the LKE Cluster kubeconfig from remote terraform state
   get-cluster-kubeconfig:
@@ -34,8 +34,9 @@ jobs:
         id: extract
         run: |
           # tell github actions to task the kubeconfig to prevent leak via public logs
-          echo "::add-mask::$(terraform output -raw k8s_singapore_kubeconfig)"
+          LKE_SG_KUBECONFIG=$(terraform output -raw k8s_singapore_kubeconfig)
+          echo "::add-mask::$LKE_SG_KUBECONFIG"
           # extract kubeconfig encoded as base64 as a output
-          echo "::set-output name=lke_sgp_kubeconfig_base64::$(terraform output -raw k8s_singapore_kubeconfig)"
+          echo "::set-output name=lke_sgp_kubeconfig_base64::$LKE_SG_KUBECONFIG"
     outputs:
       lke_sgp_kubeconfig_base64: ${{ steps.extract.outputs.lke_sgp_kubeconfig_base64 }}
