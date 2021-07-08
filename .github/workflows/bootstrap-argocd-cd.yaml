@@ -1,10 +1,10 @@
 #
 # nimbus
 # K8s ArgoCD 
-# Continous Deployment pipeline
+# Continuous Deployment pipeline
 #
 
-name: "CD: Deploy ArgoCD on Linode LKE"
+name: "CD: Deploy ArgoCD on Linode k8s"
 on:
   push:
     #branches:
@@ -13,13 +13,13 @@ on:
     #  - ".github/workflows/bootstrap-argocd-cd.yaml"
 jobs:
   get-cluster-kubeconfig:
-    name: "Get LKE Cluster Kubeconfig"
+    name: "Get k8s Cluster Kubeconfig"
     runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: "terraform/linode"
     steps:
-      # get the LKE Cluster kubeconfig from remote terraform state
+      # get the k8s Cluster kubeconfig from remote terraform state
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
         uses: hashicorp/setup-terraform@v1
@@ -31,13 +31,35 @@ jobs:
         run: terraform init
       - name: "Retrieve Terraform State"
         run: terraform apply -refresh-only -auto-approve
-      - name: "Get LKE Cluster Kubeconfig"
+      - name: "Get k8s cluster kubeconfig"
         id: extract
         run: |
-          # utiliizes the terraform wrapper script
           LKE_SG_KUBECONFIG="$(terraform output -raw k8s_singapore_kubeconfig)"
+          # mask required for secuirty: kubeconfig does not leak into workflow logs
           echo "::add-mask::$LKE_SG_KUBECONFIG"
           # extract kubeconfig encoded as base64 as a output
           echo "::set-output name=lke_sgp_kubeconfig_base64::$LKE_SG_KUBECONFIG"
     outputs:
       lke_sgp_kubeconfig_base64: ${{ steps.extract.outputs.lke_sgp_kubeconfig_base64 }}
+
+  deploy-argocd:
+    name: "Deploy ArgoCD on Linode k8s"
+    runs-on: ubuntu-16.04
+    needs: get-cluster-kubeconfig
+    env:
+      KUBECONFIG: kubeconfig.yaml
+    steps:
+      - name: "Write Kubeconfig to disk"
+        env:
+          LKE_SG_KUBECONFIG: ${{ needs.get-cluster-kubeconfig.outputs.lke_sgp_kubeconfig_base64 }}
+          ARGOCD_YAML: https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
+        run: |
+          # mask required for secuirty: kubeconfig does not leak into workflow logs
+          echo "::add-mask::$LKE_SG_KUBECONFIG"
+          echo "$LKE_SG_KUBECONFIG" >$KUBECONFIG
+      - name: "Create ArgoCD namespace on k8s"
+        run: kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+      - name: "Dry Run: Apply ArgoCD manifests on k8s"
+        run: kubectl apply --dry-run=server -n argocd -f $ARGOCD_YAML
+      - name: "Apply ArgoCD manifests on k8s"
+        run: kubectl apply -n argocd -f $ARGOCD_YAML
