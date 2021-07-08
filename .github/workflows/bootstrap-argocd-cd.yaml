@@ -4,7 +4,7 @@
 # Continous Deployment pipeline
 #
 
-name: "CD: Deploy ArgoCD on K8s"
+name: "CD: Deploy ArgoCD on Linode LKE"
 on:
   push:
     #branches:
@@ -12,7 +12,6 @@ on:
     #paths:
     #  - ".github/workflows/bootstrap-argocd-cd.yaml"
 jobs:
-  # get the LKE Cluster kubeconfig from remote terraform state
   get-cluster-kubeconfig:
     name: "Get LKE Cluster Kubeconfig"
     runs-on: ubuntu-20.04
@@ -20,21 +19,23 @@ jobs:
       run:
         working-directory: "terraform/linode"
     steps:
+      # get the LKE Cluster kubeconfig from remote terraform state
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.0.1
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
       - name: "Terraform Init"
         run: terraform init
       - name: "Retrieve Terraform State"
         run: terraform apply -refresh-only -auto-approve
-      - name: "Extract & Output Kubeconfig"
+      - name: "Get LKE Cluster Kubeconfig"
         id: extract
         run: |
-          # tell github actions to task the kubeconfig to prevent leak via public logs
-          LKE_SG_KUBECONFIG=$(terraform output -raw k8s_singapore_kubeconfig)
+          # utiliizes the terraform wrapper script
+          LKE_SG_KUBECONFIG="$(terraform output -raw k8s_singapore_kubeconfig)"
           echo "::add-mask::$LKE_SG_KUBECONFIG"
           # extract kubeconfig encoded as base64 as a output
           echo "::set-output name=lke_sgp_kubeconfig_base64::$LKE_SG_KUBECONFIG"
