@@ -20,6 +20,7 @@ jobs:
         working-directory: "terraform/linode"
     env:
       KUBECONFIG: kubeconfig.yaml
+      ARGOCD_YAML: https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
