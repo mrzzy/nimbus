@@ -24,3 +24,9 @@ terraform {
 provider "linode" {
   token = var.linode_token
 }
+
+## Resources ##
+resource "linode_sshkey" "mrzzy_ed25519" {
+  label = "mrzzy_ed25519"
+  ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr zzy"
+}
