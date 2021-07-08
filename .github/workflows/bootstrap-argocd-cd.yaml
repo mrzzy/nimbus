@@ -16,9 +16,6 @@ jobs:
   deploy-argocd:
     name: "Deploy ArgoCD on Linode k8s"
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: "terraform/linode"
     env:
       KUBECONFIG: kubeconfig.yaml
       ARGOCD_YAML: https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
@@ -31,10 +28,12 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_wrapper: false
       - name: "Get k8s Cluster Kubeconfig from Terraform"
+        working-directory: "terraform/linode"
         run: |
           terraform init
           terraform apply -refresh-only -auto-approve
-          terraform output -raw k8s_singapore_kubeconfig | base64 -d >$KUBECONFIG
+          # write kubeconfig to project root
+          terraform output -raw k8s_singapore_kubeconfig | base64 -d >../../$KUBECONFIG
       - name: "Create ArgoCD namespace on k8s if it does not exist"
         run: kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
       - name: "Dry Run: Apply ArgoCD manifests on k8s"
