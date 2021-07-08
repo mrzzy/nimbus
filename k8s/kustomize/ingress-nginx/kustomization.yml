@@ -6,3 +6,15 @@
 # deploy ingress nginx for ingress support
 resources:
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.47.0/deploy/static/provider/cloud/deploy.yaml
+    
+patches:
+# disable load balancer service as we have no use for it yet
+- patch: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: ingress-nginx-controller
+      namespace: ingress-nginx
+    spec:
+      type: ClusterIP
+
