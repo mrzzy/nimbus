@@ -1,6 +1,6 @@
 #
 # nimbus
-# k8s: ingress
+# ingress-nginx kustomization
 #
 
 # deploy ingress nginx for ingress support

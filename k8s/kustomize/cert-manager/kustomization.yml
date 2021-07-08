@@ -1,0 +1,21 @@
+#
+# nimbus
+# cert-manager kustomization
+#
+
+# deploy cert manager for digital certificate management
+resources:
+- https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.yaml
+- issuers/cluster-staging.yaml
+- issuers/cluster-production.yaml
+
+patches:
+# insert the admin's email to all acme issuer CRDs
+- target:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    labelSelector: "type=acme"
+  patch: |
+    - op: replace
+      path: /spec/acme/email
+      value: program.nom@gmail.com
