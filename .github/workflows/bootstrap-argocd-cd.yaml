@@ -34,8 +34,8 @@ jobs:
         id: extract
         run: |
           # tell github actions to task the kubeconfig to prevent leak via public logs
-          echo "::add-mask::$(terraform output -json | jq -r '.k8s_singapore_kubeconfig.value')"
+          echo "::add-mask::$(terraform output -raw k8s_singapore_kubeconfig)"
           # extract kubeconfig encoded as base64 as a output
-          echo "::set-output name=lke_sgp_kubeconfig_base64::$(terraform output -json | jq -r '.k8s_singapore_kubeconfig.value')"
+          echo "::set-output name=lke_sgp_kubeconfig_base64::$(terraform output -raw k8s_singapore_kubeconfig)"
     outputs:
       lke_sgp_kubeconfig_base64: ${{ steps.extract.outputs.lke_sgp_kubeconfig_base64 }}
