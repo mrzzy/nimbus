@@ -1,0 +1,8 @@
+#
+# nimbus
+# k8s: ingress
+#
+
+# deploy nginx ingress
+resources:
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.47.0/deploy/static/provider/cloud/deploy.yaml
