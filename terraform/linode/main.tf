@@ -17,7 +17,7 @@ terraform {
       version = "1.19.1"
     }
   }
-  required_version = "1.0.1"
+  required_version = ">=1.0.1, <1.1.0"
 }
 
 ## Providers ##
