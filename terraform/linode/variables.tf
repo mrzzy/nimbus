@@ -9,3 +9,8 @@ variable "linode_token" {
   sensitive   = true
   description = "Linode Personal Access Token for authenticating with Linode"
 }
+
+variable "prefix" {
+  type        = string
+  description = "Prefix to attach to labels of created resources"
+}
