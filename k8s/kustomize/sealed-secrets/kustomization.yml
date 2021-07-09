@@ -1,0 +1,7 @@
+#
+# nimbus
+# sealed-secrets kustomization
+#
+
+resources:
+- https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/controller.yaml
