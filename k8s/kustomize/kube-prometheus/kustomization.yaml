@@ -4,9 +4,6 @@
 #
 #
 
-
-# TODO(mrzzy): continue by patching HA deploys to only 1 instance only
-# since we really have that many resources.
 resources:
 - https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/0namespace-namespace.yaml
 - https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0alertmanagerConfigCustomResourceDefinition.yaml
@@ -91,3 +88,35 @@ resources:
 - https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-service.yaml
 - https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-serviceAccount.yaml
 - https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-serviceMonitor.yaml
+
+# by default kube-prometheus is configured to deploy with multiple replicas for HA
+# patch only deploy 1 replica as we deploying into a resource constrained environment
+patches:
+- target:
+    group: monitoring.coreos.com
+    version:  v1
+    kind: AlertManager
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
+- target:
+    group: monitoring.coreos.com
+    version:  v1
+    kind: Prometheus
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: prometheus-adapter
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
