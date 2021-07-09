@@ -1,0 +1,19 @@
+#
+# admin
+# do k8s sg cluster definitions
+# Wireguard VPN
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+- service.yaml
+- wg0-conf-sealed.yaml
+namespace: wireguard
+commonLabels:
+  app: wireguard
+images:
+- name: wg-server
+  newName: ghcr.io/mrzzy/wireguard-boringtun
+  newTag: 0.0.3
