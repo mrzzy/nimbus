@@ -49,7 +49,7 @@ spec:
       volumes:
         - name: wg-config
           secret:
-            secretName: wg0-config
+            secretName: wg-conf
         - name: dev-net-tun
           hostPath:
             type: 'CharDevice'
