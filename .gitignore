@@ -36,3 +36,9 @@ terraform.rc
 ### Development Environment
 # tag files
 tag?
+
+### Sealed Secrets
+# ignore the public key used encrypt secrets
+cert.pem
+# Dont commit secrets
+k8s/kustomize/wireguard/wg0.conf
