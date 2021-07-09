@@ -1,0 +1,19 @@
+#
+# admin
+# do k8s sg cluster definitions
+# wireguard vpn service
+# 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wireguard
+spec:
+  sessionAffinity: ClientIP
+  type: NodePort
+  ports:
+  - port: 51820
+    targetPort: 51820
+    protocol: UDP
+    nodePort: 32525
+    name: wireguard
