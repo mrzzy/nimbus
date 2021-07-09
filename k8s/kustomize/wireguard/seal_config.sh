@@ -9,4 +9,4 @@ kubectl create secret generic wg-config-secret \
     --namespace wireguard \
     --dry-run=client \
     --from-file=wg0.conf \
-    -output yaml | kubeseal --cert cert.pem -o yaml >config-secret.yaml
+    --output yaml | kubeseal --cert cert.pem -o yaml >config-secret.yaml
