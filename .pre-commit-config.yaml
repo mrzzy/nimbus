@@ -10,3 +10,11 @@ repos:
   rev: v1.1.0
   hooks:
   - id: detect-secrets
+    args:
+    - '--baseline'
+    - '.secrets.baseline'
+    - '--disable-plugin'
+    - 'KeywordDetector'
+    - '--exclude-files'
+    # prevent false positive on sealed secrets
+    - '.*sealed.yaml'
