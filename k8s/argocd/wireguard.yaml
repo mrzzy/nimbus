@@ -1,0 +1,19 @@
+#
+# nimbus
+# argocd app to deploy wireguard vpn
+#
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wireguard
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mrzzy/nimbus.git
+    targetRevision: HEAD
+    path: k8s/kustomize/wireguard
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
