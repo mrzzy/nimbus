@@ -1,0 +1,38 @@
+#
+# nimbus
+# kube-prometheus: clusterrole patch to allow prometheus to scrape all namesapces
+#
+- op: add
+  path: /rules/-1
+  value:
+    apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+- op: add
+  path: /rules/-1
+  value:
+    apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+- op: add
+  path: /rules/-1
+  value:
+    apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list - watch

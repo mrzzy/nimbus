@@ -1,0 +1,130 @@
+#
+# nimbus
+# monitoring stack: kube-prometheus kustomization
+#
+#
+
+resources:
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/0namespace-namespace.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0alertmanagerConfigCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0alertmanagerCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0podmonitorCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0probeCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0prometheusCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0prometheusruleCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0servicemonitorCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-0thanosrulerCustomResourceDefinition.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-deployment.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/setup/prometheus-operator-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-alertmanager.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-podDisruptionBudget.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-secret.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/alertmanager-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-configuration.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-deployment.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/blackbox-exporter-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-dashboardDatasources.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-dashboardDefinitions.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-dashboardSources.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-deployment.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/grafana-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-prometheus-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-deployment.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kube-state-metrics-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-serviceMonitorApiserver.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-serviceMonitorCoreDNS.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-serviceMonitorKubeControllerManager.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-serviceMonitorKubeScheduler.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/kubernetes-serviceMonitorKubelet.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-daemonset.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/node-exporter-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-apiService.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-clusterRoleAggregatedMetricsReader.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-clusterRoleBindingDelegator.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-clusterRoleServerResources.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-configMap.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-deployment.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-podDisruptionBudget.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-roleBindingAuthReader.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-adapter-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-clusterRole.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-operator-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-operator-serviceMonitor.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-podDisruptionBudget.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-prometheus.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-prometheusRule.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-roleBindingConfig.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-roleBindingSpecificNamespaces.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-roleConfig.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-roleSpecificNamespaces.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-service.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-serviceAccount.yaml
+- https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/release-0.8/manifests/prometheus-serviceMonitor.yaml
+
+# by default kube-prometheus is configured to deploy with multiple replicas for HA
+# patch only deploy 1 replica as we deploying into a resource constrained environment
+patches:
+- target:
+    group: monitoring.coreos.com
+    version:  v1
+    kind: AlertManager
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
+- target:
+    group: monitoring.coreos.com
+    version:  v1
+    kind: Prometheus
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: prometheus-adapter
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value:  1
+# config RBAC to allow prometheus to scrap all namespaces
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: prometheus-k8s
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  path: cluster-role-patch.yaml
