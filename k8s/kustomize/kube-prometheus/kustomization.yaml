@@ -120,3 +120,11 @@ patches:
     - op: replace
       path: /spec/replicas
       value:  1
+# config RBAC to allow prometheus to scrap all namespaces
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: prometheus-k8s
+    labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
+  path: cluster-role-patch.yaml
