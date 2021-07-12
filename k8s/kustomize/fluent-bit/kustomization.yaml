@@ -1,0 +1,24 @@
+#
+# nimbus
+# fluent-bit log collection
+#
+
+resources:
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
+
+namespace: logging
+
+patches:
+  # patch to point fluentd at the elasticsearch service
+- target:
+    group: apps
+    kind: DaemonSet
+    labelSelector: " k8s-app=fluent-bit-logging"
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env/0/value
+      value: "elasticsearch-es-http.elastic-system.svc"
