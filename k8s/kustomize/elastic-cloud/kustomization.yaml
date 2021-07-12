@@ -10,6 +10,6 @@ resources:
 - elasticsearch.yaml
 - kibana.yaml
 
-namespace: logging
+namespace: elastic-system
 commonLabels:
   part-of: elastic-cloud
