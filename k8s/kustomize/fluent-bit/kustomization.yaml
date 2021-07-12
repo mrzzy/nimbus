@@ -13,6 +13,10 @@ resources:
 
 namespace: logging
 
+images:
+- name: fluent/fluent-bit
+  newTag: 1.8.1
+
 patches:
   # patch to point fluentd at the elasticsearch service
 - target:
