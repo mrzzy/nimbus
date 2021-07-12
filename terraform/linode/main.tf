@@ -36,10 +36,10 @@ resource "linode_lke_cluster" "singapore" {
   region      = "ap-south"
   k8s_version = "1.21"
 
-  # default node pool: 2vcpu, 4gb
+  # default node pool: 2vcpu, 4gb ram
   pool {
     type  = "g6-standard-2"
-    count = 1
+    count = 2
   }
 
   tags = [
