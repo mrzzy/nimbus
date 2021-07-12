@@ -1,6 +1,6 @@
 #
 # nimbus
-# K8s ArgoCD 
+# K8s ArgoCD
 # Continuous Deployment pipeline
 #
 
@@ -41,6 +41,6 @@ jobs:
       - name: "Apply ArgoCD manifests on k8s"
         run: kubectl apply -n argocd -f $ARGOCD_YAML
       - name: "Dry Run: Apply ArgoCD CRD manifests on k8s"
-        run: kubectl apply --dry-run=server -n argocd -f k8s/argocd 
+        run: kubectl apply --dry-run=server -n argocd -f k8s/argocd
       - name: "Apply ArgoCD CRD manifests on k8s"
-        run: kubectl apply -n argocd -f k8s/argocd 
+        run: kubectl apply -n argocd -f k8s/argocd
