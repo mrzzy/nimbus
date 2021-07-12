@@ -4,4 +4,7 @@
 #
 
 resources:
-  - https://download.elastic.co/downloads/eck/1.6.0/all-in-one.yaml
+# deploy elastic cloud operator to deploy elastic cloud components via CRDs
+- https://download.elastic.co/downloads/eck/1.6.0/all-in-one.yaml
+# deploy a single node elasticsearch cluster
+- elasticsearch.yaml

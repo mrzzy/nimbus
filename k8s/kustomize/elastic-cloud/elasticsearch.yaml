@@ -1,0 +1,24 @@
+#
+# nimbus
+# elasticsearch single node cluster
+#
+
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  namespace: elastic-system
+spec:
+  version: 7.13.3
+  nodeSets:
+  - name: default
+    count: 1
+    podTemplate:
+      spec:
+        initContainers:
+        # increase mmap limit for elasticsearch performance
+        # https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-virtual-memory.html
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
