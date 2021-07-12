@@ -5,3 +5,16 @@
 
 resources:
 - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/controller.yaml
+
+patches:
+# configures sealed secret controller to output status of SealedSecret CRDs
+# required by ArgoCD to verify the status of SealedSecret CRDs
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: sealed-secrets-controller
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/command/-1
+      value: --update-status
