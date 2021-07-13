@@ -1,0 +1,55 @@
+#
+# nimbus
+# fluent-bit log collection
+#
+
+resources:
+- namespace.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
+- https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
+- elastic-creds-sealed.yaml
+
+namespace: logging
+
+images:
+- name: fluent/fluent-bit
+  newTag: 1.8.1
+
+patches:
+# patch to point fluentd at the elasticsearch service
+- target:
+    group: apps
+    kind: DaemonSet
+    labelSelector: "k8s-app=fluent-bit-logging"
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env/0/value
+      value: "elasticsearch-es-http.elastic-system.svc"
+# patch to configure fluentd to use insecure TLS when accessing elasticsearch
+# and obtain elasticsearch credentials from environment
+- path: config.yaml
+# patch to pass elasticsearch credentials at elasticsearch
+- target:
+    group: apps
+    kind: DaemonSet
+    labelSelector: "k8s-app=fluent-bit-logging"
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env/-1
+      value:
+        name: FLUENT_ELASTICSEARCH_USER
+        valueFrom:
+          secretKeyRef:
+            name: elastic-creds
+            key: FLUENT_ELASTICSEARCH_USER
+    - op: add
+      path: /spec/template/spec/containers/0/env/-1
+      value:
+        name: FLUENT_ELASTICSEARCH_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: elastic-creds
+            key: FLUENT_ELASTICSEARCH_PASSWORD
