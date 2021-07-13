@@ -1,0 +1,16 @@
+#
+# nimbus
+# elastic cloud operator kustomization
+#
+
+resources:
+# deploy elastic cloud operator to deploy elastic cloud components via CRDs
+- https://download.elastic.co/downloads/eck/1.6.0/all-in-one.yaml
+# deploy a single node elasticsearch cluster with kibana for visualization
+- elasticsearch.yaml
+- kibana.yaml
+- elastic-filerealm-sealed.yaml
+
+namespace: elastic-system
+commonLabels:
+  part-of: elastic-cloud
