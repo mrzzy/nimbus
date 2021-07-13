@@ -9,6 +9,7 @@ resources:
 # deploy a single node elasticsearch cluster with kibana for visualization
 - elasticsearch.yaml
 - kibana.yaml
+- elastic-creds-sealed.yaml
 
 namespace: elastic-system
 commonLabels:

@@ -9,6 +9,9 @@ metadata:
   name: elasticsearch
 spec:
   version: 7.13.3
+  auth:
+    fileRealm:
+    - secretName: elastic-filerealm
   nodeSets:
   - name: default
     count: 1
