@@ -9,7 +9,7 @@ kind: Kustomization
 resources:
 - deployment.yaml
 - service.yaml
-- wg0-conf-sealed.yaml
+- wg-conf-sealed.yaml
 namespace: wireguard
 commonLabels:
   app: wireguard
