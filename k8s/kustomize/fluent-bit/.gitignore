@@ -1,0 +1,2 @@
+# ignore elastic credentials secret
+elastic-creds.env
