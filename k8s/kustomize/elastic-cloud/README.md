@@ -3,7 +3,7 @@
 Use [File Realm](https://www.elastic.co/guide/en/cloud-on-k8s/master/k8s-users-and-roles.html#k8s_file_realm)
 to configure Users Credentials & Roles for Elasticsearch
 
-> :warning: Ensure that the `filerealm/` directed is not commited.
+> :warning: Ensure that the `filerealm/` directed is not committed.
 > Instead the generated sealed secret is safe to commit.
 
 ## Creating a File Realm
