@@ -1,0 +1,19 @@
+#
+# nimbus
+# argocd app to deploy fluent-bit log forwarding
+#
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-bit
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mrzzy/nimbus.git
+    targetRevision: HEAD
+    path: k8s/kustomize/fluent-bit
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
