@@ -5,12 +5,10 @@
 
 .PHONY: all clean sealed-secrets
 
-WIREGUARD_DIR:=k8s/kustomize/wireguard
 FLUENT_BIT_DIR:=k8s/kustomize/fluent-bit
 ELASTIC_DIR:=k8s/kustomize/elastic-cloud
 
-SEAL_SECRETS:=$(WIREGUARD_DIR)/wg-conf-sealed.yaml \
-	$(ELASTIC_DIR)/elastic-filerealm-sealed.yaml \
+SEAL_SECRETS:=$(ELASTIC_DIR)/elastic-filerealm-sealed.yaml \
 	$(FLUENT_BIT_DIR)/elastic-creds-sealed.yaml
 
 all: sealed-secrets
@@ -26,13 +24,6 @@ clean:
 
 SEAL_CERT:=cert.pem
 KUBESEAL:=kubeseal --cert $(SEAL_CERT) -o yaml
-
-$(WIREGUARD_DIR)/wg-conf-sealed.yaml: $(WIREGUARD_DIR)/wg0.conf $(SEAL_CERT)
-	kubectl create secret generic wg-conf \
-		--namespace wireguard \
-		--dry-run=client \
-		--from-file=$< \
-		--output yaml | $(KUBESEAL) >$@
 
 $(ELASTIC_DIR)/elastic-filerealm-sealed.yaml: $(ELASTIC_DIR)/filerealm $(SEAL_CERT)
 	kubectl create secret generic elastic-filerealm \
