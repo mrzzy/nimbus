@@ -3,6 +3,8 @@
 # fluent-bit log collection
 #
 
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - namespace.yaml
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
@@ -11,13 +13,10 @@ resources:
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
 - elastic-creds-sealed.yaml
-
 namespace: logging
-
 images:
 - name: fluent/fluent-bit
   newTag: 1.8.1
-
 patches:
 # patch to point fluentd at the elasticsearch service
 - target:
