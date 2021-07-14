@@ -13,8 +13,3 @@ repos:
     args:
     - '--baseline'
     - '.secrets.baseline'
-    - '--disable-plugin'
-    - 'KeywordDetector'
-    - '--exclude-files'
-    # prevent false positive on sealed secrets
-    - '.*sealed.yaml'
