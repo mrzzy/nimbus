@@ -4,6 +4,8 @@
 #
 
 # deploy cert manager for digital certificate management
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.yaml
 - issuers/cluster-staging.yaml

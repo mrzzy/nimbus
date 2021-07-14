@@ -3,6 +3,8 @@
 # elastic cloud operator kustomization
 #
 
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 # deploy elastic cloud operator to deploy elastic cloud components via CRDs
 - https://download.elastic.co/downloads/eck/1.6.0/all-in-one.yaml
