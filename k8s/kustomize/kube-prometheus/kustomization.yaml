@@ -94,7 +94,6 @@ resources:
 patches:
 - target:
     group: monitoring.coreos.com
-    version:  v1
     kind: AlertManager
     labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
   patch: |-
@@ -103,7 +102,6 @@ patches:
       value:  1
 - target:
     group: monitoring.coreos.com
-    version:  v1
     kind: Prometheus
     labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
   patch: |-
@@ -112,7 +110,6 @@ patches:
       value:  1
 - target:
     group: apps
-    version: v1
     kind: Deployment
     name: prometheus-adapter
     labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
@@ -123,7 +120,6 @@ patches:
 # config RBAC to allow prometheus to scrap all namespaces
 - target:
     group: rbac.authorization.k8s.io
-    version: v1
     kind: ClusterRole
     name: prometheus-k8s
     labelSelector: "app.kubernetes.io/part-of=kube-prometheus"
