@@ -32,9 +32,5 @@ $(ELASTIC_DIR)/elastic-filerealm-sealed.yaml: $(ELASTIC_DIR)/filerealm $(SEAL_CE
 		--from-file=$< \
 		--output yaml | $(KUBESEAL) >$@
 
-$(FLUENT_BIT_DIR)/elastic-creds-sealed.yaml: $(FLUENT_BIT_DIR)/elastic-creds.env $(SEAL_CERT)
-	kubectl create secret generic elastic-creds \
-		--namespace logging \
-		--dry-run=client \
-		--from-env-file=$< \
-		--output yaml | $(KUBESEAL) >$@
+$(FLUENT_BIT_DIR)/elastic-creds-sealed.yaml: $(FLUENT_BIT_DIR)/elastic-creds.yaml $(SEAL_CERT)
+	cat $< | $(KUBESEAL) >$@
