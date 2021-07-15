@@ -11,8 +11,10 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/bitnami/charts
-    targetRevision: HEAD
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: mariadb
+    targetRevision: 9.3.17
+
     helm:
       values: | # pragma: allowlist secret
         # ==================== values.yaml begin ====================
