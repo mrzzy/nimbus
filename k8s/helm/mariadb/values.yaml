@@ -5,16 +5,14 @@
 
 fullnameOverride: mariadb
 architecture: standalone
+
+# mariadb auth with sealedsecret to provide credentials
 auth:
   username: mariadb
+  # reference unsealed version of sealedsecret 'mariadb-creds" passwords
   existingSecret: mariadb-creds # pragma: allowlist secret
-metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
-    namespace: monitoring
-persistence:
-  enabled: true
+  database: default
+
 extraDeploy:
   - |
     apiVersion: bitnami.com/v1alpha1
@@ -34,3 +32,20 @@ extraDeploy:
           creationTimestamp: null
           name: mariadb-creds
           namespace: mariadb
+
+# use quay.io instead of dockerhub to workaround pull limits
+# https://github.com/bitnami/charts/issues/4430
+global:
+  imageRegistry: quay.io
+
+# enable mysqld prometheus export & register Prometheus rule to register it as
+# a scraping target
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+
+# enable persistence
+persistence:
+  enabled: true
