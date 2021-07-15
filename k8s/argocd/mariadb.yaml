@@ -1,0 +1,72 @@
+#
+# nimbus
+# argocd app to deploy mariadb
+#
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mariadb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/bitnami/charts
+    targetRevision: HEAD
+    helm:
+      values: | # pragma: allowlist secret
+        # ==================== values.yaml begin ====================
+        fullnameOverride: mariadb
+        architecture: standalone
+
+        # mariadb auth with sealedsecret to provide credentials
+        auth:
+          username: mariadb
+          # reference unsealed version of sealedsecret 'mariadb-creds" passwords
+          existingSecret: mariadb-creds # pragma: allowlist secret
+          database: default
+
+        extraDeploy:
+          - |
+            apiVersion: bitnami.com/v1alpha1
+            kind: SealedSecret
+            metadata:
+              creationTimestamp: null
+              name: mariadb-creds
+              namespace: mariadb
+            spec:
+              encryptedData:
+                mariadb-password: AgCjyod6v7JPwBMsA68YCGfs6VHpiey9X5GLLHldAzn+45V3CHWzgcFQf+4ldBbae746hsF+wQmQ3cW6zZwQ0Ov8vU0m5k5OIaz4+JKcorlH7f8AU/JDZODtdcn1yB4PnqJ63Nflo/wGvsHNCt1Ei4NGjxfa/lZpCA5LPk9LLSUOgU90oZyADARgTzQ0hhHSwEPMJErrnbCd4iUG1zelkPLgf3Q2pmkBYmhikEcpOfpjCBuSEiDnIpQx6RIS6y6kTg3ZNAkxPx9DqUaRZBy+jBh7z1/yu0Y+p0721i53hXQd/Q4sfYHJutdDcGF3WEhug0BxIXz0TjJtY5mWUA8gGkolQnHaMjXBJileem79CsWf+dkKuUmm/KtJdfARIQC9/hyklbPaTe96J+a14i/yFKkxE2tqCUe0YKUbFoVUnetMt80wRxK4i54wc6LCOdQZ+ChLehdhN3h4HMQcuOzUfDY+ya4Q4D8bEdyPp6R/9tco0KleTFukzWNLPYvfSfM+689YMMStysSsusY/tFwjlB4EKgADULZ8NosoF7h6ZVdllGws0vpqeQSmNsWhiFV2pgXMZQqI2NarnZQgUmbqKSNnbgZyVaPgnmBJRWRRbm+LoYNWnuBE1j01BwTanaPZv72TZiW1W3+vYvKIe3VdZKMD9Lw4L59xke8h4ziyWema++Yhp/JnH1D/S84gUmAUXG3PVRLvbroziFbIkhJ0nZXGELaeQQ==
+                mariadb-replication-password: AgBarzH8/WdvGnO7bFxqD+D3sdX09W5dQCcjO9SnJekI8NxiDDqVLW5V3ENeLQDVXQNIh2AvQKcpEedet/tLopxqvn8lU4RpMx+a4HOsLzHyEtxEQnQ77rnmC0jfK1KA1FlghCnlr/CW1j14au+i168yze4VypclmQMh2O0DohVyW/k6fLKkb9wFOhcmF76FcLcanzN36eQb+Y08Hto22Vtbc24X57SOEvOFZBnsrLExFiXE1k8HwD00NKZWGxJ9Krv+WVOQ7hyMGtTvSM9MFJya2NnHW3Zfbk3bnupyK2sVMFeKgkpTR3Yl94KCAE8iVnJXU/I1UXa5zFJ0Atwsy/YZuSkfbbC/Kbklaw2O0MLMzdP/zstcTcY1ERUlduUqgIg3wCVvi5JgpnSJQFH6hla1xvSB8uofhbgWeZz5DZMaJCbnH/tZc5xX0qI5fEG5EtvhE2tPRu/k2SzuJnifiyBRO40P4rPtvGvZUAf8CSiBhShWycqUt74SFURdaGIr4mjc5xAau0DlRMteDQUVizIBBVZOJHT+6sYHuQDS5dA5BC9qN8DhJy0uuhleVbSX/YLgRdA0bbiLsNyGon6uuN0IocywU0p5avySqAf+Q4b5FFA4nMi2fUu8w6DT4Nr18zwsgL13GeHSEycGVuyuJWj+o92LSQZoETBMVqzPZnTTCFMVf/8T43uTgxMadRD5QCAos6D928YcaUFSGFj97DwkZCdUmQ==
+                mariadb-root-password: AgDV3Wloj+zpphLUY9G+Z0pVN8/J/hjfuO5ZtqwKMNqr9vRQBOWaCgjQe6EggBkvKrpStRwwu7DqTTLs3yTi3d8pU36HkfS6dwdHfpi8yVygVw0+X66nq1BOlqrSpUhniQW6nRkgp1PInTljIonEb/C158w/JCNAoBu9dzb13HgOqACDbDn7vKf/IC02MIyi3XoCqMcI6Wb9HWjNHNqS0VsHJahqd6ZC6TIUKnFXeMq23H0Hb1LStSWT/vt+WqHZTdeFUdc4YQmZLd8Od4QBAlVe+KRfLYH009bKLDtsAaiDnFK5w/0YmU6BAV5wN4IkPVVpEddbhA7HWcR8hDlYHvYEdwwzM1dgZmIYHkzsQNo4cAegGqFCSYxWE//Qx6L4KpSDUdfEtOgegcwGLkfBBMFykx1i8r0/uYPMWIQ35ZBhyhAZoCPgJcp7JVuzE+b9w45ZA5h6yEDCVuKVM9P0pQc3hHOUfkBrkXcleDGYBecetpvoFM7qadqrFEfVZbIVusDTCW5R/UXnXU0p4Dk/8iFughBc4O2X4xe7k/gOnmTCSqKtUPnnUqoMzLBrPhqhoPCS7C3abXWCYFT+PJt98HOr3vEfm/C+VauUh5xTT90Bvz7ODtzKs688vrYf6+dj0Il8uIDx5+AqTK+rck5o/lTsH/PxUa/efwpepJTlnif+kyAG38LVOMNSWjJrNGczG/k0g+WwzTn0liaB6+k5vQseLU+dBQ==
+              template:
+                data: null
+                metadata:
+                  creationTimestamp: null
+                  name: mariadb-creds
+                  namespace: mariadb
+
+        # use quay.io instead of dockerhub to workaround pull limits
+        # https://github.com/bitnami/charts/issues/4430
+        global:
+          imageRegistry: quay.io
+
+        # enable mysqld prometheus export & register Prometheus rule to register it as
+        # a scraping target
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            namespace: monitoring
+
+        # enable persistence
+        persistence:
+          enabled: true
+        # ==================== values.yaml end ====================
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mariadb
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
