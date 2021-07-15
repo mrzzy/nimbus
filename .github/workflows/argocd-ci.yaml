@@ -1,24 +1,21 @@
 #
 # nimbus
 # K8s ArgoCD
-# Continuous Deployment pipeline
+# Continuous Intergration pipeline
 #
 
-name: "CD: Deploy ArgoCD & CRDs on Linode k8s"
+name: "CI: Dry Run ArgoCD CRDs on Linode k8s"
 on:
   push:
-    branches:
-      - main
     paths:
-      - ".github/workflows/bootstrap-argocd-cd.yaml"
+      - ".github/workflows/bootstrap-argocd-ci.yaml"
       - "k8s/argocd/**"
 jobs:
-  deploy-argocd:
-    name: "Deploy ArgoCD & CRDs on Linode k8s"
+  dryrun-argocd:
+    name: "Dry Run ArgoCD CRDs on Linode k8s"
     runs-on: ubuntu-20.04
     env:
       KUBECONFIG: kubeconfig.yaml
-      ARGOCD_YAML: https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
@@ -34,13 +31,5 @@ jobs:
           terraform apply -refresh-only -auto-approve
           # write kubeconfig to project root
           terraform output -raw k8s_singapore_kubeconfig | base64 -d >../../$KUBECONFIG
-      - name: "Create ArgoCD namespace on k8s if it does not exist"
-        run: kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-      - name: "Dry Run: Apply ArgoCD manifests on k8s"
-        run: kubectl apply --dry-run=server -n argocd -f $ARGOCD_YAML
-      - name: "Apply ArgoCD manifests on k8s"
-        run: kubectl apply -n argocd -f $ARGOCD_YAML
       - name: "Dry Run: Apply ArgoCD CRD manifests on k8s"
         run: kubectl apply --dry-run=server -n argocd -f k8s/argocd
-      - name: "Apply ArgoCD CRD manifests on k8s"
-        run: kubectl apply -n argocd -f k8s/argocd
