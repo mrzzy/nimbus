@@ -35,9 +35,6 @@ spec:
             failureThreshold: 1
             tcpSocket:
               port: tiddlywiki-http
-          envFrom:
-            - secretRef:
-                name: tiddlywiki-creds-secret
       volumes:
         - name: tiddlywiki-wiki
           persistentVolumeClaim:
