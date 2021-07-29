@@ -1,0 +1,26 @@
+#
+# admin
+# do k8s sg cluster definitions
+# tiddlywiki
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+- pvc.yaml
+- namespace.yaml
+- service.yaml
+- ingress.yaml
+namespace: tiddlywiki
+commonLabels:
+  app: tiddlywiki
+images:
+  - name: tiddlywiki-node
+    newName: ghcr.io/mrzzy/tiddlywiki-node
+    newTag: 5.1.23
+secretGenerator:
+  - name: tiddlywiki-creds-secret
+    literals:
+      - TIDDLYWIKI_USERNAME=
+      - TIDDLYWIKI_PASSWORD=

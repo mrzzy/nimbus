@@ -1,0 +1,8 @@
+#
+# admin
+# do k8s sg cluster definitions
+#
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tiddlywiki

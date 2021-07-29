@@ -1,0 +1,16 @@
+#
+# admin
+# do k8s sg cluster definitions
+# tiddlywiki
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tiddlywiki-wiki-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6Gi

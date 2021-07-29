@@ -1,0 +1,45 @@
+#
+# admin
+# do k8s sg cluster definitions
+# tiddlywiki
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tiddlywiki-server
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: tiddlywiki-server
+          image: tiddlywiki-node
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /wiki
+              name: tiddlywiki-wiki
+              # subPath required as tiddlywiki-node image expects an empty dir
+              subPath: tiddlywiki
+          ports:
+            - name: tiddlywiki-http
+              containerPort: 8080
+          # tcp socket probe is used instead of http get as http get probes
+          # detects a false failure when basic http authentication is enabled.
+          readinessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 1
+            tcpSocket:
+              port: tiddlywiki-http
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 1
+            tcpSocket:
+              port: tiddlywiki-http
+          envFrom:
+            - secretRef:
+                name: tiddlywiki-creds-secret
+      volumes:
+        - name: tiddlywiki-wiki
+          persistentVolumeClaim:
+            claimName: tiddlywiki-wiki-pvc
