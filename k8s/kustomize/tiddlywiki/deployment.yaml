@@ -41,4 +41,4 @@ spec:
       volumes:
         - name: tiddlywiki-wiki
           persistentVolumeClaim:
-            claimName: tiddlywiki-wiki-pvc
+            claimName: tiddlywiki

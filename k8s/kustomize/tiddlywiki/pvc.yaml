@@ -6,7 +6,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: tiddlywiki-wiki-pvc
+  name: tiddlywiki
 spec:
   accessModes:
     - ReadWriteOnce
