@@ -1,5 +1,5 @@
 #
-# admin
+# nimbus
 # do k8s sg cluster definitions
 #
 apiVersion: v1
