@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tiddlywiki
@@ -17,5 +17,7 @@ spec:
       - path: /
         pathType: Prefix
         backend:
-          serviceName: tiddlywiki
-          servicePort: 80
+          service:
+            name: tiddlywiki
+            port:
+              name: http
