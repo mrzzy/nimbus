@@ -15,9 +15,9 @@ namespace: tiddlywiki
 commonLabels:
   app: tiddlywiki
 images:
-  - name: tiddlywiki-node
-    newName: ghcr.io/mrzzy/tiddlywiki-node
-    newTag: 5.1.23
+  - name: tiddlywiki
+    newName: ghcr.io/mrzzy/tiddlywiki
+    newTag: 5.1.22-0.0.1-alpha-1-gd2c5460
 secretGenerator:
   - name: tiddlywiki-creds-secret
     literals:

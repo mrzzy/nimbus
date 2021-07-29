@@ -13,12 +13,12 @@ spec:
     spec:
       containers:
         - name: tiddlywiki-server
-          image: tiddlywiki-node
+          image: tiddlywiki
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /wiki
               name: tiddlywiki-wiki
-              # subPath required as tiddlywiki-node image expects an empty dir
+              # subPath required as tiddlywiki image expects an empty dir
               subPath: tiddlywiki
           ports:
             - name: tiddlywiki-http
