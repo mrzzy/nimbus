@@ -9,7 +9,7 @@ metadata:
   name: tiddlywiki
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 6Gi
