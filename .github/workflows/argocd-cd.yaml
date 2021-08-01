@@ -10,7 +10,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/bootstrap-argocd-cd.yaml"
+      - ".github/workflows/argocd-cd.yaml"
       - "k8s/argocd/**"
 jobs:
   deploy-argocd:
