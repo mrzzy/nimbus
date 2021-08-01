@@ -8,7 +8,7 @@ name: "CI: Dry Run ArgoCD CRDs on Linode k8s"
 on:
   push:
     paths:
-      - ".github/workflows/bootstrap-argocd-ci.yaml"
+      - ".github/workflows/argocd-ci.yaml"
       - "k8s/argocd/**"
 jobs:
   dryrun-argocd:
