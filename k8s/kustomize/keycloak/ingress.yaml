@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/server-snippet: |2-
+
+                            location ~* "^/auth/realms/master/metrics" {
+                                return 301 /auth/realms/master;
+                              }
+  labels:
+    app: keycloak
+  name: keycloak
+spec:
+  rules:
+  - host: keycloak.mrzzy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: keycloak
+            port:
+              number: 8443
+        path: /
+        pathType: ImplementationSpecific

@@ -6,4 +6,5 @@
 namespace: keycloak
 resources:
 - github.com/keycloak/keycloak-operator/deploy?ref=15.0.0
-- keycloak
+- keycloak.yaml
+- ingress.yaml
