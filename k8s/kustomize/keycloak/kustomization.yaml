@@ -3,5 +3,7 @@
 # kustomization to deploy keycloak
 #
 
+namespace: keycloak
 resources:
 - github.com/keycloak/keycloak-operator/deploy?ref=15.0.0
+- keycloak
