@@ -1,19 +1,21 @@
 #
 # nimbus
-# tiddlywiki deploy
-# keycloak realm
+# keycloak realm for tiddlywiki
 #
 
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
   name: tiddlywiki
+  labels:
+    app: tiddlywiki
 spec:
   realm:
     id: "tiddlywiki"
     realm: "tiddlywiki"
-    enabled: True
+    enabled: true
     displayName: "TiddlyWiki"
+    bruteForceProtected: true
   # select keycloak instance to create realm in
   instanceSelector:
     matchLabels:
