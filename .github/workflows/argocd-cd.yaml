@@ -1,14 +1,12 @@
 #
 # nimbus
 # K8s ArgoCD
-# Continuous Deployment pipeline
+# ci/cd pipeline
 #
 
-name: "CD: Deploy ArgoCD & CRDs on Linode k8s"
+name: "CI: Deploy ArgoCD & CRDs on Linode k8s"
 on:
   push:
-    branches:
-      - main
     paths:
       - ".github/workflows/argocd-cd.yaml"
       - "k8s/argocd/**"
@@ -34,13 +32,19 @@ jobs:
           terraform apply -refresh-only -auto-approve
           # write kubeconfig to project root
           terraform output -raw k8s_singapore_kubeconfig | base64 -d >../../$KUBECONFIG
+
       - name: "Create ArgoCD namespace on k8s if it does not exist"
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+
       - name: "Dry Run: Apply ArgoCD manifests on k8s"
         run: kubectl apply --dry-run=server -n argocd -f $ARGOCD_YAML
       - name: "Apply ArgoCD manifests on k8s"
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: kubectl apply -n argocd -f $ARGOCD_YAML
+
       - name: "Dry Run: Apply ArgoCD CRD manifests on k8s"
         run: kubectl apply --dry-run=server -n argocd -f k8s/argocd
       - name: "Apply ArgoCD CRD manifests on k8s"
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: kubectl apply -n argocd --recursive -f k8s/argocd
