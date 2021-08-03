@@ -9,6 +9,7 @@ on:
   push:
     paths:
       - "terraform/linode/**"
+      - ".github/workflows/terraform-linode-ci.yaml"
 jobs:
   terraform-lint-plan:
     name: "Terraform Lint & Plan: Linode Cloud"
