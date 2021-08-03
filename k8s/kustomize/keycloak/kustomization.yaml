@@ -8,3 +8,4 @@ resources:
 - github.com/keycloak/keycloak-operator/deploy?ref=15.0.0
 - keycloak.yaml
 - ingress.yaml
+- realms/tiddlywiki.yaml
