@@ -1,7 +1,7 @@
 #
 # nimbus
 # terraform linode cloud
-# continuous integration pipeline
+# ci/cd pipeline
 #
 
 name: "CI/Terraform: Linode Cloud"
@@ -9,6 +9,7 @@ on:
   push:
     paths:
       - "terraform/linode/**"
+      - ".github/workflows/terraform-linode-ci.yaml"
 jobs:
   terraform-lint-plan:
     name: "Terraform Lint & Plan: Linode Cloud"
@@ -31,3 +32,6 @@ jobs:
         run: terraform validate -no-color
       - name: "Terraform Plan"
         run: terraform plan
+      - name: "Terraform Apply"
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: terraform apply -auto-approve
