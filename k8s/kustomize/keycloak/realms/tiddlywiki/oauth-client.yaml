@@ -22,3 +22,5 @@ spec:
     # valid urls to redirect oauth authorization codes to
     redirectUris:
       - "https://wiki.mrzzy.co/oauth2/callback"
+    defaultClientScopes:
+      - email

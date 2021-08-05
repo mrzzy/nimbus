@@ -64,6 +64,7 @@ spec:
             - "--redeem-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/token"
             - "--profile-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
             - "--validate-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
+            - "--scope=email"
               # allow all emails from all domains to authenticate
             - "--email-domain=*"
           readinessProbe:
