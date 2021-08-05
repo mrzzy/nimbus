@@ -17,9 +17,6 @@ spec:
   client:
     # name of the client
     clientId: tiddlywiki-oauth-client
-    # suffix of the secret that stores the oauth2 client credentials
-    # actual secret name is prefixed with 'keycloak-client-secret'
-    secret: tiddlywiki-oauth # pragma: allowlist secret
     # enable standard oauth2 flow
     standardFlowEnabled: true
     # valid urls to redirect oauth authorization codes to

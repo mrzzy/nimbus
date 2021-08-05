@@ -12,7 +12,7 @@ spec:
   template:
     spec:
       containers:
-        - name: tiddlywiki-server
+        - name: tiddlywiki
           image: tiddlywiki
           imagePullPolicy: Always
           volumeMounts:
@@ -28,13 +28,56 @@ spec:
           readinessProbe:
             initialDelaySeconds: 10
             failureThreshold: 1
-            tcpSocket:
+            httpGet:
               port: tiddlywiki-http
+              path: /
           livenessProbe:
             initialDelaySeconds: 10
             failureThreshold: 1
-            tcpSocket:
+            httpGet:
               port: tiddlywiki-http
+              path: /
+        # sidecar to provide oauth2 authentication to tiddlywiki
+        - name: oauth2-proxy
+          image: oauth2-proxy
+          envFrom:
+            - secretRef:
+                name: tiddlywiki-oauth2
+          ports:
+            - name: oauth2-http
+              containerPort: 4180
+            - name: oauth2-metrics
+              containerPort: 4181
+          command:
+            - "/bin/oauth2-proxy"
+            - "--http-address=http://0.0.0.0:4180"
+            - "--metrics-address=http://0.0.0.0:4181"
+              # proxy traffic to tiddlywiki container
+            - "--upstream=http://localhost:8080"
+              # required as traiffic is reverse proxied from ingress-nginx
+            - "--reverse-proxy=true"
+              # passes username as X-Forwarded-User header
+            - "--pass-user-headers=true"
+              # keycloak oauth2 config
+            - "--provider=keycloak"
+            - "--login-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/auth"
+            - "--redeem-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/token"
+            - "--profile-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
+            - "--validate-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
+              # allow all emails from all domains to authenticate
+            - "--email-domain=*"
+          readinessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 1
+            httpGet:
+              port: oauth2-http
+              path: /ping
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 1
+            httpGet:
+              port: oauth2-http
+              path: /ping
       volumes:
         - name: tiddlywiki-wiki
           persistentVolumeClaim:
