@@ -11,7 +11,7 @@ data:
   resource.customizations: | # pragma: allowlist secret
     # prevent changes in sealedsecrets from being flagged in argocd as differences
     # that need to be synced.
-    sealedsecrets.bitnami.com/SealedSecret:
+    bitnami.com/SealedSecret:
       ignoreDifferences: |
         jsonPointers:
           - /metadata/labels
