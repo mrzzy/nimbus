@@ -13,6 +13,7 @@ data:
     # that need to be synced.
     bitnami.com/SealedSecret:
       ignoreDifferences: |
-        jsonPointers:
-          - /metadata/labels
-          - /spec/encryptedData
+        jqPathExpressions:
+        - '.metadata.labels[]'
+        - '.spec.encryptedData[]'
+        - '.spec.template.type'
