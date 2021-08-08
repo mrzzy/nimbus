@@ -11,6 +11,7 @@ commonLabels:
   managed-by: nimbus-ci
   app.kubernetes.io/part-of: argocd
 resources:
-  #- https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
-  - deploy.yaml
-  - namespace.yaml
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
+- namespace.yaml
+patches:
+- configmap.yaml

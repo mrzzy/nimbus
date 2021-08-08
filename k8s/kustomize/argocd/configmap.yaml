@@ -1,0 +1,19 @@
+#
+# nimbus
+# argocd configmap
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  resource.customizations: |
+    # prevent changes in sealedsecrets from being flagged in argocd as differences
+    # that need to be synced.
+    ignoreDifferences: |
+      - group: sealedsecrets.bitnami.com
+        kind: SealedSecret
+        jsonPointers:
+          - /metadata/labels
+          - /spec/encryptedData
