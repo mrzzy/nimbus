@@ -8,12 +8,11 @@ kind: ConfigMap
 metadata:
   name: argocd-cm
 data:
-  resource.customizations: |
+  resource.customizations: | # pragma: allowlist secret
     # prevent changes in sealedsecrets from being flagged in argocd as differences
     # that need to be synced.
-    ignoreDifferences: |
-      - group: sealedsecrets.bitnami.com
-        kind: SealedSecret
+    sealedsecrets.bitnami.com/SealedSecret:
+      ignoreDifferences: |
         jsonPointers:
           - /metadata/labels
           - /spec/encryptedData
