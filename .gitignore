@@ -37,6 +37,9 @@ terraform.rc
 # tag files
 tag?
 
+# vim-projectionist
+.projections.json
+
 ### Sealed Secrets
 # ignore the public key used encrypt secrets
 cert.pem
