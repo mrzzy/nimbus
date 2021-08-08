@@ -11,7 +11,6 @@ resources:
 # deploy a single node elasticsearch cluster with kibana for visualization
 - elasticsearch.yaml
 - kibana.yaml
-- elastic-filerealm-sealed.yaml
 
 namespace: elastic-system
 commonLabels:
