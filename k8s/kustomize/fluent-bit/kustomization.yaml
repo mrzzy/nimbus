@@ -12,7 +12,6 @@ resources:
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
 - https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
-- elastic-creds-sealed.yaml
 namespace: logging
 images:
 - name: fluent/fluent-bit
@@ -35,7 +34,7 @@ patches:
     group: apps
     kind: DaemonSet
     labelSelector: "k8s-app=fluent-bit-logging"
-  patch: |-
+  patch: |- # pragma: allowlist secret
     - op: add
       path: /spec/template/spec/containers/0/env/-1
       value:
