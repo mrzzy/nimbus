@@ -1,0 +1,15 @@
+#
+# nimbus
+# kustomization to deploy keycloak realm for tiddlywiki deploy
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# keycloak CRDs must be deployed in the same namespace as the keycloak deployment
+namespace: keycloak
+commonLabels:
+  app: tiddlywiki
+  deployed-for: tiddlywiki
+resources:
+- realm.yaml
+- oauth-client.yaml

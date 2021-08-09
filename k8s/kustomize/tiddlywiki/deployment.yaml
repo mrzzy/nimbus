@@ -1,0 +1,98 @@
+#
+# nimbus
+# tiddlywiki
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tiddlywiki-server
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: tiddlywiki
+          image: tiddlywiki
+          imagePullPolicy: Always
+          env:
+            - name: TIDDLYWIKI_AUTH_HEADER
+              # tiddlywiki matches auth header in lowercase
+              value: "x-forwarded-preferred-username"
+            - name: TIDDLYWIKI_DEBUG
+              value: "debug"
+          volumeMounts:
+            - mountPath: /wiki
+              name: tiddlywiki-wiki
+              # subPath required as tiddlywiki image expects an empty dir
+              subPath: tiddlywiki
+          ports:
+            - name: tiddlywiki-http
+              containerPort: 8080
+          # tcp socket probe is used instead of http get as http get probes
+          # detects a false failure when basic http authentication is enabled.
+          readinessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            httpGet:
+              port: tiddlywiki-http
+              httpHeaders:
+                - name: X-Forwarded-Preferred-Username
+                  value: "k8s-readiness-probe"
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            httpGet:
+              port: tiddlywiki-http
+              httpHeaders:
+                - name: X-Forwarded-Preferred-Username
+                  value: "k8s-liveness-probe"
+        # sidecar to provide oauth2 authentication to tiddlywiki
+        - name: oauth2-proxy
+          image: oauth2-proxy
+          envFrom:
+            - secretRef:
+                name: tiddlywiki-oauth2
+          ports:
+            - name: oauth2-http
+              containerPort: 4180
+            - name: oauth2-metrics
+              containerPort: 4181
+          command:
+            - "/bin/oauth2-proxy"
+            - "--http-address=http://0.0.0.0:4180"
+            - "--metrics-address=http://0.0.0.0:4181"
+              # proxy traffic to tiddlywiki container
+            - "--upstream=http://localhost:8080"
+              # required as traiffic is reverse proxied from ingress-nginx
+            - "--reverse-proxy=true"
+              # passes username as X-Forwarded-User header
+            - "--pass-user-headers=true"
+              # keycloak oauth2 config via oauth2-proxy's oidc provider
+            - "--provider=oidc"
+            - "--oidc-issuer-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki"
+            - "--login-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/auth"
+            - "--redeem-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/token"
+            - "--profile-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
+            - "--validate-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
+            - "--scope=openid profile email"
+              # allow all emails from all domains to authenticate
+            - "--email-domain=*"
+              # disable default oauth-proxy logo
+            - "--custom-sign-in-logo=-"
+          readinessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            httpGet:
+              port: oauth2-http
+              path: /ping
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            httpGet:
+              port: oauth2-http
+              path: /ping
+      volumes:
+        - name: tiddlywiki-wiki
+          persistentVolumeClaim:
+            claimName: tiddlywiki
