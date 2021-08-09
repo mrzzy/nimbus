@@ -17,7 +17,8 @@ spec:
           imagePullPolicy: Always
           env:
             - name: TIDDLYWIKI_AUTH_HEADER
-              value: "X-Forwarded-Preferred-Username"
+              # tiddlywiki matches auth header in lowercase
+              value: "x-forwarded-preferred-username"
             - name: TIDDLYWIKI_DEBUG
               value: "debug"
           volumeMounts:
@@ -32,22 +33,20 @@ spec:
           # detects a false failure when basic http authentication is enabled.
           readinessProbe:
             initialDelaySeconds: 10
-            failureThreshold: 1
+            failureThreshold: 3
             httpGet:
               port: tiddlywiki-http
               httpHeaders:
-                - name: "X-Forwarded-Preferred-Username"
+                - name: X-Forwarded-Preferred-Username
                   value: "k8s-readiness-probe"
-              path: /
           livenessProbe:
             initialDelaySeconds: 10
-            failureThreshold: 1
+            failureThreshold: 3
             httpGet:
               port: tiddlywiki-http
               httpHeaders:
-                - name: "X-Forwarded-Preferred-Username"
+                - name: X-Forwarded-Preferred-Username
                   value: "k8s-liveness-probe"
-              path: /
         # sidecar to provide oauth2 authentication to tiddlywiki
         - name: oauth2-proxy
           image: oauth2-proxy
@@ -82,13 +81,13 @@ spec:
             - "--custom-sign-in-logo=-"
           readinessProbe:
             initialDelaySeconds: 10
-            failureThreshold: 1
+            failureThreshold: 3
             httpGet:
               port: oauth2-http
               path: /ping
           livenessProbe:
             initialDelaySeconds: 10
-            failureThreshold: 1
+            failureThreshold: 3
             httpGet:
               port: oauth2-http
               path: /ping
