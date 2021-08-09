@@ -67,6 +67,8 @@ spec:
             - "--scope=email"
               # allow all emails from all domains to authenticate
             - "--email-domain=*"
+              # disable default oauth-proxy logo
+            - "--custom-sign-in-logo=-"
           readinessProbe:
             initialDelaySeconds: 10
             failureThreshold: 1
