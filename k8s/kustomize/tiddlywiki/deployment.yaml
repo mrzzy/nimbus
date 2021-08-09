@@ -15,6 +15,9 @@ spec:
         - name: tiddlywiki
           image: tiddlywiki
           imagePullPolicy: Always
+          env:
+            - name: TIDDLYWIKI_AUTH_HEADER
+              value: "X-Forwarded-Preferred-Username"
           volumeMounts:
             - mountPath: /wiki
               name: tiddlywiki-wiki
