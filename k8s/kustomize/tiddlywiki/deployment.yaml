@@ -18,6 +18,8 @@ spec:
           env:
             - name: TIDDLYWIKI_AUTH_HEADER
               value: "X-Forwarded-Preferred-Username"
+            - name: TIDDLYWIKI_DEBUG
+              value: "debug"
           volumeMounts:
             - mountPath: /wiki
               name: tiddlywiki-wiki
@@ -33,12 +35,18 @@ spec:
             failureThreshold: 1
             httpGet:
               port: tiddlywiki-http
+              httpHeaders:
+                - name: "X-Forwarded-Preferred-Username"
+                  value: "k8s-readiness-probe"
               path: /
           livenessProbe:
             initialDelaySeconds: 10
             failureThreshold: 1
             httpGet:
               port: tiddlywiki-http
+              httpHeaders:
+                - name: "X-Forwarded-Preferred-Username"
+                  value: "k8s-liveness-probe"
               path: /
         # sidecar to provide oauth2 authentication to tiddlywiki
         - name: oauth2-proxy
