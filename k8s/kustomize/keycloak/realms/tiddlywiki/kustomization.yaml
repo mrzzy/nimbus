@@ -10,6 +10,8 @@ namespace: keycloak
 commonLabels:
   app: tiddlywiki
   deployed-for: tiddlywiki
+  keycloak-realm: tiddlywiki
 resources:
 - realm.yaml
 - oauth-client.yaml
+- users.yaml
