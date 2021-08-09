@@ -1,0 +1,22 @@
+#
+# nimbus
+# tiddlywiki keycloak realm
+# users
+#
+
+
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: mrzzy
+spec:
+  user:
+    username: mrzzy
+    firstName: "Zhu"
+    lastName: "Zhanyan"
+    email: "program.nom@gmail.com"
+    enabled: true
+    emailVerified: true
+  realmSelector:
+    matchLabels:
+      keycloak-realm: tiddlywiki
