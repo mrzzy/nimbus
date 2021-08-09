@@ -1,0 +1,23 @@
+#
+# nimbus
+# keycloak realm for tiddlywiki
+#
+
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: tiddlywiki
+  labels:
+    app: tiddlywiki
+spec:
+  realm:
+    id: "tiddlywiki"
+    realm: "tiddlywiki"
+    enabled: true
+    displayName: "TiddlyWiki"
+    bruteForceProtected: true
+  # select keycloak instance to create realm in
+  instanceSelector:
+    matchLabels:
+      app: keycloak
+      app.kubernetes.io/instance: keycloak

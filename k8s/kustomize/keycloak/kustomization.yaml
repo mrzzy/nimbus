@@ -3,8 +3,11 @@
 # kustomization to deploy keycloak
 #
 
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 namespace: keycloak
 resources:
 - github.com/keycloak/keycloak-operator/deploy?ref=15.0.0
 - keycloak.yaml
 - ingress.yaml
+- realms/tiddlywiki
