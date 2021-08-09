@@ -68,13 +68,14 @@ spec:
             - "--reverse-proxy=true"
               # passes username as X-Forwarded-User header
             - "--pass-user-headers=true"
-              # keycloak oauth2 config
-            - "--provider=keycloak"
+              # keycloak oauth2 config via oauth2-proxy's oidc provider
+            - "--provider=oidc"
+            - "--oidc-issuer-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki"
             - "--login-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/auth"
             - "--redeem-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/token"
             - "--profile-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
             - "--validate-url=https://keycloak.mrzzy.co/auth/realms/tiddlywiki/protocol/openid-connect/userinfo"
-            - "--scope='profile email'"
+            - "--scope=openid profile email"
               # allow all emails from all domains to authenticate
             - "--email-domain=*"
               # disable default oauth-proxy logo
