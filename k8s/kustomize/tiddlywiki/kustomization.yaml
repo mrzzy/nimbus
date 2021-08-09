@@ -10,6 +10,8 @@ commonLabels:
   app: tiddlywiki
   version: 5.1.22
   part-of: tiddlywiki
+  deployed-by: argocd
+  managed-by: nimbus-ci
 resources:
 - deployment.yaml
 - pvc.yaml
