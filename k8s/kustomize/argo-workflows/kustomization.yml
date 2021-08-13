@@ -1,0 +1,14 @@
+
+# nimbus
+# argo-workflows kustomization
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argo
+commonLabels:
+  managed-by: nimbus
+  deployed-by: argocd
+resources:
+- https://raw.githubusercontent.com/argoproj/argo-workflows/v3.1.6/manifests/install.yaml
+- namespace.yaml
