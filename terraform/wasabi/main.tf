@@ -47,3 +47,29 @@ provider "wasabi" {
   access_key = var.access_key
   secret_key = var.secret_key
 }
+
+
+## Tiddlywiki Archive
+# bucket archiving snapshots of tiddlers from the Tiddlywiki deployment
+resource "wasabi_bucket" "tiddlywiki_archive" {
+  provider = wasabi.eu-central-1
+
+  bucket = "mrzzy-co-tiddlywiki-archive"
+  acl    = "public-read"
+
+  versioning {
+    enabled = true
+  }
+}
+
+# service account & access key for writing to tiddlywiki_archive
+resource "wasabi_user" "tiddlywiki_sa" {
+  provider = wasabi.eu-central-1
+  name     = "tiddlywiki_service_account"
+}
+
+
+resource "wasabi_access_key" "tiddlywiki_sa_key" {
+  provider = wasabi.eu-central-1
+  user     = wasabi_user.tiddlywiki_sa.name
+}
