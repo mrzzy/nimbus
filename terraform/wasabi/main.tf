@@ -82,10 +82,13 @@ resource "wasabi_policy" "tiddlywiki_archive_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid      = "AllowAllS3TiddlyArchiveBucket",
-        Effect   = "Allow",
-        Action   = "s3:*",
-        Resource = [wasabi_bucket.tiddlywiki_archive.arn]
+        Sid    = "AllowAllS3TiddlyArchiveBucket",
+        Effect = "Allow",
+        Action = "s3:*",
+        Resource = [
+          wasabi_bucket.tiddlywiki_archive.arn,
+          "${wasabi_bucket.tiddlywiki_archive.arn}/*"
+        ]
       }
     ]
   })
