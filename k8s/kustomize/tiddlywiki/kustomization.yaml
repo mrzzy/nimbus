@@ -19,12 +19,12 @@ resources:
 - service.yaml
 - ingress.yaml
 images:
-  - name: tiddlywiki
-    newName: ghcr.io/mrzzy/tiddlywiki
-    newTag: 5.1.22-0.0.1-alpha-7-g3cf6de5
-  - name: oauth2-proxy
-    newName: quay.io/oauth2-proxy/oauth2-proxy
-    newTag: v7.1.3
-  - name: sftp
-    newName: atmoz/sftp
-    newTag: alpine
+- name: tiddlywiki
+  newName: ghcr.io/mrzzy/tiddlywiki
+  newTag: 5.1.22-0.0.1-alpha-7-g3cf6de5
+- name: oauth2-proxy
+  newName: quay.io/oauth2-proxy/oauth2-proxy
+  newTag: v7.1.3
+- name: sftp
+  newName: atmoz/sftp
+  newTag: alpine
