@@ -25,3 +25,6 @@ images:
   - name: oauth2-proxy
     newName: quay.io/oauth2-proxy/oauth2-proxy
     newTag: v7.1.3
+  - name: sftp
+    newName: atmoz/sftp
+    newTag: alpine

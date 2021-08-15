@@ -47,6 +47,7 @@ spec:
               httpHeaders:
                 - name: X-Forwarded-Preferred-Username
                   value: "k8s-liveness-probe"
+
         # sidecar to provide oauth2 authentication to tiddlywiki
         - name: oauth2-proxy
           image: oauth2-proxy
@@ -92,7 +93,31 @@ spec:
             httpGet:
               port: oauth2-http
               path: /ping
+
+        # sidecar to expose saved tiddler files to backup pipeline via SFTP
+        - name: sftp-export
+          image: sftp
+          env:
+            - name: SFTP_USERS
+              valueFrom:
+                secretKeyRef:
+                  key: SFTP_USERS
+                  name: tiddlywiki-sftp
+          ports:
+            - name: sftp
+              containerPort: 22
+          # mount the ssh keys used for authentication
+          # assumes 'sftp' user is used
+          volumeMounts:
+            - mountPath: /home/sftp/.ssh/authorized_keys
+              name: tiddlywiki-ssh-key
+              subPath: ssh_public_key.pub
+        # TODO(mrzzy): add readiness and liveness probes.
+
       volumes:
         - name: tiddlywiki-wiki
           persistentVolumeClaim:
             claimName: tiddlywiki
+        - name: tiddlywiki-ssh-key
+          secret:
+              secretName: tiddlywiki-sftp
