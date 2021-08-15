@@ -112,6 +112,9 @@ spec:
             - mountPath: /home/sftp/.ssh/authorized_keys
               name: tiddlywiki-ssh-key
               subPath: ssh_public_key.pub
+            - mountPath: /home/sftp/wiki
+              name: tiddlywiki-wiki
+              subPath: tiddlywiki
           readinessProbe:
             initialDelaySeconds: 10
             failureThreshold: 3
