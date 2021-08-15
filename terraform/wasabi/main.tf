@@ -55,7 +55,7 @@ resource "wasabi_bucket" "tiddlywiki_archive" {
   provider = wasabi.eu-central-1
 
   bucket = "mrzzy-co-tiddlywiki-archive"
-  acl    = "public-read"
+  acl    = "private"
 
   versioning {
     enabled = true
@@ -72,4 +72,27 @@ resource "wasabi_user" "tiddlywiki_sa" {
 resource "wasabi_access_key" "tiddlywiki_sa_key" {
   provider = wasabi.us-east-1
   user     = wasabi_user.tiddlywiki_sa.name
+}
+
+# attach policy to allow the service account to write to archive bucket
+resource "wasabi_policy" "tiddlywiki_archive_policy" {
+  name     = "TiddlywikiArchiveAccessPolicy"
+  provider = wasabi.us-east-1
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid      = "AllowAllS3TiddlyArchiveBucket",
+        Effect   = "Allow",
+        Action   = "s3:*",
+        Resource = [wasabi_bucket.tiddlywiki_archive.arn]
+      }
+    ]
+  })
+}
+
+resource "wasabi_user_policy_attachment" "tiddlywiki_sa_policy_attachment" {
+  provider   = wasabi.us-east-1
+  user       = wasabi_user.tiddlywiki_sa.name
+  policy_arn = wasabi_policy.tiddlywiki_archive_policy.arn
 }
