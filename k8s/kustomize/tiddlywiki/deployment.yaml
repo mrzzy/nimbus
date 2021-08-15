@@ -112,7 +112,16 @@ spec:
             - mountPath: /home/sftp/.ssh/authorized_keys
               name: tiddlywiki-ssh-key
               subPath: ssh_public_key.pub
-        # TODO(mrzzy): add readiness and liveness probes.
+          readinessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            tcpSocket:
+              port: sftp
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            tcpSocket:
+              port: sftp
 
       volumes:
         - name: tiddlywiki-wiki
