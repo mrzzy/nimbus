@@ -14,3 +14,7 @@ spec:
     port: 80
     targetPort: oauth2-http
     protocol: TCP
+  - name: sftp
+    port: 22
+    targetPort: sftp
+    protocol: TCP
