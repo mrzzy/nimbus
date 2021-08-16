@@ -4,67 +4,71 @@
 #
 
 apiVersion: argoproj.io/v1alpha1
-kind: WorkflowTemplate
+kind: CronWorkflow
 metadata:
   name: archive-tiddlywiki
 spec:
-  entrypoint: rclone-tiddlers
-  arguments:
-    parameters:
-      # wasabi region where the target bucket is located
-      - name: wasabi-region
-        value: eu-central-1
-      # the target bucket to write archived tiddlers to.
-      - name: wasabi-bucket
-        value: mrzzy-co-tiddlywiki-archive
-  templates:
-    - name: rclone-tiddlers
-      script:
-        image: rclone/rclone:1.56.0
-        command: [ash]
-        source: |
-          set -ex
-          # rclone makes a copy of the rclone file to store mutable state:
-          # https://github.com/rclone/rclone/issues/3655
-          # this breaks as rclone.conf is mounted on read only basis.
-          # hence the mount and copy to workaround the rclone mutablity requirement.
-          mkdir -p /config/rclone
-          cp /rclone.conf /config/rclone/rclone.conf
+  # schedule workflow to run at 3am.
+  schedule: "0 3 * * *"
+  timezone: Asia/Singapore
+  concurrencyPolicy: Allow
+  workflowSpec:
+    entrypoint: rclone-tiddlers
+    arguments:
+      parameters:
+        # wasabi region where the target bucket is located
+        - name: wasabi-region
+          value: eu-central-1
+        # the target bucket to write archived tiddlers to.
+        - name: wasabi-bucket
+          value: mrzzy-co-tiddlywiki-archive
+    templates:
+      - name: rclone-tiddlers
+        script:
+          image: rclone/rclone:1.56.0
+          command: [ash]
+          source: |
+            set -ex
+            # rclone makes a copy of the rclone file to store mutable state:
+            # https://github.com/rclone/rclone/issues/3655
+            # this breaks as rclone.conf is mounted on read only basis.
+            # hence the mount and copy to workaround the rclone mutablity requirement.
+            mkdir -p /config/rclone
+            cp /rclone.conf /config/rclone/rclone.conf
 
-          # use rclone to copy tiddlywiki tiddlers to wasabi S3
-          rclone copy \
-            sftp:wiki \
-            wasabi:{{ workflow.parameters.wasabi-bucket }}/wiki-$(date -u  +"%Y_%m_%d__%H_%M_%S") \
-            -vv --retries 1 --low-level-retries 1 --dump bodies
-        env:
-          - name: RCLONE_CONFIG_WASABI_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: tiddlywiki-archive
-                key: RCLONE_CONFIG_WASABI_ACCESS_KEY_ID
-          - name: RCLONE_CONFIG_WASABI_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: tiddlywiki-archive
-                key: RCLONE_CONFIG_WASABI_SECRET_ACCESS_KEY
-          - name: RCLONE_CONFIG_WASABI_ENDPOINT
-            value: "s3.{{ workflow.parameters.wasabi-region }}.wasabisys.com"
-          - name: RCLONE_CONFIG_WASABI_REGION
-            value: "{{ workflow.parameters.wasabi-region }}"
-        volumeMounts:
-          - mountPath: /ssh_private_key
-            name: ssh-key
-            subPath: ssh_private_key
-          - mountPath: /rclone.conf
-            name: rclone-conf
-            subPath: rclone.conf
-
-  volumes:
-    - name: ssh-key
-      secret:
-        secretName: tiddlywiki-archive
-    - name: rclone-conf
-      configMap:
-        name: tiddlywiki-archive
-  podGC:
-    strategy: OnWorkflowSuccess
+            # use rclone to copy tiddlywiki tiddlers to wasabi S3
+            rclone copy \
+              sftp:wiki \
+              wasabi:{{ workflow.parameters.wasabi-bucket }}/wiki-$(date -u  +"%Y_%m_%d__%H_%M_%S") \
+              -vv --retries 1 --low-level-retries 1 --dump bodies
+          env:
+            - name: RCLONE_CONFIG_WASABI_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: tiddlywiki-archive
+                  key: RCLONE_CONFIG_WASABI_ACCESS_KEY_ID
+            - name: RCLONE_CONFIG_WASABI_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tiddlywiki-archive
+                  key: RCLONE_CONFIG_WASABI_SECRET_ACCESS_KEY
+            - name: RCLONE_CONFIG_WASABI_ENDPOINT
+              value: "s3.{{ workflow.parameters.wasabi-region }}.wasabisys.com"
+            - name: RCLONE_CONFIG_WASABI_REGION
+              value: "{{ workflow.parameters.wasabi-region }}"
+          volumeMounts:
+            - mountPath: /ssh_private_key
+              name: ssh-key
+              subPath: ssh_private_key
+            - mountPath: /rclone.conf
+              name: rclone-conf
+              subPath: rclone.conf
+    volumes:
+      - name: ssh-key
+        secret:
+          secretName: tiddlywiki-archive
+      - name: rclone-conf
+        configMap:
+          name: tiddlywiki-archive
+    podGC:
+      strategy: OnWorkflowSuccess
