@@ -14,3 +14,4 @@ resources:
 - namespace.yaml
 - role.yaml
 - rolebinding.yaml
+- tiddlywiki-archive
