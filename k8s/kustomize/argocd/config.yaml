@@ -1,0 +1,18 @@
+#
+# nimbus
+# argocd deployment
+# argocd config map
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+ configManagementPlugins: |
+  - name: jsonnet-bundled
+    init:
+      command: [jb, update]
+    generate:
+      command: [jsonnet, -J, vendor, -y, "*.jsonnet"]
