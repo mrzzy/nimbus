@@ -9,5 +9,8 @@ namespace: argocd
 commonLabels:
   managed-by: nimbus-ci
 resources:
-- https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
+- deploy.yaml
 - namespace.yaml
+patches:
+- path: config.yaml
+- path: jsonnet-bundler-bin.yaml
