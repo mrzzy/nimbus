@@ -15,6 +15,9 @@ local kp =
       common+: {
         namespace: 'monitoring',
       },
+      prometheus+: {
+        name: 'main',
+      },
     },
   };
 // kube-prometheus components
