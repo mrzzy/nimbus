@@ -1,7 +1,7 @@
 #
 # nimbus
 # argocd deployment
-# patch to add jsonnet bundler custom tool to argocd
+# patch to add custom tooling
 #
 
 apiVersion: apps/v1
@@ -12,22 +12,33 @@ metadata:
 spec:
   template:
     spec:
+      # init container to download custom tooling
       initContainers:
-      - name: download-jsonnet-bundler
+      - name: download-custom-tools
         image: alpine:3.12
         command: [sh, -c]
         args:
         - wget https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/v0.4.0/jb-linux-amd64
-          -O /custom-tools/jb && chmod g+x /custom-tools/jb
+            -O /custom-tools/jb
+          && wget https://github.com/google/go-jsonnet/releases/download/v0.17.0/go-jsonnet_0.17.0_Linux_x86_64.tar.gz
+            -O go-jsonnet.tgz
+          && tar xzf go-jsonnet.tgz
+          && mv jsonnet /custom-tools/
+          && chmod -R g+x /custom-tools/
         volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools
+
+      # mount custom tooling
       containers:
       - name: argocd-repo-server
         volumeMounts:
         - mountPath: /usr/local/bin/jb
           name: custom-tools
           subPath: jb
+        - mountPath: /usr/local/bin/jsonnet
+          name: custom-tools
+          subPath: jsonnet
       volumes:
       - name: custom-tools
         emptyDir: {}
