@@ -3,6 +3,7 @@
 // kube-prometheus deployment
 //
 
+
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
   // Uncomment the following imports to enable its patches
@@ -16,8 +17,6 @@ local kp =
       },
     },
   };
-
-
 // kube-prometheus components
 local kpComponents = [
   kp.prometheusOperator,
@@ -25,7 +24,37 @@ local kpComponents = [
   // general monitoring components
   kp.alertmanager,
   kp.prometheus,
-  kp.grafana,
+  // patch grafana deploy to obtain admin credentials from secret
+  kp.grafana {
+    deployment+: {
+      spec+: {
+        template+: {
+          spec+: {
+            containers: [
+              kp.grafana.deployment.spec.template.spec.containers[0] {
+                env+: [
+                  // expose admin user credentials to grafana from secret as env vars
+                  {
+                    name: configKey,
+                    valueFrom: {
+                      secretKeyRef: {
+                        key: configKey,
+                        name: 'kube-prometheus-grafana',
+                      },
+                    },
+                  }
+                  for configKey in [
+                    'GF_SECURITY_ADMIN_USER',
+                    'GF_SECURITY_ADMIN_PASSWORD',
+                  ]
+                ],
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
 
   // exports metrics for k8s resources, api server and nodes
   kp.kubeStateMetrics,
@@ -39,7 +68,8 @@ local kpComponents = [
   kp.blackboxExporter,
 ];
 
-// compile all kube-prometheus manifests as a flatterned list
+
+// compile all kube-prometheus manifests as a flattened list
 local kpManifestsJson = [
   kp.kubePrometheus.namespace,
   kp.kubePrometheus.prometheusRule,
