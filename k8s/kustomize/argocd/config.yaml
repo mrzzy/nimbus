@@ -8,7 +8,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
-  namespace: argocd
 data:
  configManagementPlugins: |
   # writes a yaml steam of json documents to stdout
