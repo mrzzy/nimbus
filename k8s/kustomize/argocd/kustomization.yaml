@@ -11,3 +11,6 @@ commonLabels:
 resources:
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
 - namespace.yaml
+patches:
+- path: config.yaml
+- path: custom-tools.yaml
