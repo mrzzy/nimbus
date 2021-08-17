@@ -16,4 +16,6 @@ data:
     init:
       command: [jb, update]
     generate:
-      command: [jsonnet, -J, vendor, -y, "*.jsonnet"]
+      command: [sh, -c]
+      args:
+        - "jsonnet -J vendor -y *.jsonnet"
