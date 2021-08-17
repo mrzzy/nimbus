@@ -10,6 +10,7 @@ on:
     paths:
       - ".github/workflows/argocd-cd.yaml"
       - "k8s/argocd/**"
+      - "k8s/kustomize/argocd/**"
 jobs:
   deploy-argocd:
     name: "Deploy ArgoCD & CRDs on Linode k8s"
