@@ -11,7 +11,8 @@ metadata:
   namespace: argocd
 data:
  configManagementPlugins: |
-  - name: jsonnet-bundled
+  # writes a yaml steam of json documents to stdout
+  - name: jsonnet-bundled-yamlstream
     init:
       command: [jb, update]
     generate:
