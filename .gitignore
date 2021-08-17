@@ -45,3 +45,7 @@ tag?
 cert.pem
 # Dont commit secrets
 k8s/kustomize/wireguard/wg0.conf
+
+### jsonnet
+# ignore jsonnet-bundler's vendor dir
+vendor/

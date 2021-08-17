@@ -1,0 +1,20 @@
+#
+# nimbus
+# argocd deployment
+# argocd config map
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+ configManagementPlugins: |
+  # writes a yaml steam of json documents to stdout
+  - name: jsonnet-bundled-yamlstream
+    init:
+      command: [jb, update]
+    generate:
+      command: [sh, -c]
+      args:
+        - "jsonnet -J vendor -y *.jsonnet"
