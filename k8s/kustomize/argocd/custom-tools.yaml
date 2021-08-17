@@ -24,7 +24,7 @@ spec:
             -O go-jsonnet.tgz
           && tar xzf go-jsonnet.tgz
           && mv jsonnet /custom-tools/
-          && chmod -R g+x /custom-tools/
+          && chmod -R a+x /custom-tools/
         volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools
