@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/mrzzy/nimbus.git
     targetRevision: HEAD
-    path: k8s/kustomize/kube-prometheus
+    path: k8s/jsonnet/kube-prometheus
     plugin:
       name: jsonnet-bundled-yamlstream
   destination:
