@@ -1,0 +1,35 @@
+#
+# nimbus
+# K8s kustomize
+# ci  pipeline
+#
+
+name: "CI: Dry Run Kustomize manifests"
+on:
+  push:
+    paths:
+      - ".github/workflows/kustomize-ci.yaml"
+      - "k8s/kustomize/**"
+jobs:
+  dryrun-kustomize:
+    name: "Dry Run Kustomize manifests"
+    runs-on: ubuntu-20.04
+    env:
+      KUBECONFIG: kubeconfig.yaml
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup Terraform CLI"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
+      - name: "Get k8s Cluster Kubeconfig from Terraform"
+        working-directory: "terraform/linode"
+        run: |
+          terraform init
+          terraform apply -refresh-only -auto-approve
+          # write kubeconfig to project root
+          terraform output -raw k8s_singapore_kubeconfig | base64 -d >../../$KUBECONFIG
+      - name: "Dry Run: Apply Kustomize manifests client side"
+        run:  find k8s/kustomize -maxdepth 1 -mindepth 1 | xargs -n 1 kubectl apply --dry-run=client -k
