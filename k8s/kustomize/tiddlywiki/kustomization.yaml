@@ -21,7 +21,7 @@ resources:
 images:
 - name: tiddlywiki
   newName: ghcr.io/mrzzy/tiddlywiki
-  newTag: 5.1.22-0.0.2-alpha
+  newTag: 5.1.22-0.0.2-alpha-1-g14338fa
 - name: oauth2-proxy
   newName: quay.io/oauth2-proxy/oauth2-proxy
   newTag: v7.1.3
