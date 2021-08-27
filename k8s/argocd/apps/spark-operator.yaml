@@ -1,0 +1,47 @@
+#
+# nimbus
+# argocd app to deploy spark-operator
+#
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spark-operator
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
+    targetRevision: 1.1.6
+    chart: spark-operator
+    helm:
+      values: |
+        # ==================== values.yaml begin ====================
+        webhook:
+          # -- Enable webhook server
+          enable: false
+          # -- Webhook service port
+          port: 8080
+
+        metrics:
+          # -- Enable prometheus metric scraping
+          enable: true
+          # -- Metrics port
+          port: 10254
+
+        # -- Prometheus pod monitor for operator's pod.
+        podMonitor:
+          # -- If enabled, a pod monitor for operator's pod will be submitted.
+          enable: true
+
+        # podLabels -- Additional labels to add to the pod
+        podLabels:
+          managed-by: nimbus
+          deployed-by: argocd
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: spark-operator
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
