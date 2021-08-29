@@ -54,7 +54,7 @@ resource "linode_lke_cluster" "singapore" {
 # provide services to the LKE cluster without exposing them to the public internet
 module "bastion_singapore" {
   source = "./modules/wireguard"
-  prefix = "bastion-"
+  prefix = "bastion"
 
   linode_region = local.sg_region
 
