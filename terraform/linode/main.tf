@@ -50,13 +50,34 @@ resource "linode_lke_cluster" "singapore" {
   tags = setunion(var.tags, ["sgp"])
 }
 
+# firewall to safeguard against giving unintentional public access to LKE k8s nodeport services
+resource "linode_firewall" "lke_singapore" {
+  label = "${var.prefix}-sgp-lke-nodes"
+  tags  = setunion(var.tags, ["sgp"])
+  linodes = flatten(
+    [for pool in linode_lke_cluster.singapore.pool :
+      [for node in pool.nodes : node.instance_id]
+    ]
+  )
+
+  inbound_policy = "DROP"
+  inbound {
+    label    = "allow-shadowsocks"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "32121"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  outbound_policy = "ACCEPT"
+}
+
 # bastion host providing wireguard vpn access to SG LKE cluster allows us to
 # provide services to the LKE cluster without exposing them to the public internet
 module "bastion_singapore" {
   source = "./modules/wireguard"
   prefix = "bastion"
-  # attach bastion to private network so it can be used to access instances via LAN
-  private_ip = true
 
   linode_region = local.sg_region
   ssh_keys      = [linode_sshkey.mrzzy_ed25519.ssh_key]
