@@ -38,6 +38,9 @@ resource "linode_instance" "wireguard" {
   region          = var.linode_region
   authorized_keys = var.ssh_keys
 
+  # attach wireguard server private network so it can be used to access instances via LAN
+  private_ip = true
+
   type = "g6-nanode-1"
   tags = setunion(var.tags)
 

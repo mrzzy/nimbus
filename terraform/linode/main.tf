@@ -55,6 +55,8 @@ resource "linode_lke_cluster" "singapore" {
 module "bastion_singapore" {
   source = "./modules/wireguard"
   prefix = "bastion"
+  # attach bastion to private network so it can be used to access instances via LAN
+  private_ip = true
 
   linode_region = local.sg_region
   ssh_keys      = [linode_sshkey.mrzzy_ed25519.ssh_key]
