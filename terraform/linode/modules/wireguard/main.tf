@@ -6,7 +6,7 @@
 
 terraform {
   required_providers {
-    aws = {
+    linode = {
       source  = "linode/linode"
       version = ">= 1.19.1"
     }
@@ -20,14 +20,14 @@ resource "linode_stackscript" "setup_wireguard" {
   images = ["linode/ubuntu20.04", "linode/ubuntu18.04"]
   is_public = false
 
-  script = templatefile("./scripts/setup_wireguard.sh.tpl", {
-    cidr_length = vars.vpn_cidr_length
+  script = templatefile("${path.module}/scripts/setup_wireguard.sh.tpl", {
+    cidr_length = var.vpn_cidr_length
     wg_server = {
-      address_ip = vars.wireguard_server_vpn_ip
-      port = vars.wireguard_port
-      private_key = vars.wireguard_server_private_key
+      address_ip = var.wireguard_server_vpn_ip
+      port = var.wireguard_port
+      private_key = var.wireguard_server_private_key
     }
-    wg_peers = vars.wireguard_peers
+    wg_peers = var.wireguard_peers
   })
 }
 
