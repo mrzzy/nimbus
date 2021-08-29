@@ -13,6 +13,8 @@ set -ex
 apt-get update
 apt-get install -y wireguard
 
+# enable ip forwarding for VPN to allow clients to access hosts the server can access
+sysctl -w net.ipv4.ip_forward=1
 
 # setup config for wireguard VPN
 mkdir -p /etc/wireguard
