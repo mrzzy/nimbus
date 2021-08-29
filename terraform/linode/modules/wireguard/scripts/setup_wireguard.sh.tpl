@@ -1,5 +1,5 @@
 #!/bin/bash
-# <UDF name="wg_private_key" />
+# <UDF name="wg_private_key" label="Private Key used by the Wireguard server bootstrapped by this script" />
 #
 # nimbus
 # Linode Terraform
