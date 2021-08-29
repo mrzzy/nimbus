@@ -11,7 +11,6 @@ set -ex
 
 # install wireguard VPN
 apt-get update
-add-apt-repository ppa:wireguard/wireguard -y
 apt-get install -y wireguard
 
 
