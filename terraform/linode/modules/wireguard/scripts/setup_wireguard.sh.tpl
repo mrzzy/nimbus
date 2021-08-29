@@ -10,11 +10,12 @@ set -ex
 
 # install wireguard VPN
 apt-get update
-add-apt-repository ppa:wireguard/wireguard
+add-apt-repository ppa:wireguard/wireguard -y
 apt-get install -y wireguard
 
 
 # setup config for wireguard VPN
+mkdir -p /etc/wireguard
 cat >/etc/wireguard/wg0.conf <<EOF
 [Interface]
 PrivateKey = ${wg_server["private_key"]}

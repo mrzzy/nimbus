@@ -13,6 +13,8 @@ terraform {
   }
 }
 
+
+
 # stackscript used to setup wireguard services
 resource "linode_stackscript" "setup_wireguard" {
   label = "${var.prefix}-setup-wireguard"
