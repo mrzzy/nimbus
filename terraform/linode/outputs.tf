@@ -19,3 +19,8 @@ output "k8s_singapore_kubeconfig" {
   description = "Base64 encoded kubeconfig used to connect to the created LKE cluster"
   sensitive   = true
 }
+
+output "bastion_ip" {
+  value = module.bastion_singapore.wireguard_ip
+  description = "IP address of the bastion host"
+}
