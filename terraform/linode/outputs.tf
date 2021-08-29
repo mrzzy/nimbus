@@ -21,6 +21,6 @@ output "k8s_singapore_kubeconfig" {
 }
 
 output "bastion_ip" {
-  value = module.bastion_singapore.wireguard_ip
+  value       = module.bastion_singapore.wireguard_ip
   description = "IP address of the bastion host"
 }

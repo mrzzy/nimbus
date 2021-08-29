@@ -30,7 +30,7 @@ PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING 
 %{ for public_key, address_ip in wg_peers ~}
 [Peer]
 PublicKey = ${public_key}
-AlllowedIPs =  ${address_ip}/32
+AllowedIPs =  ${address_ip}/32
 %{ endfor ~}
 EOF
 
