@@ -57,6 +57,7 @@ module "bastion_singapore" {
   prefix = "bastion"
 
   linode_region = local.sg_region
+  ssh_keys      = [linode_sshkey.mrzzy_ed25519.ssh_key]
 
   wireguard_server_private_key = var.bastion_wireguard_private_key
   wireguard_peers = {
