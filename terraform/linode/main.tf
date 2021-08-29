@@ -5,6 +5,7 @@
 
 locals {
   sg_region = "ap-south"
+  lan_cidr = "192.168.128.0/17"
 }
 
 terraform {
@@ -61,6 +62,28 @@ resource "linode_firewall" "lke_singapore" {
   )
 
   inbound_policy = "DROP"
+
+  # allow all traffic from private network
+  dynamic "inbound" {
+    for_each = ["TCP", "UDP"]
+    iterator = protocol
+    content {
+      label    = "allow-private-lan-${lower(protocol.value)}"
+      action   = "ACCEPT"
+      protocol = protocol.value
+      ports    = "1-65535"
+      ipv4     = [local.lan_cidr]
+    }
+  }
+
+  inbound {
+    label    = "allow-private-lan-icmp"
+    action   = "ACCEPT"
+    protocol = "ICMP"
+    ipv4     = [local.lan_cidr]
+  }
+
+  # allow traffic for shadowsocks proxy service
   inbound {
     label    = "allow-shadowsocks"
     action   = "ACCEPT"
