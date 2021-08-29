@@ -1,4 +1,5 @@
 #!/bin/bash
+# <UDF name="wg_private_key" />
 #
 # nimbus
 # Linode Terraform
@@ -18,7 +19,7 @@ apt-get install -y wireguard
 mkdir -p /etc/wireguard
 cat >/etc/wireguard/wg0.conf <<EOF
 [Interface]
-PrivateKey = ${wg_server["private_key"]}
+PrivateKey = $${WG_PRIVATE_KEY}
 Address = ${wg_server["address_ip"]}/${cidr_length}
 ListenPort = ${wg_server["port"]}
 

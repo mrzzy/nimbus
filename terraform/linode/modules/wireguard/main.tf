@@ -14,7 +14,6 @@ terraform {
 }
 
 
-
 # stackscript used to setup wireguard services
 resource "linode_stackscript" "setup_wireguard" {
   label = "${var.prefix}-setup-wireguard"
@@ -27,7 +26,6 @@ resource "linode_stackscript" "setup_wireguard" {
     wg_server = {
       address_ip = var.wireguard_server_vpn_ip
       port = var.wireguard_port
-      private_key = var.wireguard_server_private_key
     }
     wg_peers = var.wireguard_peers
   })
@@ -43,4 +41,7 @@ resource "linode_instance" "wireguard" {
   tags = setunion(var.tags)
 
   stackscript_id = linode_stackscript.setup_wireguard.id
+  stackscript_data = {
+    wg_private_key = var.wireguard_server_private_key
+  }
 }
