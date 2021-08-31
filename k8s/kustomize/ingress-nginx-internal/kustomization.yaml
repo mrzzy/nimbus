@@ -43,6 +43,52 @@ patches:
       - --validating-webhook=:8443
       - --validating-webhook-certificate=/usr/local/certificates/cert
       - --validating-webhook-key=/usr/local/certificates/key
+# patches to namespace cluster scoped resources to prevent name collisions
+- target:
+    group: admissionregistration.k8s.io
+    version: v1
+    kind: ValidatingWebhookConfiguration
+    name: ingress-nginx-admission
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal-admission
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: ingress-nginx
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: ingress-nginx-admission
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-admission-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRoleBinding
+    name: ingress-nginx
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRoleBinding
+    name: ingress-nginx-admission
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-admission-internal
 
 # patch ingress service to nodeport to avoid creating a publicly exposed load balancer
 # this limits traffic to this ingress only from the manually configured bastion host
