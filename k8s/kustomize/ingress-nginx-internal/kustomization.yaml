@@ -7,14 +7,24 @@
 # via bastion host.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-nameSuffix: -internal
 namespace: ingress-nginx-internal
 commonLabels:
-  app.kubernetes.io/name: ingress-nginx-internal
+  app.kubernetes.io/name: ingress-nginx
   app.kubernetes.io/instance: ingress-nginx-internal
+  managed-by: nimbus
+  deployed-by: argocd
 resources:
 - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.47.0/deploy/static/provider/cloud/deploy.yaml
 patches:
+# patch namespace name to avoid deploying the same namespace as the public ingress-nginx
+- target:
+    version: v1
+    kind: Namespace
+    name: ingress-nginx
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
 # patch controller to use a distinct ingress class to target ingresses for internal services.
 - target:
     group: apps
@@ -26,10 +36,10 @@ patches:
       path: /spec/template/spec/containers/0/args
       value:
       - /nginx-ingress-controller
-      - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller-internal
+      - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
       - --election-id=ingress-controller-leader
       - --ingress-class=nginx-internal
-      - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller-internal
+      - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
       - --validating-webhook=:8443
       - --validating-webhook-certificate=/usr/local/certificates/cert
       - --validating-webhook-key=/usr/local/certificates/key
