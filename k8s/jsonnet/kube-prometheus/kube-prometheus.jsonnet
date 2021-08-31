@@ -15,12 +15,18 @@ local kp =
       common+: {
         namespace: 'monitoring',
       },
+      // disable HA on prometheus & alertmanager to reduce resource consumption
       prometheus+: {
         name: 'main',
+        replicas: 1,
+      },
+      alertmanager+: {
+        replicas: 1,
       },
     },
   };
 // kube-prometheus components
+
 local kpComponents = [
   kp.prometheusOperator,
 
