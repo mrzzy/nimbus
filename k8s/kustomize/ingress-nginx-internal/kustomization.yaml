@@ -1,0 +1,46 @@
+#
+# nimbus
+# ingress-nginx for internal services kustomization
+#
+
+# deploy ingress nginx for ingress support for internal services only accessible
+# via bastion host.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+nameSuffix: -internal
+namespace: ingress-nginx-internal
+commonLabels:
+  app.kubernetes.io/name: ingress-nginx-internal
+  app.kubernetes.io/instance: ingress-nginx-internal
+resources:
+- https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.47.0/deploy/static/provider/cloud/deploy.yaml
+patches:
+# patch controller to use a distinct ingress class to target ingresses for internal services.
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    labelSelector: "app.kubernetes.io/component=controller"
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/args
+      value:
+      - /nginx-ingress-controller
+      - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller-internal
+      - --election-id=ingress-controller-leader
+      - --ingress-class=nginx-internal
+      - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller-internal
+      - --validating-webhook=:8443
+      - --validating-webhook-certificate=/usr/local/certificates/cert
+      - --validating-webhook-key=/usr/local/certificates/key
+
+# patch ingress service to nodeport to avoid creating a publicly exposed load balancer
+# this limits traffic to this ingress only from the manually configured bastion host
+- target:
+    version: v1
+    kind: Service
+    name: ingress-nginx-controller
+  patch: |-
+    - op: replace
+      path: /spec/type
+      value: NodePort
