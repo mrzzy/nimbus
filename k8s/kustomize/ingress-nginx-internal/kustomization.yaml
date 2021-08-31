@@ -59,15 +59,6 @@ patches:
 
 # patches to namespace cluster scoped resources to prevent name collisions
 - target:
-    group: admissionregistration.k8s.io
-    version: v1
-    kind: ValidatingWebhookConfiguration
-    name: ingress-nginx-admission
-  patch: |
-    - op: replace
-      path: /metadata/name
-      value: ingress-nginx-internal-admission
-- target:
     group: rbac.authorization.k8s.io
     version: v1
     kind: ClusterRole
@@ -114,3 +105,11 @@ patches:
     - op: replace
       path: /spec/type
       value: NodePort
+# disable validating webhook due to issue with certificate issues with different
+# conflicting ingress controllers: https://github.com/kubernetes/ingress-nginx/issues/6458
+- patch: |-
+    $patch: delete
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    metadata:
+      name: ingress-nginx-admission
