@@ -43,6 +43,20 @@ patches:
       - --validating-webhook=:8443
       - --validating-webhook-certificate=/usr/local/certificates/cert
       - --validating-webhook-key=/usr/local/certificates/key
+# when performing leader election the ingress controller tries to create the configmap
+# with the name <election-id>-<ingress-class>. The default Role attached to the service
+# account assumes a static ingress-class. Hence we patch the role to allow the updating
+# of the configmap with the correct name.
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: Role
+    name: ingress-nginx
+  patch: |-
+    - op: replace
+      path: /rules/6/resourceNames/0
+      value: ingress-controller-leader-nginx-internal
+
 # patches to namespace cluster scoped resources to prevent name collisions
 - target:
     group: admissionregistration.k8s.io
