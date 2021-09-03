@@ -123,7 +123,7 @@ module "bastion_singapore" {
 
   # port forward HTTP/HTTPs traffic to internal ingress services's Nodeports
   port_forwards = {
-    80  = "${local.sg_lke_node_ip}:30616"
+    80  = "${local.sg_lke_node_ip}:30618"
     443 = "${local.sg_lke_node_ip}:32231"
   }
 

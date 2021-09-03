@@ -37,6 +37,7 @@ PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING 
  iptables -t nat -D PREROUTING -p tcp --dport ${src_port} -j DNAT --to-destination ${dest};
 %{~ endfor ~}
 
+# generate peer sections
 %{ for public_key, address_ip in wg_peers ~}
 [Peer]
 PublicKey = ${public_key}
