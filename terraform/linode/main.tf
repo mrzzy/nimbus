@@ -2,12 +2,6 @@
 # nimbus
 # terraform deploy for linode cloud
 #
-
-locals {
-  sg_region = "ap-south"
-  lan_cidr = "192.168.128.0/17"
-}
-
 terraform {
   backend "remote" {
     organization = "mrzzy-co"
@@ -29,6 +23,26 @@ terraform {
 provider "linode" {
   token = var.linode_token
 }
+
+## Data Sources
+data "linode_instances" "lke_singapore_nodes" {
+  filter {
+    name   = "id"
+    values = local.sg_lke_node_ids
+  }
+}
+
+locals {
+  sg_region = "ap-south"
+  lan_cidr  = "192.168.128.0/17"
+  sg_lke_node_ids = flatten(
+    [for pool in linode_lke_cluster.singapore.pool :
+      [for node in pool.nodes : node.instance_id]
+    ]
+  )
+  sg_lke_node_ip = data.linode_instances.lke_singapore_nodes.instances[0].private_ip_address
+}
+
 
 ## Resources ##
 resource "linode_sshkey" "mrzzy_ed25519" {
@@ -53,13 +67,9 @@ resource "linode_lke_cluster" "singapore" {
 
 # firewall to safeguard against giving unintentional public access to LKE k8s nodeport services
 resource "linode_firewall" "lke_singapore" {
-  label = "${var.prefix}-sgp-lke-nodes"
-  tags  = setunion(var.tags, ["sgp"])
-  linodes = flatten(
-    [for pool in linode_lke_cluster.singapore.pool :
-      [for node in pool.nodes : node.instance_id]
-    ]
-  )
+  label   = "${var.prefix}-sgp-lke-nodes"
+  tags    = setunion(var.tags, ["sgp"])
+  linodes = local.sg_lke_node_ids
 
   inbound_policy = "DROP"
 
@@ -109,6 +119,12 @@ module "bastion_singapore" {
   wireguard_peers = {
     "0wBcwb/2jI+Xj8TBMkKYdRUHgjNKpb0dkdCrFv9AlAs=" = "172.31.255.2" # pragma: allowlist secret
     "qWVEEa0sMEWnVqTNqWaGz9WFEB+4ur+Idu3Uip58DxE=" = "172.31.255.3" # pragma: allowlist secret
+  }
+
+  # port forward HTTP/HTTPs traffic to internal ingress services's Nodeports
+  port_forwards = {
+    80  = "${local.sg_lke_node_ip}:30616"
+    443 = "${local.sg_lke_node_ip}:32231"
   }
 
   tags = setunion(var.tags, ["sgp"])
