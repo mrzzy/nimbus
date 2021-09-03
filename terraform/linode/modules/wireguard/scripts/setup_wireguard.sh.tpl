@@ -3,7 +3,6 @@
 #
 # nimbus
 # Linode Terraform
-# Wireguard VPN Module
 # Wireguard VPN Bootstrap script template
 #
 
@@ -25,9 +24,18 @@ Address = ${wg_server["address_ip"]}/${cidr_length}
 ListenPort = ${wg_server["port"]}
 
 PostUp = echo "$(date +%s) WireGuard server started"
-PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 PostDown = echo "$(date +%s) WireGuard server stopped"
-PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+# toggle iptables forwarding rules on VPN up/down
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
+%{~ for src_port, dest in port_forwards ~}
+ iptables -t nat -A PREROUTING -p tcp --dport ${src_port} -j DNAT --to-destination ${dest}; ip6tables -t nat -A PREROUTING -p tcp --dport ${src_port} -j DNAT --to-destination ${dest};
+%{~ endfor ~}
+
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
+%{~ for src_port, dest in port_forwards ~}
+ iptables -t nat -D PREROUTING -p tcp --dport ${src_port} -j DNAT --to-destination ${dest}; ip6tables -t nat -D PREROUTING -p tcp --dport ${src_port} -j DNAT --to-destination ${dest};
+%{~ endfor ~}
 
 %{ for public_key, address_ip in wg_peers ~}
 [Peer]

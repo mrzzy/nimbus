@@ -27,7 +27,8 @@ resource "linode_stackscript" "setup_wireguard" {
       address_ip = var.wireguard_server_vpn_ip
       port       = var.wireguard_port
     }
-    wg_peers = var.wireguard_peers
+    wg_peers      = var.wireguard_peers
+    port_forwards = var.port_forwards
   })
 }
 

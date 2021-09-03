@@ -57,3 +57,9 @@ variable "tags" {
     "terraform"
   ]
 }
+
+variable "port_forwards" {
+  type        = map(string)
+  description = "Map of source to dest ip:port of port forwards to perform when forwarding traffic"
+  default     = {}
+}
