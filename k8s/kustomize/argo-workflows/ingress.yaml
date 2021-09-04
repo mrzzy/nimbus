@@ -1,0 +1,25 @@
+#
+# nimbus
+# argo workflows deploy
+# ingress
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo
+  annotations:
+    kubernetes.io/ingress.class: "nginx-internal"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  rules:
+  - host: argo.mrzzy.co
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argo-server
+            port:
+              name: web

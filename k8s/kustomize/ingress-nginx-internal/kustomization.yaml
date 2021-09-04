@@ -1,0 +1,115 @@
+#
+# nimbus
+# ingress-nginx for internal services kustomization
+#
+
+# deploy ingress nginx for ingress support for internal services only accessible
+# via bastion host.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ingress-nginx-internal
+commonLabels:
+  app.kubernetes.io/name: ingress-nginx
+  app.kubernetes.io/instance: ingress-nginx-internal
+  managed-by: nimbus
+  deployed-by: argocd
+resources:
+- https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.47.0/deploy/static/provider/cloud/deploy.yaml
+patches:
+# patch namespace name to avoid deploying the same namespace as the public ingress-nginx
+- target:
+    version: v1
+    kind: Namespace
+    name: ingress-nginx
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
+# patch controller to use a distinct ingress class to target ingresses for internal services.
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    labelSelector: "app.kubernetes.io/component=controller"
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/args
+      value:
+      - /nginx-ingress-controller
+      - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
+      - --election-id=ingress-controller-leader
+      - --ingress-class=nginx-internal
+      - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+      - --validating-webhook=:8443
+      - --validating-webhook-certificate=/usr/local/certificates/cert
+      - --validating-webhook-key=/usr/local/certificates/key
+# when performing leader election the ingress controller tries to create the configmap
+# with the name <election-id>-<ingress-class>. The default Role attached to the service
+# account assumes a static ingress-class. Hence we patch the role to allow the updating
+# of the configmap with the correct name.
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: Role
+    name: ingress-nginx
+  patch: |-
+    - op: replace
+      path: /rules/6/resourceNames/0
+      value: ingress-controller-leader-nginx-internal
+
+# patches to namespace cluster scoped resources to prevent name collisions
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: ingress-nginx
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: ingress-nginx-admission
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-admission-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRoleBinding
+    name: ingress-nginx
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-internal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRoleBinding
+    name: ingress-nginx-admission
+  patch: |
+    - op: replace
+      path: /metadata/name
+      value: ingress-nginx-admission-internal
+
+# patch ingress service to nodeport to avoid creating a publicly exposed load balancer
+# this limits traffic to this ingress only from the manually configured bastion host
+- target:
+    version: v1
+    kind: Service
+    name: ingress-nginx-controller
+  patch: |-
+    - op: replace
+      path: /spec/type
+      value: NodePort
+# disable validating webhook due to issue with certificate issues with different
+# conflicting ingress controllers: https://github.com/kubernetes/ingress-nginx/issues/6458
+- patch: |-
+    $patch: delete
+    apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    metadata:
+      name: ingress-nginx-admission
