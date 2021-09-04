@@ -50,3 +50,34 @@ resource "linode_instance" "wireguard" {
     wg_private_key = var.wireguard_server_private_key
   }
 }
+
+# firewall to limit traffic to instance to wireguard and ssh traffic only
+resource "linode_firewall" "wireguard" {
+  label   = "${var.prefix}-wireguard-firewall"
+  tags    = setunion(var.tags, ["sgp"])
+  linodes = [linode_instance.wireguard.id]
+
+  inbound_policy = "DROP"
+
+  # allow wireguard VPN traffic
+  inbound {
+    label    = "allow-wireguard"
+    action   = "ACCEPT"
+    protocol = "UDP"
+    ports    = var.wireguard_port
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  # allow ssh traffic for debugging purposes
+  inbound {
+    label    = "allow-ssh"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "22"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  outbound_policy = "ACCEPT"
+}
