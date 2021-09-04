@@ -11,7 +11,7 @@ resources:
 # deploy a single node elasticsearch cluster with kibana for visualization
 - elasticsearch.yaml
 - kibana.yaml
-
+- ingress-kibana.yaml
 namespace: elastic-system
 commonLabels:
   part-of: elastic-cloud
