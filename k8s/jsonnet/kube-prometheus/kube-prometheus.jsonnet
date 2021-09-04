@@ -84,7 +84,7 @@ local grafanaIngress = ingress(
   host='grafana.mrzzy.co',
   svcName=kp.grafana.service.metadata.name,
   svcPort=kp.grafana.service.spec.ports[0].name,
-  ingressClass='ingress-nginx',
+  ingressClass='nginx-internal',
   namespace=kp.values.common.namespace,
 );
 
