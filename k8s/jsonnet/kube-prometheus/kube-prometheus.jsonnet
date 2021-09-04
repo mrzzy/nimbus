@@ -3,6 +3,7 @@
 // kube-prometheus deployment
 //
 
+local ingress = import 'ingress.libsonnet';
 
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
@@ -78,10 +79,20 @@ local kpComponents = [
 ];
 
 
+// expose grafana service via internal ingress
+local grafanaIngress = ingress(
+  host='grafana.mrzzy.co',
+  svcName=kp.grafana.service.metadata.name,
+  svcPort=kp.grafana.service.spec.ports[0].name,
+  ingressClass='ingress-nginx',
+  namespace=kp.values.common.namespace,
+);
+
 // compile all kube-prometheus manifests as a flattened list
 local kpManifestsJson = [
   kp.kubePrometheus.namespace,
   kp.kubePrometheus.prometheusRule,
+  grafanaIngress,
 ] + std.flatMap(function(component) std.objectValues(component), kpComponents);
 
 kpManifestsJson
