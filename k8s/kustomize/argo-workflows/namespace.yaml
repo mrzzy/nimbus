@@ -1,9 +1,0 @@
-#
-# nimbus
-# argo-workflows namespace
-#
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: argo

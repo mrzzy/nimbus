@@ -49,3 +49,7 @@ k8s/kustomize/wireguard/wg0.conf
 ### jsonnet
 # ignore jsonnet-bundler's vendor dir
 vendor/
+
+### python
+# ignore python virtualenv
+/venv/
