@@ -3,6 +3,10 @@
 # Terraform Deployment: Google Cloud Platform
 #
 
+locals {
+  allow_ssh_tag = "allow-ssh"
+}
+
 terraform {
   required_version = ">=1.1.0, <1.2.0"
 
@@ -22,12 +26,27 @@ provider "google" {
   zone    = "asia-southeast1-c"
 }
 
+# custom VPC with hardened firewall rules (as compared to default VPC)
 resource "google_compute_network" "sandbox" {
   name                    = "sandbox"
   description             = "Hardend VPC Network to attach GCE resources to."
   auto_create_subnetworks = "true"
 }
 
+# allow SSH traffic to instances tagged with "allow-ssh" tag.
+resource "google_compute_firewall" "sandbox" {
+  name        = "allow-ssh"
+  network     = google_compute_network.sandbox.self_link
+  description = "allow SSH traffic to instances tagged with 'allow-ssh' tag."
+
+  direction = "INGRESS"
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = [local.allow_ssh_tag]
+}
 
 # enroll project-wide ssh key for ssh access to VMs
 resource "google_compute_project_metadata_item" "ssh_keys" {
@@ -50,6 +69,7 @@ resource "google_compute_disk" "warp_disk" {
 resource "google_compute_instance" "wrap_vm" {
   name         = "warp-box-vm"
   machine_type = "e2-standard-2"
+  tags         = [local.allow_ssh_tag]
 
   boot_disk {
     initialize_params {
@@ -62,7 +82,7 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   network_interface {
-    network = resource.google_compute_network.sandbox.self_link
+    network = google_compute_network.sandbox.self_link
     access_config {
       network_tier = "STANDARD"
     }
