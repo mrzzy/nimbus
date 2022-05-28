@@ -3,11 +3,6 @@
 # Terraform Deployment: Google Cloud Platform
 #
 
-locals {
-  # name of the VPC network to attach provisioned resources to
-  vpc_network = "default"
-}
-
 terraform {
   required_version = ">=1.1.0, <1.2.0"
 
@@ -27,9 +22,16 @@ provider "google" {
   zone    = "asia-southeast1-c"
 }
 
+resource "google_compute_network" "sandbox" {
+  name                    = "sandbox"
+  description             = "Hardend VPC Network to attach GCE resources to."
+  auto_create_subnetworks = "true"
+}
+
+
 # enroll project-wide ssh key for ssh access to VMs
 resource "google_compute_project_metadata_item" "ssh_keys" {
-  key = "ssh-keys"
+  key   = "ssh-keys"
   value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
 
@@ -60,7 +62,7 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   network_interface {
-    network = local.vpc_network
+    network = resource.google_compute_network.sandbox.self_link
     access_config {
       network_tier = "STANDARD"
     }
