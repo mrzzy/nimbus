@@ -45,7 +45,7 @@ resource "google_compute_instance" "wrap_vm" {
 
   boot_disk {
     initialize_params {
-      image = data.google_compute_image.warp_box
+      image = data.google_compute_image.warp_box.self_link
     }
   }
 
