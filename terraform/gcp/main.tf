@@ -27,6 +27,12 @@ provider "google" {
   zone    = "asia-southeast1-c"
 }
 
+# enroll project-wide ssh key for ssh access to VMs
+resource "google_compute_project_metadata_item" "ssh_keys" {
+  key = "ssh-keys"
+  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
+}
+
 # Deploy WARP Box development VM
 # https://github.com/mrzzy/warp
 data "google_compute_image" "warp_box" {
