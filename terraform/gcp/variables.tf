@@ -4,9 +4,15 @@
 # Input Variables
 #
 
+variable "has_warp_vm" {
+  type        = bool
+  description = "Whether to deploy the WARP development VM instance."
+  default     = true
+}
+
 variable "warp_image" {
   type        = string
-  description = "Name of the VM image used to boot WARP development box VM"
+  description = "Name of the VM image used to boot WARP development VM"
   default     = "warp-box"
 }
 
