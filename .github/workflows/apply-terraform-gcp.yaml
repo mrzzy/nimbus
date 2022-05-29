@@ -1,13 +1,13 @@
 #
 # Nimbus
 # Terraform: Google Cloud Platform
-# CI Pipeline
+# Deploy Pipeline
 #
 
-name: "CI/Terraform: Google Cloud Platform"
+name: "Deploy Terraform on Google Cloud Platform"
 on: push
 jobs:
-  terraform-gcp:
+  apply-terraform-gcp:
     name: "Terraform Lint, Plan & Apply: Google Cloud Platform"
     runs-on: ubuntu-20.04
     defaults:
