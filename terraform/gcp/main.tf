@@ -10,6 +10,13 @@ locals {
 terraform {
   required_version = ">=1.1.0, <1.2.0"
 
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
+  }
+
   # terraform cloud workspace to store terraform state
   # https://learn.hashicorp.com/tutorials/terraform/cloud-migrate?in=terraform/state
   cloud {
