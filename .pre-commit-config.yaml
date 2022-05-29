@@ -27,3 +27,11 @@ repos:
   rev: 0.13.0
   hooks:
   - id: check-github-workflows
+
+# lint terraform HCL formatting
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.72.1
+  hooks:
+  - id: terraform_fmt
+    args:
+      - --args=-recursive
