@@ -14,7 +14,7 @@ on:
         required: true
 jobs:
   apply-terraform-gcp:
-    name: "Terraform Lint, Plan & Apply: Google Cloud Platform"
+    name: "Apply Terraform development on GCP"
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -35,7 +35,7 @@ jobs:
       - name: "Terraform Plan"
         run: terraform plan
       - name: "Terraform Apply"
-        # if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         env:
           TF_VAR_has_warp_vm: "${{ github.event.inputs.deploy_warp_vm }}"
         run: terraform apply -auto-approve

@@ -5,8 +5,8 @@
 #
 
 name: "Cleanup costly resources on Google Cloud Platform"
-on: push
-  # schedule: [ cron: "30 22 * * *" ]
+on:
+  schedule: [ cron: "30 22 * * *" ]
 jobs:
   cleanup-terraform-gcp:
     name: "Apply lean Terraform deployment on GCP"
@@ -30,7 +30,7 @@ jobs:
       - name: "Terraform Plan"
         run: terraform plan
       - name: "Terraform Apply"
-        # if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         env:
           TF_VAR_has_warp_vm: false
         run: terraform apply -auto-approve
