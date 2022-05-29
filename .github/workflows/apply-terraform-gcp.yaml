@@ -5,7 +5,7 @@
 #
 
 name: "Deploy Terraform on Google Cloud Platform"
-on: push
+on: workflow_dispatch
 jobs:
   apply-terraform-gcp:
     name: "Terraform Lint, Plan & Apply: Google Cloud Platform"
