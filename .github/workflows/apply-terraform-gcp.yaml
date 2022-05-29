@@ -10,7 +10,7 @@ on:
     inputs:
       deploy_warp_vm:
         type: boolean
-        description: "Whether to deploy the WARP development VM."
+        description: "Deploy WARP VM"
         required: true
 jobs:
   apply-terraform-gcp:
