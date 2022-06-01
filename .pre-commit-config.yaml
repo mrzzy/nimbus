@@ -8,13 +8,10 @@ repos:
   - id: trailing-whitespace
 
 # check for secrets
-- repo: https://github.com/Yelp/detect-secrets
-  rev: v1.1.0
+- repo: https://github.com/zricethezav/gitleaks
+  rev: v8.8.6
   hooks:
-  - id: detect-secrets
-    args:
-    - '--baseline'
-    - '.secrets.baseline'
+    - id: gitleaks-docker
 
 # check for spelling mistakes
 - repo: https://github.com/codespell-project/codespell
