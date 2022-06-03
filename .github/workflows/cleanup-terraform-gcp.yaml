@@ -6,7 +6,8 @@
 
 name: "Cleanup costly resources on Google Cloud Platform"
 on:
-  schedule: [ cron: "30 22 * * *" ]
+  # UTC 1500 - 11pm in SGT
+  schedule: [ cron: "00 15 * * *" ]
 jobs:
   cleanup-terraform-gcp:
     name: "Apply lean Terraform deployment on GCP"
