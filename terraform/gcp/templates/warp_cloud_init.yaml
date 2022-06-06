@@ -3,15 +3,15 @@ bootcmd:
   # format warp disk with btrfs
   # verify that no fs exists on device before formatting
   - >-
-    test -z "$(blkid ${warp_disk_dev})" &&
-      mkfs.btrfs -L warp_disk ${ warp_disk_dev }
+    test -z "$(blkid ${warp_disk_device})" &&
+      mkfs.btrfs -L warp_disk ${ warp_disk_device }
   # create mountpoint
   - mkdir -p /home/mrzzy/disk
 
 mount:
   # fstab entry to mount warp disk with the mrzzy user as owner
-  - ["${warp_disk_dev}", "/home/mrzzy/disk", "btrfs", "defaults,uid=mrzzy,gid=mrzzy", "0", "2"]
+  - ["${warp_disk_device}", "/home/mrzzy/disk", "btrfs", "defaults,uid=mrzzy,gid=mrzzy", "0", "2"]
 
 runcmd:
   # mount warp disk as configured in fstab
-  - mount ${warp_disk_dev}
+  - mount ${warp_disk_device}
