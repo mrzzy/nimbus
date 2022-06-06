@@ -4,7 +4,8 @@
 #
 
 locals {
-  allow_ssh_tag = "allow-ssh"
+  allow_ssh_tag    = "allow-ssh"
+  warp_disk_device = "/dev/disk/by-id/warp_disk"
 }
 
 terraform {
@@ -87,6 +88,8 @@ resource "google_compute_instance" "wrap_vm" {
 
   attached_disk {
     source = google_compute_disk.warp_disk.self_link
+    // accessible via /dev/disk/by-id
+    device_name = basename(local.warp_disk_device)
   }
 
   network_interface {
@@ -95,4 +98,8 @@ resource "google_compute_instance" "wrap_vm" {
       network_tier = "STANDARD"
     }
   }
+
+  metadata_startup_script = templatefile("templates/warp_cloud_init.yaml", {
+    "warp_disk_device" : local.warp_disk_device
+  })
 }
