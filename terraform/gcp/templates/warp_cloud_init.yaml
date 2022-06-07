@@ -1,4 +1,4 @@
-#cloud-init
+#cloud-config
 bootcmd:
   # format warp disk with btrfs
   # verify that no fs exists on device before formatting
