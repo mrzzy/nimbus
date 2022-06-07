@@ -5,12 +5,13 @@ bootcmd:
   - >-
     test -z "$(blkid ${warp_disk_device})" &&
       mkfs.btrfs -L warp_disk ${ warp_disk_device }
-  # create mountpoint
+  # create mountpoint with the mrzzy user as owner
   - mkdir -p /home/mrzzy/disk
+  - chown mrzzy:mrzzy /home/mrzzy/disk
 
 mounts:
-  # fstab entry to mount warp disk with the mrzzy user as owner
-  - ["${warp_disk_device}", "/home/mrzzy/disk", "btrfs", "defaults,uid=mrzzy,gid=mrzzy", "0", "2"]
+  # fstab entry to mount warp disk
+  - ["${warp_disk_device}", "/home/mrzzy/disk", "btrfs", "defaults", "0", "2"]
 
 runcmd:
   # mount warp disk as configured in fstab
