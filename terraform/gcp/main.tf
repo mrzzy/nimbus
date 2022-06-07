@@ -99,7 +99,9 @@ resource "google_compute_instance" "wrap_vm" {
     }
   }
 
-  metadata_startup_script = templatefile("templates/warp_cloud_init.yaml", {
-    "warp_disk_device" : local.warp_disk_device
-  })
+  metadata = {
+    user-data = templatefile("templates/warp_cloud_init.yaml", {
+      "warp_disk_device" : local.warp_disk_device
+    })
+  }
 }
