@@ -9,11 +9,23 @@ on:
   workflow_dispatch:
     inputs:
       # setting: whether to deploy the warp vm
-      deploy_warp_vm:
+      warp_vm_deploy:
         type: boolean
-        description: "Deploy WARP VM"
+        description: "Deploy WARP VM?"
         required: true
-      # config vm image used to start warp vm]
+      # warp vm machine type setting to control cpu, ram & cost of deployed vm
+      warp_vm_machine_type:
+        type: choice
+        description: "WARM VM Machine Type (CPU & RAM)"
+        required: true
+        options:
+          - "e2-tiny - 0.25CPU, 1GB"
+          - "e2-small - 0.5CPU, 2GB"
+          - "e2-medium - 1CPU, 4GB"
+          - "e2-standard-2 - 2CPU, 8GB"
+          - "e2-standard-4 - 4CPU, 16GB"
+          - "e2-standard-8 - 8CPU, 32GB"
+      # config vm image used to start warp vm
       warp_vm_image:
         type: choice
         description: "WARP VM Boot Image"
@@ -21,6 +33,7 @@ on:
         options:
           - "warp-box"
           - "warp-box-dev"
+
 jobs:
   apply-terraform-gcp:
     name: "Apply Terraform deployment on GCP"
@@ -40,6 +53,6 @@ jobs:
       - name: "Terraform Apply"
         if: ${{ github.ref == 'refs/heads/main' }}
         env:
-          TF_VAR_has_warp_vm: "${{ github.event.inputs.deploy_warp_vm }}"
+          TF_VAR_has_warp_vm: "${{ github.event.inputs.warp_vm_deploy }}"
           TF_VAR_warp_image: "${{ github.event.inputs.warp_vm_image }}"
         run: terraform apply -auto-approve
