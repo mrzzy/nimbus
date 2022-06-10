@@ -19,7 +19,7 @@ on:
         description: "WARM VM Machine Type (CPU & RAM)"
         required: true
         options:
-          - "e2-tiny - 0.25CPU, 1GB"
+          - "e2-micro - 0.25CPU, 1GB"
           - "e2-small - 0.5CPU, 2GB"
           - "e2-medium - 1CPU, 4GB"
           - "e2-standard-2 - 2CPU, 8GB"
