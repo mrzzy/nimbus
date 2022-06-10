@@ -77,7 +77,7 @@ resource "google_compute_disk" "warp_disk" {
 resource "google_compute_instance" "wrap_vm" {
   count        = var.has_warp_vm ? 1 : 0
   name         = "warp-box-vm"
-  machine_type = "e2-standard-2"
+  machine_type = var.warp_machine_type
   tags         = [local.allow_ssh_tag]
 
   boot_disk {
