@@ -26,3 +26,22 @@ jobs:
         run: terraform init
       - name: "Terraform Validate"
         run: terraform validate -no-color
+
+  plan-terraform-gcp:
+    name: "Plan Terraform deployment on GCP"
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: terraform/gcp
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup Terraform CLI"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.9
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - name: "Terraform Init"
+        run: terraform init
+      - name: "Terraform Plan"
+        run:
+          terraform plan
