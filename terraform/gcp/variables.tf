@@ -16,6 +16,12 @@ variable "warp_image" {
   default     = "warp-box"
 }
 
+variable "warp_machine_type" {
+  type        = string
+  description = "GCE machine type to use for WARP development VM"
+  default     = "e2-standard-2"
+}
+
 variable "warp_disk_size_gb" {
   type        = number
   description = "Size of the disk used mounted on the WARP development VM for persistent storage"
