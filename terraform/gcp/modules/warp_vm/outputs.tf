@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Google Cloud Platform
+# Terraform Deployment: WARP VM on GCP
 # Output variables
 #
 
