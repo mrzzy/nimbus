@@ -48,7 +48,7 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   metadata = {
-    user-data = templatefile("templates/warp_cloud_init.yaml", {
+    user-data = templatefile("${path.module}/templates/warp_cloud_init.yaml", {
       "warp_disk_device" : "/dev/disk/by-id/google-${local.warp_disk_id}"
     })
   }
