@@ -71,3 +71,9 @@ module "warp_vm" {
   machine_type  = var.warp_machine_type
   allow_ssh_tag = local.allow_ssh_tag
 }
+
+# Moved tombstones for refactored resources
+moved {
+  from = google_compute_disk.warp_disk
+  to   = module.warp_vm.google_compute_disk.warp_disk
+}
