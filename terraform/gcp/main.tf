@@ -72,6 +72,10 @@ data "google_compute_image" "warp_box" {
 resource "google_compute_disk" "warp_disk" {
   name = "warp-box-disk"
   size = var.warp_disk_size_gb
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_compute_instance" "wrap_vm" {
