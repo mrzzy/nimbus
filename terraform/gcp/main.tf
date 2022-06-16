@@ -5,7 +5,6 @@
 
 locals {
   allow_ssh_tag = "allow-ssh"
-  warp_disk_id  = "warp-disk"
 }
 
 terraform {
@@ -64,48 +63,18 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
 
 # Deploy WARP Box development VM
 # https://github.com/mrzzy/warp
-data "google_compute_image" "warp_box" {
-  name = var.warp_image
+module "warp_vm" {
+  source = "./modules/warp_vm"
+
+  enabled       = var.has_warp_vm
+  image         = var.warp_image
+  machine_type  = var.warp_machine_type
+  allow_ssh_tag = local.allow_ssh_tag
+  disk_size_gb  = var.warp_disk_size_gb
 }
 
-# disk for persistent storage when using the ephemeral development VM
-resource "google_compute_disk" "warp_disk" {
-  name = "warp-box-disk"
-  size = var.warp_disk_size_gb
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "google_compute_instance" "wrap_vm" {
-  count        = var.has_warp_vm ? 1 : 0
-  name         = "warp-box-vm"
-  machine_type = var.warp_machine_type
-  tags         = [local.allow_ssh_tag]
-
-  boot_disk {
-    initialize_params {
-      image = data.google_compute_image.warp_box.self_link
-    }
-  }
-
-  attached_disk {
-    source = google_compute_disk.warp_disk.self_link
-    // accessible via /dev/disk/by-id/google- prefix
-    device_name = local.warp_disk_id
-  }
-
-  network_interface {
-    network = google_compute_network.sandbox.self_link
-    access_config {
-      network_tier = "STANDARD"
-    }
-  }
-
-  metadata = {
-    user-data = templatefile("templates/warp_cloud_init.yaml", {
-      "warp_disk_device" : "/dev/disk/by-id/google-${local.warp_disk_id}"
-    })
-  }
+# Moved tombstones for refactored resources
+moved {
+  from = google_compute_disk.warp_disk
+  to   = module.warp_vm.google_compute_disk.warp_disk
 }
