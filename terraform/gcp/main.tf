@@ -70,6 +70,7 @@ module "warp_vm" {
   image         = var.warp_image
   machine_type  = var.warp_machine_type
   allow_ssh_tag = local.allow_ssh_tag
+  disk_size_gb  = var.warp_disk_size_gb
 }
 
 # Moved tombstones for refactored resources
