@@ -52,6 +52,13 @@ module "warp_vm" {
   allow_ssh_tag = local.allow_ssh_tag
   disk_size_gb  = var.warp_disk_size_gb
 }
+locals {
+  warp_ip = (
+    module.warp_vm.external_ip == null ?
+    null : nonsensitive(module.warp_vm.external_ip)
+  )
+}
+
 
 # DNS zone & routes for mrzzy.co domain
 module "dns" {
@@ -59,5 +66,5 @@ module "dns" {
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
-  routes = var.has_warp_vm ? { "vm.warp" : module.warp_vm.external_ip } : {}
+  routes = var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {}
 }

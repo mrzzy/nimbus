@@ -16,5 +16,5 @@ resource "google_dns_record_set" "route" {
   ttl          = 300
 
   name    = "${each.key}.${google_dns_managed_zone.zone.dns_name}"
-  rrdatas = each.value
+  rrdatas = [each.value]
 }
