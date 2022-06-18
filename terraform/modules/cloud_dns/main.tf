@@ -11,10 +11,10 @@ resource "google_dns_managed_zone" "zone" {
 
 resource "google_dns_record_set" "route" {
   for_each     = var.routes
-  managed_zone = google_dns_managed_zone.mrzzy_co.name
+  managed_zone = google_dns_managed_zone.zone.name
   type         = "A"
   ttl          = 300
 
-  name    = "${each.key}.${google_dns_record_set.mrzzy_co.dns_name}"
+  name    = "${each.key}.${google_dns_managed_zone.zone.dns_name}"
   rrdatas = each.value
 }
