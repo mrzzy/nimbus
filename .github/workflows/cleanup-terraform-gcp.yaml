@@ -1,20 +1,20 @@
 #
 # Nimbus
-# Terraform: Google Cloud Platform
+# Terraform
 # Cleanup Costly Resources
 #
 
-name: "Cleanup costly resources on Google Cloud Platform"
+name: "Cleanup Costly Resources"
 on:
   # UTC 1500 - 11pm in SGT
   schedule: [ cron: "00 15 * * *" ]
 jobs:
-  cleanup-terraform-gcp:
-    name: "Apply lean Terraform deployment on GCP"
+  cleanup-terraform:
+    name: "Apply lean Terraform deployment"
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: terraform/gcp
+        working-directory: terraform
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Terraform CLI"
