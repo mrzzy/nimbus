@@ -10,6 +10,6 @@ variable "domain" {
 }
 
 variable "routes" {
-  type        = map(any)
+  type        = map(string)
   description = "Map of subdomain host to IP of DNS A routes to create."
 }

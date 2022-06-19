@@ -5,7 +5,7 @@
 #
 
 variable "ingress_allows" {
-  type        = map(any)
+  type        = map(number)
   description = <<-EOF
   List of ingress allow rules to create the firewall as map of <tag> = <port>.
   This allows ingress traffic from the internet to thespecified port on
