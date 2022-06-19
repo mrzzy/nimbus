@@ -52,11 +52,15 @@ module "gce" {
 module "warp_vm" {
   source = "./modules/warp_vm"
 
-  enabled       = var.has_warp_vm
-  image         = var.warp_image
-  machine_type  = var.warp_machine_type
-  allow_ssh_tag = local.allow_ssh_tag
-  disk_size_gb  = var.warp_disk_size_gb
+  enabled      = var.has_warp_vm
+  image        = var.warp_image
+  machine_type = var.warp_machine_type
+  tags = [
+    local.allow_ssh_tag,
+    local.allow_http_tag,
+    local.allow_https_tag,
+  ]
+  disk_size_gb = var.warp_disk_size_gb
 }
 locals {
   warp_ip = (

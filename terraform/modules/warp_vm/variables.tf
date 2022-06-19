@@ -28,7 +28,7 @@ variable "disk_size_gb" {
   default     = 10
 }
 
-variable "allow_ssh_tag" {
-  type        = string
-  description = "GCE Metadata tag to attach to enable ssh access to WARP development VM"
+variable "tags" {
+  type        = list(string)
+  description = "List of GCE Metadata tags to add to the VM instance."
 }

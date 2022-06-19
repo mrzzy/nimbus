@@ -26,7 +26,7 @@ resource "google_compute_instance" "wrap_vm" {
   count        = var.enabled ? 1 : 0
   name         = "warp-box-vm"
   machine_type = var.machine_type
-  tags         = [var.allow_ssh_tag]
+  tags         = var.tags
 
   boot_disk {
     initialize_params {
