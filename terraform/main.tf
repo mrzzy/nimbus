@@ -38,7 +38,9 @@ provider "google" {
 module "gce" {
   source = "./modules/gce"
 
-  allow_ssh_tag = local.allow_ssh_tag
+  ingress_allows = {
+    (local.allow_ssh_tag) = 22
+  }
 }
 
 # Deploy WARP Box development VM on GCP
