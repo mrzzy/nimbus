@@ -1,10 +1,10 @@
 #
 # Nimbus
-# Terraform: Google Cloud Platform
+# Terraform
 # Deploy Pipeline
 #
 
-name: "Deploy Terraform on Google Cloud Platform"
+name: "Deploy Terraform"
 on:
   workflow_dispatch:
     inputs:
