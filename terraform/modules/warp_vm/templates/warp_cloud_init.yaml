@@ -20,3 +20,5 @@ runcmd:
   # within Lets Encrypt production servers rate limit.
   - mkdir /home/mrzzy/disk/tls_cache
   - ln --symbolic --force /home/mrzzy/disk/tls_cache /etc/letsencrypt
+  # ensure certs are readable by ttyd running as the mrzzy user
+  - chown -RL mrzzy /etc/letsencrypt
