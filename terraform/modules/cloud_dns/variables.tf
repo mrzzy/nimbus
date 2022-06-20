@@ -11,5 +11,5 @@ variable "domain" {
 
 variable "routes" {
   type        = map(string)
-  description = "Map of subdomain host to IP of DNS A routes to create."
+  description = "Map of DNS A routes to create with subdomain prefix as key & IP as value."
 }
