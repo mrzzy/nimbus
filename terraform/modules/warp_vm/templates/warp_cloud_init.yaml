@@ -1,11 +1,11 @@
 #cloud-config
 bootcmd:
-  # format warp disk with btrfs
+  # format warp's persisent disk with btrfs
   # verify that no fs exists on device before formatting
   - >-
     test -z "$(blkid ${warp_disk_device})" &&
       mkfs.btrfs -L warp_disk ${ warp_disk_device }
-  # create mountpoint with
+  # create mountpoint
   - mkdir -p /home/mrzzy/disk
 
 mounts:
@@ -15,3 +15,8 @@ mounts:
 runcmd:
   # ensure warp disk is writeable by making the mrzzy user owner
   - chown mrzzy:mrzzy /home/mrzzy/disk
+  # create a symlink to cache certs written by certbot to persistent disk
+  # this prevents certbot from provisioning fresh certs on each boot & staying
+  # within Lets Encrypt production servers rate limit.
+  - mkdir /home/mrzzy/disk/tls_cache
+  - ln --symbolic --force /home/mrzzy/disk/tls_cache /etc/letsencrypt
