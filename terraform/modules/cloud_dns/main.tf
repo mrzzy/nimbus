@@ -3,6 +3,15 @@
 # Terraform Deployment: Google Cloud DNS
 #
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
+  }
+}
+
 resource "google_dns_managed_zone" "zone" {
   name        = replace(var.domain, ".", "-")
   dns_name    = "${var.domain}."

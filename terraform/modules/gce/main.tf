@@ -3,6 +3,15 @@
 # Terraform Deployment: GCE Shared Resources
 #
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
+  }
+}
+
 # custom VPC with hardened firewall rules (as compared to default VPC)
 resource "google_compute_network" "sandbox" {
   name                    = "sandbox"

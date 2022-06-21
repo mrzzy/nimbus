@@ -3,6 +3,15 @@
 # Terraform Deployment: WARP VM on GCP
 #
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
+  }
+}
+
 locals {
   warp_disk_id = "warp-disk"
 }

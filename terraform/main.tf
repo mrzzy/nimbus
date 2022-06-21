@@ -21,10 +21,6 @@ terraform {
       source  = "vancluever/acme"
       version = ">=2.9.0, <2.10.0"
     }
-    tls = {
-      source  = "hashicorp/tls"
-      version = ">=3.4.0, <3.5.0"
-    }
   }
 
   # terraform cloud workspace to store terraform state
