@@ -15,10 +15,3 @@ mounts:
 runcmd:
   # ensure warp disk is writeable by making the mrzzy user owner
   - chown mrzzy:mrzzy /home/mrzzy/disk
-  # create a symlink to cache certs written by certbot to persistent disk
-  # this prevents certbot from provisioning fresh certs on each boot & staying
-  # within Lets Encrypt production servers rate limit.
-  - mkdir /home/mrzzy/disk/tls_cache
-  - ln --symbolic --force --no-target-directory /home/mrzzy/disk/tls_cache /etc/letsencrypt
-  # ensure certs are readable by ttyd running as the mrzzy user
-  - chown -RL mrzzy /etc/letsencrypt
