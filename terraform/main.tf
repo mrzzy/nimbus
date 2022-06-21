@@ -4,9 +4,11 @@
 #
 
 locals {
-  allow_ssh_tag   = "allow-ssh"
-  allow_http_tag  = "allow-http"
-  allow_https_tag = "allow-https"
+  allow_ssh_tag     = "allow-ssh"
+  allow_http_tag    = "allow-http"
+  allow_https_tag   = "allow-https"
+  domain            = "mrzzy.co"
+  warp_vm_subdomain = "vm.warp"
 }
 
 terraform {
@@ -38,6 +40,23 @@ provider "google" {
   project = "mrzzy-sandbox"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-c"
+}
+
+# Lets Encrypt ACME TLS certificate issuer
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+# Issue TLS certs via ACME
+module "tls_certs" {
+  source = "./modules/tls_certs"
+
+  common_name = local.domain
+  domains = [
+    for subdomain in [
+      local.warp_vm_subdomain
+    ] : "${subdomain}.${local.domain}"
+  ]
 }
 
 # Shared resources for GCE VMs
@@ -73,12 +92,11 @@ locals {
   )
 }
 
-
 # DNS zone & routes for mrzzy.co domain
 module "dns" {
   source = "./modules/cloud_dns"
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
-  routes = var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {}
+  routes = var.has_warp_vm ? { local.warp_vm_subdomain : local.warp_ip } : {}
 }
