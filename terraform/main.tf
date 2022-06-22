@@ -54,7 +54,7 @@ module "tls_certs" {
   common_name = local.domain
   domains = [
     for subdomain in [
-      local.warp_vm_subdomain
+      (local.warp_vm_subdomain)
     ] : "${subdomain}.${local.domain}"
   ]
 }
@@ -98,5 +98,5 @@ module "dns" {
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
-  routes = var.has_warp_vm ? { local.warp_vm_subdomain : local.warp_ip } : {}
+  routes = var.has_warp_vm ? { (local.warp_vm_subdomain) : local.warp_ip } : {}
 }
