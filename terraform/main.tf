@@ -92,9 +92,16 @@ module "warp_vm" {
   ]
   disk_size_gb = var.warp_disk_size_gb
 
-  web_tls_cert = module.tls_cert.full_chain_cert
-  web_tls_key  = module.tls_cert.private_key
+  web_tls_cert = (
+    length(var.warp_web_tls_cert) > 0 ? var.warp_web_tls_cert :
+    module.tls_cert.full_chain_cert
+  )
+  web_tls_key = (
+    length(var.warp_web_tls_key) > 0 ? var.warp_web_tls_key :
+    module.tls_cert.full_chain_key
+  )
 }
+
 locals {
   warp_ip = (
     module.warp_vm.external_ip == null ?
