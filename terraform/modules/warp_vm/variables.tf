@@ -28,7 +28,24 @@ variable "disk_size_gb" {
   default     = 10
 }
 
-variable "allow_ssh_tag" {
+variable "tags" {
+  type        = list(string)
+  description = "List of GCE Metadata tags to add to the VM instance."
+}
+
+variable "web_tls_cert" {
   type        = string
-  description = "GCE Metadata tag to attach to enable ssh access to WARP development VM"
+  description = <<-EOF
+  Full chain TLS certificate used to verify WARP VM identity when connecting
+  via its Web Terminal. The certificate should be encoded in the PEM format.
+  EOF
+}
+
+variable "web_tls_key" {
+  type        = string
+  sensitive   = true
+  description = <<-EOF
+  Private key of the TLS certificate used by the WARP VM's Web Terminal.
+  The private key should be encoded in the PEM format.
+  EOF
 }
