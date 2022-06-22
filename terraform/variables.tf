@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Google Cloud Platform
+# Terraform Deployment
 # Input Variables
 #
 
@@ -15,7 +15,6 @@ variable "warp_image" {
   description = "Name of the VM image used to boot WARP development VM"
   default     = "warp-box"
 }
-
 variable "warp_machine_type" {
   type        = string
   description = "GCE machine type to use for WARP development VM"
@@ -26,4 +25,10 @@ variable "warp_disk_size_gb" {
   type        = number
   description = "Size of the disk used mounted on the WARP development VM for persistent storage"
   default     = 10
+}
+
+variable "gcp_service_account_key" {
+  type        = string
+  sensitive   = true
+  description = "GCP Service Account JSON Key used to authenticate with the GCP API."
 }

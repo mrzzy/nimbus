@@ -5,6 +5,10 @@
 
 terraform {
   required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
     acme = {
       source  = "vancluever/acme"
       version = ">=2.9.0, <2.10.0"
@@ -15,6 +19,7 @@ terraform {
     }
   }
 }
+
 
 # register an account with the ACME server to issue TLS certificates given private key
 resource "tls_private_key" "account" {
@@ -39,7 +44,8 @@ resource "acme_certificate" "cert" {
   dns_challenge {
     provider = "gcloud"
     config = {
-      GCE_PROJECT = var.gcp_project_id
+      GCE_PROJECT         = var.gcp_project_id
+      GCE_SERVICE_ACCOUNT = var.gcp_service_account_key
     }
   }
 }

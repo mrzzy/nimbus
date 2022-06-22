@@ -17,9 +17,15 @@ variable "domains" {
 variable "gcp_project_id" {
   type        = string
   description = <<-EOF
-  Google Cloud Project ID with the Cloud DNS service enabled.
+  GCP Project ID with the Cloud DNS service enabled.
 
   Uses Cloud DNS in the project to complete the ACME dns-01 challenge when issuing
   TLS certificates
   EOF
+}
+
+variable "gcp_service_account_key" {
+  type        = string
+  sensitive   = true
+  description = "GCP Service Account JSON Key for authenticate Cloud DNS requests for ACME."
 }

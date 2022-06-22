@@ -48,10 +48,14 @@ provider "acme" {
   server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
 
+# use terraform service account to auth DNS requests used to perform dns-01 challenge
+data "google_service_account" "terraform" {
+  account_id = "nimbus-ci-terraform"
+}
+
 # Issue TLS certs via ACME
 module "tls_certs" {
-  source         = "./modules/tls_certs"
-  gcp_project_id = local.gcp_project_id
+  source = "./modules/tls_certs"
 
   common_name = local.domain
   domains = [
@@ -60,6 +64,8 @@ module "tls_certs" {
     ] : "${subdomain}.${local.domain}"
   ]
 
+  gcp_project_id          = local.gcp_project_id
+  gcp_service_account_key = var.gcp_service_account_key
 }
 
 # Shared resources for GCE VMs
