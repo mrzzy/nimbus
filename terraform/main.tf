@@ -4,6 +4,7 @@
 #
 
 locals {
+  gcp_project_id    = "mrzzy-sandbox"
   allow_ssh_tag     = "allow-ssh"
   allow_http_tag    = "allow-http"
   allow_https_tag   = "allow-https"
@@ -37,7 +38,7 @@ terraform {
 
 # Google Cloud Platform
 provider "google" {
-  project = "mrzzy-sandbox"
+  project = local.gcp_project_id
   region  = "asia-southeast1"
   zone    = "asia-southeast1-c"
 }
@@ -49,7 +50,8 @@ provider "acme" {
 
 # Issue TLS certs via ACME
 module "tls_certs" {
-  source = "./modules/tls_certs"
+  source         = "./modules/tls_certs"
+  gcp_project_id = local.gcp_project_id
 
   common_name = local.domain
   domains = [
@@ -57,6 +59,7 @@ module "tls_certs" {
       (local.warp_vm_subdomain)
     ] : "${subdomain}.${local.domain}"
   ]
+
 }
 
 # Shared resources for GCE VMs

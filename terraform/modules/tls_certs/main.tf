@@ -16,7 +16,6 @@ terraform {
   }
 }
 
-
 # register an account with the ACME server to issue TLS certificates given private key
 resource "tls_private_key" "account" {
   algorithm = "RSA"
@@ -39,5 +38,8 @@ resource "acme_certificate" "cert" {
 
   dns_challenge {
     provider = "gcloud"
+    config {
+      GCE_PROJECT = var.gcp_project_id
+    }
   }
 }
