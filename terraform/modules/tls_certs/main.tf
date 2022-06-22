@@ -38,7 +38,7 @@ resource "acme_certificate" "cert" {
 
   dns_challenge {
     provider = "gcloud"
-    config {
+    config = {
       GCE_PROJECT = var.gcp_project_id
     }
   }
