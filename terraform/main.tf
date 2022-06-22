@@ -65,7 +65,6 @@ module "gce" {
 
   ingress_allows = {
     (local.allow_ssh_tag)   = 22
-    (local.allow_http_tag)  = 80
     (local.allow_https_tag) = 443
   }
 }
