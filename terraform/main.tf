@@ -88,7 +88,6 @@ module "warp_vm" {
   machine_type = var.warp_machine_type
   tags = [
     local.allow_ssh_tag,
-    local.allow_http_tag,
     local.allow_https_tag,
   ]
   disk_size_gb = var.warp_disk_size_gb
