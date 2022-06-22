@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: TLS Certificates
+# Terraform Deployment: TLS ACME
 #
 
 terraform {

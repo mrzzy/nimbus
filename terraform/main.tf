@@ -53,9 +53,9 @@ data "google_service_account" "terraform" {
   account_id = "nimbus-ci-terraform"
 }
 
-# Issue TLS certs via ACME
-module "tls_certs" {
-  source = "./modules/tls_certs"
+# Issue TLS cert via ACME
+module "tls_cert" {
+  source = "./modules/tls_acme"
 
   common_name = local.domain
   domains = [
@@ -92,6 +92,9 @@ module "warp_vm" {
     local.allow_https_tag,
   ]
   disk_size_gb = var.warp_disk_size_gb
+
+  web_tls_cert = module.tls_cert.full_chain_cert
+  web_tls_key  = module.tls_cert.private_key
 }
 locals {
   warp_ip = (

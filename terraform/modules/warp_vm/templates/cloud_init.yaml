@@ -8,6 +8,17 @@ bootcmd:
   # create mountpoint
   - mkdir -p /home/mrzzy/disk
 
+write_files:
+# write TLS certificate & private key for the TTYD web terminal
+- path: /etc/ssl/certs/ttyd.pem
+  content: |
+    ${ttyd_cert}
+  permissions: "0644"
+- path: /etc/ssl/private/ttyd.key
+  content: |
+    ${ttyd_key}
+  permissions: "0640"
+
 mounts:
   # fstab entry to mount warp disk
   - ["${warp_disk_device}", "/home/mrzzy/disk", "btrfs", "defaults", "0", "2"]
