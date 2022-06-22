@@ -45,7 +45,7 @@ provider "google" {
 
 # Lets Encrypt ACME TLS certificate issuer
 provider "acme" {
-  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  server_url = var.acme_server_url
 }
 
 # use terraform service account to auth DNS requests used to perform dns-01 challenge
