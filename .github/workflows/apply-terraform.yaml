@@ -55,6 +55,8 @@ jobs:
         env:
           TF_VAR_has_warp_vm: "${{ github.event.inputs.warp_vm_deploy }}"
           TF_VAR_warp_image: "${{ github.event.inputs.warp_vm_image }}"
+          # use LetsEncrypt's production server to issue trusted TLS certificates
+          TF_VAR_acme_server_url: "https://acme-v02.api.letsencrypt.org/directory"
         run: >
           terraform apply
           -auto-approve=true
