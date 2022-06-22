@@ -4,7 +4,12 @@
 #
 
 locals {
-  allow_ssh_tag = "allow-ssh"
+  gcp_project_id    = "mrzzy-sandbox"
+  allow_ssh_tag     = "allow-ssh"
+  allow_http_tag    = "allow-http"
+  allow_https_tag   = "allow-https"
+  domain            = "mrzzy.co"
+  warp_vm_subdomain = "vm.warp"
 }
 
 terraform {
@@ -14,6 +19,10 @@ terraform {
     google = {
       source  = "hashicorp/google"
       version = ">=4.22.0, <4.23.0"
+    }
+    acme = {
+      source  = "vancluever/acme"
+      version = ">=2.9.0, <2.10.0"
     }
   }
 
@@ -29,16 +38,44 @@ terraform {
 
 # Google Cloud Platform
 provider "google" {
-  project = "mrzzy-sandbox"
+  project = local.gcp_project_id
   region  = "asia-southeast1"
   zone    = "asia-southeast1-c"
+}
+
+# Lets Encrypt ACME TLS certificate issuer
+provider "acme" {
+  server_url = var.acme_server_url
+}
+
+# use terraform service account to auth DNS requests used to perform dns-01 challenge
+data "google_service_account" "terraform" {
+  account_id = "nimbus-ci-terraform"
+}
+
+# Issue TLS cert via ACME
+module "tls_cert" {
+  source = "./modules/tls_acme"
+
+  common_name = local.domain
+  domains = [
+    for subdomain in [
+      (local.warp_vm_subdomain)
+    ] : "${subdomain}.${local.domain}"
+  ]
+
+  gcp_project_id          = local.gcp_project_id
+  gcp_service_account_key = var.gcp_service_account_key
 }
 
 # Shared resources for GCE VMs
 module "gce" {
   source = "./modules/gce"
 
-  allow_ssh_tag = local.allow_ssh_tag
+  ingress_allows = {
+    (local.allow_ssh_tag)   = 22
+    (local.allow_https_tag) = 443
+  }
 }
 
 # Deploy WARP Box development VM on GCP
@@ -46,30 +83,30 @@ module "gce" {
 module "warp_vm" {
   source = "./modules/warp_vm"
 
-  enabled       = var.has_warp_vm
-  image         = var.warp_image
-  machine_type  = var.warp_machine_type
-  allow_ssh_tag = local.allow_ssh_tag
-  disk_size_gb  = var.warp_disk_size_gb
+  enabled      = var.has_warp_vm
+  image        = var.warp_image
+  machine_type = var.warp_machine_type
+  tags = [
+    local.allow_ssh_tag,
+    local.allow_https_tag,
+  ]
+  disk_size_gb = var.warp_disk_size_gb
+
+  web_tls_cert = module.tls_cert.full_chain_cert
+  web_tls_key  = module.tls_cert.private_key
+}
+locals {
+  warp_ip = (
+    module.warp_vm.external_ip == null ?
+    null : nonsensitive(module.warp_vm.external_ip)
+  )
 }
 
-# Tombstones for resources moved into child modules
-moved {
-  from = google_compute_disk.warp_disk
-  to   = module.warp_vm.google_compute_disk.warp_disk
-}
+# DNS zone & routes for mrzzy.co domain
+module "dns" {
+  source = "./modules/cloud_dns"
 
-moved {
-  from = google_compute_network.sandbox
-  to   = module.gce.google_compute_network.sandbox
-}
-
-moved {
-  from = google_compute_firewall.sandbox
-  to   = module.gce.google_compute_firewall.sandbox
-}
-
-moved {
-  from = google_compute_project_metadata_item.ssh_keys
-  to   = module.gce.google_compute_project_metadata_item.ssh_keys
+  domain = "mrzzy.co"
+  # only create dns route for WARP VM if its deployed
+  routes = var.has_warp_vm ? { (local.warp_vm_subdomain) : local.warp_ip } : {}
 }

@@ -1,12 +1,24 @@
 #cloud-config
 bootcmd:
-  # format warp disk with btrfs
+  # format warp's persisent disk with btrfs
   # verify that no fs exists on device before formatting
   - >-
     test -z "$(blkid ${warp_disk_device})" &&
       mkfs.btrfs -L warp_disk ${ warp_disk_device }
-  # create mountpoint with
+  # create mountpoint
   - mkdir -p /home/mrzzy/disk
+
+write_files:
+# write TLS certificate & private key for the TTYD web terminal
+- path: /etc/ssl/certs/ttyd.pem
+  encoding: b64
+  content: "${ttyd_cert_base64}"
+  permissions: "0644"
+- path: /etc/ssl/private/ttyd.key
+  encoding: b64
+  owner: root:ssl-cert
+  content: "${ttyd_key_base64}"
+  permissions: "0640"
 
 mounts:
   # fstab entry to mount warp disk
