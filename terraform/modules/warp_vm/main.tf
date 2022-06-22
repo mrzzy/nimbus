@@ -3,6 +3,15 @@
 # Terraform Deployment: WARP VM on GCP
 #
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">=4.22.0, <4.23.0"
+    }
+  }
+}
+
 locals {
   warp_disk_id = "warp-disk"
 }
@@ -26,7 +35,7 @@ resource "google_compute_instance" "wrap_vm" {
   count        = var.enabled ? 1 : 0
   name         = "warp-box-vm"
   machine_type = var.machine_type
-  tags         = [var.allow_ssh_tag]
+  tags         = var.tags
 
   boot_disk {
     initialize_params {
@@ -36,7 +45,7 @@ resource "google_compute_instance" "wrap_vm" {
 
   attached_disk {
     source = google_compute_disk.warp_disk.self_link
-    // accessible via /dev/disk/by-id/google- prefix
+    # accessible via /dev/disk/by-id/google- prefix
     device_name = local.warp_disk_id
   }
 
@@ -48,8 +57,10 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   metadata = {
-    user-data = templatefile("${path.module}/templates/warp_cloud_init.yaml", {
-      "warp_disk_device" : "/dev/disk/by-id/google-${local.warp_disk_id}"
+    user-data = templatefile("${path.module}/templates/cloud_init.yaml", {
+      warp_disk_device = "/dev/disk/by-id/google-${local.warp_disk_id}"
+      ttyd_cert_base64 = base64encode(var.web_tls_cert)
+      ttyd_key_base64  = base64encode(var.web_tls_key)
     })
   }
 }
