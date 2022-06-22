@@ -45,7 +45,7 @@ resource "google_compute_instance" "wrap_vm" {
 
   attached_disk {
     source = google_compute_disk.warp_disk.self_link
-    // accessible via /dev/disk/by-id/google- prefix
+    # accessible via /dev/disk/by-id/google- prefix
     device_name = local.warp_disk_id
   }
 
