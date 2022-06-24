@@ -8,6 +8,7 @@ name: "Deploy Terraform"
 on:
   workflow_dispatch:
     inputs:
+      # WARP VM inputs
       # setting: whether to deploy the warp vm
       warp_vm_deploy:
         type: boolean
@@ -25,7 +26,7 @@ on:
           - "e2-standard-2 - 2CPU, 8GB"
           - "e2-standard-4 - 4CPU, 16GB"
           - "e2-standard-8 - 8CPU, 32GB"
-      # config vm image used to start warp vm
+      # set vm image used to start warp vm
       warp_vm_image:
         type: choice
         description: "WARP VM Boot Image"
@@ -33,6 +34,18 @@ on:
         options:
           - "warp-box"
           - "warp-box-dev"
+      # whether to enable warp vm's http web terminal
+      warp_vm_http:
+        type: boolean
+        description: "WARP VM publicly accessible Web Terminal (HTTP)?"
+        required: true
+      # ip range to allow traffic to warp VM for security
+      warp_vm_allow_cidr:
+        type: string
+        description: "WARP VM limit traffic to IP CIDR range"
+        required: true
+        # by default, allow traffic from all ip addresses
+        default: "0.0.0.0/0"
 
 jobs:
   apply-terraform:
