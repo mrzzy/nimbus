@@ -27,29 +27,6 @@ variable "warp_disk_size_gb" {
   default     = 10
 }
 
-variable "warp_web_tls_cert" {
-  type        = string
-  description = <<-EOF
-  Full chain TLS certificate used to verify WARP VM identity when connecting
-  via its Web Terminal. The certificate should be encoded in the PEM format.
-
-  By default, uses a ACME server issued TLS certificate.
-  EOF
-  default     = ""
-}
-
-variable "warp_web_tls_key" {
-  type        = string
-  sensitive   = true
-  description = <<-EOF
-  Private key of the TLS certificate used by the WARP VM's Web Terminal.
-  The private key should be encoded in the PEM format.
-
-  By default, users the private key of the ACME server issued TLS certificate.
-  EOF
-  default     = ""
-}
-
 variable "gcp_service_account_key" {
   type        = string
   sensitive   = true
