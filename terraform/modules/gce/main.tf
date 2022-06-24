@@ -30,9 +30,9 @@ resource "google_compute_firewall" "sandbox" {
   direction = "INGRESS"
   allow {
     protocol = "tcp"
-    ports    = ["${each.value}"]
+    ports    = ["${each.value[1]}"]
   }
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["${each.value[0]}"]
   target_tags   = [each.key]
 }
 
