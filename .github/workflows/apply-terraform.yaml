@@ -12,12 +12,12 @@ on:
       # setting: whether to deploy the warp vm
       warp_vm_deploy:
         type: boolean
-        description: "Deploy WARP VM?"
+        description: "WARP VM: Deploy?"
         required: true
       # warp vm machine type setting to control cpu, ram & cost of deployed vm
       warp_vm_machine_type:
         type: choice
-        description: "WARM VM Machine Type (CPU & RAM)"
+        description: "WARM VM: Machine Type (CPU & RAM)"
         required: true
         options:
           - "e2-micro - 0.25CPU, 1GB"
@@ -29,7 +29,7 @@ on:
       # set vm image used to start warp vm
       warp_vm_image:
         type: choice
-        description: "WARP VM Boot Image"
+        description: "WARP VM: Boot Image"
         required: true
         options:
           - "warp-box"
@@ -37,12 +37,12 @@ on:
       # whether to enable warp vm's http web terminal
       warp_vm_http:
         type: boolean
-        description: "WARP VM publicly accessible Web Terminal (HTTP)?"
+        description: "WARP VM: Publicly accessible Web Terminal (HTTP)?"
         required: true
       # ip range to allow traffic to warp VM for security
       warp_vm_allow_cidr:
         type: string
-        description: "WARP VM limit traffic to IP CIDR range"
+        description: "WARP VM: Allow traffic from IPs (CIDR range):"
         required: true
         # by default, allow traffic from all ip addresses
         default: "0.0.0.0/0"
