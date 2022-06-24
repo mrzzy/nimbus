@@ -35,12 +35,12 @@ on:
           - "warp-box"
           - "warp-box-dev"
       # whether to enable warp vm's http web terminal
-      warp_vm_http:
+      warp_vm_http_term:
         type: boolean
         description: "WARP VM: Publicly accessible Web Terminal (HTTP)?"
         required: true
       # ip range to allow traffic to warp VM for security
-      warp_vm_allow_cidr:
+      warp_vm_allow_ip:
         type: string
         description: "WARP VM: Allow traffic from IPs (CIDR range):"
         required: true
@@ -68,6 +68,8 @@ jobs:
         env:
           TF_VAR_has_warp_vm: "${{ github.event.inputs.warp_vm_deploy }}"
           TF_VAR_warp_image: "${{ github.event.inputs.warp_vm_image }}"
+          TF_VAR_warp_http_terminal: "${{ github.event.inputs.warp_vm_http_term }}"
+          TF_VAR_warp_allow_ip: "{{ github.event.inputsf.warp_vm_allow_ip }}"
           # use LetsEncrypt's production server to issue trusted TLS certificates
           TF_VAR_acme_server_url: "https://acme-v02.api.letsencrypt.org/directory"
         run: >

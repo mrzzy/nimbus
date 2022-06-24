@@ -27,6 +27,18 @@ variable "warp_disk_size_gb" {
   default     = 10
 }
 
+variable "warp_http_terminal" {
+  type        = bool
+  description = "Whether to enable the publicly accessible HTTP web terminal on WARP VM."
+  default     = false
+}
+
+variable "warp_allow_ip" {
+  type        = string
+  description = "Allow traffic to WARP VM from the given IP range in CIDR notation."
+  default     = "0.0.0.0/0"
+}
+
 variable "gcp_service_account_key" {
   type        = string
   sensitive   = true
