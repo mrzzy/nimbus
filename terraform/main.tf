@@ -5,11 +5,13 @@
 
 locals {
   gcp_project_id    = "mrzzy-sandbox"
-  allow_ssh_tag     = "allow-ssh"
-  allow_http_tag    = "allow-http"
-  allow_https_tag   = "allow-https"
   domain            = "mrzzy.co"
   warp_vm_subdomain = "vm.warp"
+
+  # GCE tags for firewall rules
+  allow_ssh_tag       = "allow-ssh"
+  allow_https_tag     = "allow-https"
+  warp_allow_http_tag = "warp-allow-http"
 }
 
 terraform {
@@ -73,8 +75,9 @@ module "gce" {
   source = "./modules/gce"
 
   ingress_allows = {
-    (local.allow_ssh_tag)   = ["0.0.0.0/0", 22]
-    (local.allow_https_tag) = ["0.0.0.0/0", 443]
+    (local.allow_ssh_tag)       = ["0.0.0.0/0", 22]
+    (local.allow_https_tag)     = ["0.0.0.0/0", 443]
+    (local.warp_allow_http_tag) = [var.warp_allow_ip, 80]
   }
 }
 
@@ -86,10 +89,14 @@ module "warp_vm" {
   enabled      = var.has_warp_vm
   image        = var.warp_image
   machine_type = var.warp_machine_type
-  tags = [
-    local.allow_ssh_tag,
-    local.allow_https_tag,
-  ]
+  tags = concat(
+    [
+      local.allow_ssh_tag,
+      local.allow_https_tag,
+    ],
+    # allow http for warp vm's http terminal if enabled
+    var.warp_http_terminal ? [local.warp_allow_http_tag] : []
+  )
   disk_size_gb = var.warp_disk_size_gb
 
   web_tls_cert = module.tls_cert.full_chain_cert
