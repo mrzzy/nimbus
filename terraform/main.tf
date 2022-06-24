@@ -75,9 +75,9 @@ module "gce" {
   source = "./modules/gce"
 
   ingress_allows = {
-    (local.allow_ssh_tag)       = ["0.0.0.0/0", 22]
-    (local.allow_https_tag)     = ["0.0.0.0/0", 443]
-    (local.warp_allow_http_tag) = [var.warp_allow_ip, 80]
+    (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
+    (local.allow_https_tag)     = ["0.0.0.0/0", "443"]
+    (local.warp_allow_http_tag) = [var.warp_allow_ip, "80"]
   }
 }
 
