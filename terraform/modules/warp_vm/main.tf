@@ -37,6 +37,9 @@ resource "google_compute_instance" "wrap_vm" {
   machine_type = var.machine_type
   tags         = var.tags
 
+  # allow WARP VM to be stopped to update attributes such as machine_type.
+  allow_stopping_for_update = true
+
   boot_disk {
     initialize_params {
       image = data.google_compute_image.warp_box.self_link
