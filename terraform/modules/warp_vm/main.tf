@@ -24,6 +24,13 @@ data "google_compute_network" "sandbox" {
   name = "sandbox"
 }
 
+# service account for VM instance - needed to restrict IAM permissions on WARP VM
+# as the default service account gives GCP project wide editor permissions.
+resource "google_service_account" "warp" {
+  account_id   = "warp-vm"
+  display_name = "Service account for WARP VM instance(s)."
+}
+
 # disk for persistent storage when using the ephemeral development VM
 resource "google_compute_disk" "warp_disk" {
   name = "warp-box-disk"
@@ -57,6 +64,13 @@ resource "google_compute_instance" "wrap_vm" {
     access_config {
       network_tier = "STANDARD"
     }
+  }
+
+  service_account {
+    email = google_service_account.warp.email
+    # access control is enforced at the IAM role level
+    # https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#using
+    scopes = ["cloud-platform"]
   }
 
   metadata = {
