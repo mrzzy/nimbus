@@ -50,15 +50,9 @@ provider "acme" {
   server_url = var.acme_server_url
 }
 
-# use terraform service account to auth DNS requests used to perform dns-01 challenge
-data "google_service_account" "terraform" {
-  account_id = "nimbus-ci-terraform"
-}
-
-# enroll project-wide ssh key for ssh access to VMs
-resource "google_compute_project_metadata_item" "ssh_keys" {
-  key   = "ssh-keys"
-  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
+# Shared IAM resources
+module "iam" {
+  source = "./modules/iam"
 }
 
 # Issue TLS cert via ACME
@@ -105,8 +99,11 @@ module "warp_vm" {
   )
   disk_size_gb = var.warp_disk_size_gb
 
+  service_account = module.iam.warp_vm_service_account
+
   web_tls_cert = module.tls_cert.full_chain_cert
   web_tls_key  = module.tls_cert.private_key
+
 }
 locals {
   warp_ip = (
@@ -122,4 +119,10 @@ module "dns" {
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
   routes = var.has_warp_vm ? { (local.warp_vm_subdomain) : local.warp_ip } : {}
+}
+
+# enroll project-wide ssh key for ssh access to VMs
+resource "google_compute_project_metadata_item" "ssh_keys" {
+  key   = "ssh-keys"
+  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
