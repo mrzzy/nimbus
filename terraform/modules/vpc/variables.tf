@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: GCE Shared Resources
+# Terraform Deployment: VPC Network
 # Input Variables
 #
 

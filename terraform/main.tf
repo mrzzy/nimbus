@@ -55,6 +55,12 @@ data "google_service_account" "terraform" {
   account_id = "nimbus-ci-terraform"
 }
 
+# enroll project-wide ssh key for ssh access to VMs
+resource "google_compute_project_metadata_item" "ssh_keys" {
+  key   = "ssh-keys"
+  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
+}
+
 # Issue TLS cert via ACME
 module "tls_cert" {
   source = "./modules/tls_acme"
@@ -70,9 +76,9 @@ module "tls_cert" {
   gcp_service_account_key = var.gcp_service_account_key
 }
 
-# Shared resources for GCE VMs
-module "gce" {
-  source = "./modules/gce"
+# Shared VPC network VM instances reside on
+module "vpc" {
+  source = "./modules/vpc"
 
   ingress_allows = {
     (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
