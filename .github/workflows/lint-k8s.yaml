@@ -1,0 +1,43 @@
+#
+# Nimbus
+# K8s
+# Lint K8s Manifests
+#
+
+name: "Lint K8s Manifests"
+on: push
+jobs:
+  dry-run-k8s:
+    name: "Dry Run K8s Manifests"
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: k8s
+    steps:
+      - uses: actions/checkout@v2
+      # setup GCP access to gcloud sdk
+      - name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0.8"
+        with:
+          credentials_json: "${{ secrets.GCP_SERVICE_ACCCOUNT_JSON }}"
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v0.6"
+        with:
+          version: "392.0.0"
+
+      # use gcloud to obtain credentials for kubectl
+      - name: "Install kubectl"
+        uses: azure/setup-kubectl@v2.0
+        with:
+           version: "v1.24.0"
+      - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
+        run: |
+          gcloud container clusters get-credentials \
+            --zone asia-southeast1-c \
+            --project mrzzy-sandbox \
+            k8s-cluster
+
+      - name: "Perform server-side Dry Run of K8s manifests"
+        run: |
+          kubectl apply -k base \
+            --dry-run='server'
