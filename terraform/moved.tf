@@ -19,3 +19,8 @@ moved {
   from = google_compute_firewall.sandbox
   to   = module.gce.google_compute_firewall.sandbox
 }
+
+moved {
+  from = module.gce.google_compute_network.sandbox
+  to   = module.vpc.google_compute_network.sandbox
+}
