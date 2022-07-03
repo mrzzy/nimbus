@@ -21,6 +21,6 @@ moved {
 }
 
 moved {
-  from = google_compute_project_metadata_item.ssh_keys
-  to   = module.gce.google_compute_project_metadata_item.ssh_keys
+  from = module.gce.google_compute_network.sandbox
+  to   = module.vpc.google_compute_network.sandbox
 }
