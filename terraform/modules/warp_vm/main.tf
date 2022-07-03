@@ -67,7 +67,7 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   service_account {
-    email = var.service_account
+    email = google_service_account.warp.email
     # access control is enforced at the IAM role level
     # https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#using
     scopes = ["cloud-platform"]

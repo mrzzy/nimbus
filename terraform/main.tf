@@ -101,11 +101,8 @@ module "warp_vm" {
   )
   disk_size_gb = var.warp_disk_size_gb
 
-  service_account = module.iam.warp_vm_service_account
-
   web_tls_cert = module.tls_cert.full_chain_cert
   web_tls_key  = module.tls_cert.private_key
-
 }
 locals {
   warp_ip = (

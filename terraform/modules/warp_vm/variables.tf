@@ -49,8 +49,3 @@ variable "web_tls_key" {
   The private key should be encoded in the PEM format.
   EOF
 }
-
-variable "service_account" {
-  type        = string
-  description = "Email of the GCP Service Account to run WARP VM as."
-}
