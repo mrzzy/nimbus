@@ -53,6 +53,8 @@ provider "acme" {
 # Shared IAM resources
 module "iam" {
   source = "./modules/iam"
+
+  project = local.gcp_project_id
 }
 
 # Issue TLS cert via ACME
