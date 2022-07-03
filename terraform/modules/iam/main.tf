@@ -33,30 +33,3 @@ resource "google_service_account" "warp_builder" {
   GCE VM instances.
   EOF
 }
-
-# IAM Role Bindings
-# project editor role
-resource "google_project_iam_binding" "editor" {
-  project = var.project
-  role    = "roles/editor"
-  members = [
-    google_service_account.terraform.email
-  ]
-}
-
-# compute instance admin
-resource "google_project_iam_binding" "vm_admin" {
-  project = var.project
-  role    = "roles/compute.instanceAdmin.v1"
-  members = [
-    google_service_account.warp_builder.email
-  ]
-}
-
-resource "google_project_iam_binding" "service_account_user" {
-  project = var.project
-  role    = "roles/iam.serviceAccountUser"
-  members = [
-    google_service_account.warp_builder.email
-  ]
-}
