@@ -37,6 +37,15 @@ resource "google_compute_disk" "warp_disk" {
   size = var.disk_size_gb
 }
 
+# allocate a static IP for WARP VM as long as its enabled.
+resource "google_compute_address" "warp" {
+  count = var.enabled ? 1 : 0
+
+  name         = "warp-vm-ip"
+  description  = "Static IP for a WARP VM instance(s)."
+  network_tier = "STANDARD"
+}
+
 # development VM instance
 resource "google_compute_instance" "wrap_vm" {
   count        = var.enabled ? 1 : 0
@@ -62,7 +71,8 @@ resource "google_compute_instance" "wrap_vm" {
   network_interface {
     network = data.google_compute_network.sandbox.self_link
     access_config {
-      network_tier = "STANDARD"
+      network_tier = one(google_compute_address.warp).network_tier
+      nat_ip       = one(google_compute_address.warp).address
     }
   }
 
