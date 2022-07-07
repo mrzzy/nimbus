@@ -106,8 +106,7 @@ module "warp_vm" {
 }
 locals {
   warp_ip = (
-    module.warp_vm.external_ip == null ?
-    null : nonsensitive(module.warp_vm.external_ip)
+    module.warp_vm.external_ip == null ? null : module.warp_vm.external_ip
   )
 }
 
