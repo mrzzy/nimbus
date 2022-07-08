@@ -4,7 +4,6 @@
 #
 
 locals {
-  gcp_project_id    = "mrzzy-sandbox"
   domain            = "mrzzy.co"
   warp_vm_subdomain = "vm.warp"
 
@@ -21,6 +20,10 @@ terraform {
     google = {
       source  = "hashicorp/google"
       version = ">=4.22.0, <4.23.0"
+    }
+    linode = {
+      source  = "linode/linode"
+      version = ">=1.28.0, <1.29.0"
     }
     acme = {
       source  = "vancluever/acme"
@@ -44,6 +47,9 @@ provider "google" {
   region  = "asia-southeast1"
   zone    = "asia-southeast1-c"
 }
+
+# Linode Cloud
+provider "linode" {}
 
 # Lets Encrypt ACME TLS certificate issuer
 provider "acme" {
