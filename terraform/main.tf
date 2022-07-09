@@ -4,6 +4,7 @@
 #
 
 locals {
+  gcp_project_id    = "mrzzy-sandbox"
   domain            = "mrzzy.co"
   warp_vm_subdomain = "vm.warp"
 
@@ -58,14 +59,14 @@ provider "acme" {
 
 # Shared IAM resources
 module "iam" {
-  source = "./modules/iam"
+  source = "./modules/gcp/iam"
 
   project = local.gcp_project_id
 }
 
 # Issue TLS cert via ACME
 module "tls_cert" {
-  source = "./modules/tls_acme"
+  source = "./modules/gcp/tls_acme"
 
   common_name = local.domain
   domains = [
@@ -80,7 +81,7 @@ module "tls_cert" {
 
 # Shared VPC network VM instances reside on
 module "vpc" {
-  source = "./modules/vpc"
+  source = "./modules/gcp/vpc"
 
   ingress_allows = {
     (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
@@ -92,7 +93,7 @@ module "vpc" {
 # Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
-  source = "./modules/warp_vm"
+  source = "./modules/gcp/warp_vm"
 
   enabled      = var.has_warp_vm
   image        = var.warp_image
@@ -118,7 +119,7 @@ locals {
 
 # DNS zone & routes for mrzzy.co domain
 module "dns" {
-  source = "./modules/cloud_dns"
+  source = "./modules/gcp/cloud_dns"
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed

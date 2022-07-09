@@ -5,10 +5,6 @@
 
 terraform {
   required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">=4.22.0, <4.23.0"
-    }
     acme = {
       source  = "vancluever/acme"
       version = ">=2.9.0, <2.10.0"
