@@ -66,7 +66,7 @@ module "iam" {
 
 # Issue TLS cert via ACME
 module "tls_cert" {
-  source = "./modules/gcp/tls_acme"
+  source = "./modules/linode/tls_acme"
 
   common_name = local.domain
   domains = [
@@ -74,9 +74,6 @@ module "tls_cert" {
       (local.warp_vm_subdomain)
     ] : "${subdomain}.${local.domain}"
   ]
-
-  gcp_project_id          = local.gcp_project_id
-  gcp_service_account_key = var.gcp_service_account_key
 }
 
 # Shared VPC network VM instances reside on
