@@ -119,7 +119,7 @@ locals {
 
 # DNS zone & routes for mrzzy.co domain
 module "dns" {
-  source = "./modules/gcp/cloud_dns"
+  source = "./modules/linode/dns"
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
