@@ -15,6 +15,7 @@ variable "warp_image" {
   description = "Name of the VM image used to boot WARP development VM"
   default     = "warp-box"
 }
+
 variable "warp_machine_type" {
   type        = string
   description = "GCE machine type to use for WARP development VM"

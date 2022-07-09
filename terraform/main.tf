@@ -22,6 +22,10 @@ terraform {
       source  = "hashicorp/google"
       version = ">=4.22.0, <4.23.0"
     }
+    linode = {
+      source  = "linode/linode"
+      version = ">=1.28.0, <1.29.0"
+    }
     acme = {
       source  = "vancluever/acme"
       version = ">=2.9.0, <2.10.0"
@@ -45,6 +49,9 @@ provider "google" {
   zone    = "asia-southeast1-c"
 }
 
+# Linode Cloud
+provider "linode" {}
+
 # Lets Encrypt ACME TLS certificate issuer
 provider "acme" {
   server_url = var.acme_server_url
@@ -52,14 +59,14 @@ provider "acme" {
 
 # Shared IAM resources
 module "iam" {
-  source = "./modules/iam"
+  source = "./modules/gcp/iam"
 
   project = local.gcp_project_id
 }
 
 # Issue TLS cert via ACME
 module "tls_cert" {
-  source = "./modules/tls_acme"
+  source = "./modules/linode/tls_acme"
 
   common_name = local.domain
   domains = [
@@ -67,14 +74,11 @@ module "tls_cert" {
       (local.warp_vm_subdomain)
     ] : "${subdomain}.${local.domain}"
   ]
-
-  gcp_project_id          = local.gcp_project_id
-  gcp_service_account_key = var.gcp_service_account_key
 }
 
 # Shared VPC network VM instances reside on
 module "vpc" {
-  source = "./modules/vpc"
+  source = "./modules/gcp/vpc"
 
   ingress_allows = {
     (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
@@ -86,7 +90,7 @@ module "vpc" {
 # Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
-  source = "./modules/warp_vm"
+  source = "./modules/gcp/warp_vm"
 
   enabled      = var.has_warp_vm
   image        = var.warp_image
@@ -112,7 +116,7 @@ locals {
 
 # DNS zone & routes for mrzzy.co domain
 module "dns" {
-  source = "./modules/cloud_dns"
+  source = "./modules/linode/dns"
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
