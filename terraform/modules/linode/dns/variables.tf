@@ -1,12 +1,12 @@
 #
 # Nimbus
-# Terraform Deployment: Google Cloud DNS
+# Terraform Deployment: Linode Managed DNS
 # Input Variables
 #
 
 variable "domain" {
   type        = string
-  description = "Domain managed by Cloud DNS"
+  description = "Domain managed by Linode Managed DNS"
 }
 
 variable "routes" {
