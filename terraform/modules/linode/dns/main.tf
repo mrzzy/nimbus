@@ -19,10 +19,6 @@ resource "linode_domain" "domain" {
 
   # create an authorizative DNS zone (master)
   type = "master"
-
-  depends_on = [
-    linode_instance.dummy
-  ]
 }
 
 resource "linode_domain_record" "route" {
@@ -34,13 +30,4 @@ resource "linode_domain_record" "route" {
 
   name   = each.key
   target = each.value
-}
-
-# TODO(mrzzy): remove instance.
-# Linode Managed DNS requires at least 1 instance to be running in order for
-# DNS records to be served. Create a dummy instance to satisfy this requirement.
-resource "linode_instance" "dummy" {
-  label  = "dns-dummy"
-  region = "ap-south"
-  type   = "g6-nanode-1"
 }
