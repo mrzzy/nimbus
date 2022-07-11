@@ -26,4 +26,4 @@ mounts:
 
 runcmd:
   # ensure warp disk is writeable by making the mrzzy user owner
-  - chown mrzzy:mrzzy /home/mrzzy/disk
+  - chown -R mrzzy:mrzzy /home/mrzzy/disk
