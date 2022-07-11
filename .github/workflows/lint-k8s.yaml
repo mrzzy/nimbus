@@ -6,6 +6,8 @@
 
 name: "Lint K8s Manifests"
 on: push
+env:
+  KUBECONFIG: /tmp/kubeconfig
 jobs:
   dry-run-k8s:
     name: "Dry Run K8s Manifests"
@@ -15,27 +17,24 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v2
-      # setup GCP access to gcloud sdk
-      - name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v0.8"
-        with:
-          credentials_json: "${{ secrets.GCP_SERVICE_ACCCOUNT_JSON }}"
-      - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v0.6"
-        with:
-          version: "392.0.0"
+      - name: "Set up linode CLI"
+        run: |
+          pip3 install linode-cli==5.21.0
 
       # use gcloud to obtain credentials for kubectl
       - name: "Install kubectl"
         uses: azure/setup-kubectl@v2.0
         with:
            version: "v1.24.0"
+
       - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
+        env:
+          LINODE_CLI_TOKEN: "${{ secrets.LINODE_CLOUD_TOKEN }}"
         run: |
-          gcloud container clusters get-credentials \
-            --zone asia-southeast1-c \
-            --project mrzzy-sandbox \
-            k8s-cluster
+          CLUSTER_ID=$(linode-cli lke clusters-list --json | jq '.[] | select(.label == "main") | .id')
+          linode-cli lke kubeconfig-view --json ${CLUSTER_ID} \
+            | jq --raw-output '.[0].kubeconfig' \
+            | base64 -d >${KUBECONFIG}
 
       - name: "Perform server-side Dry Run of K8s manifests"
         run: |
