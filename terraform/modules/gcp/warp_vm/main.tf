@@ -84,10 +84,13 @@ resource "google_compute_instance" "wrap_vm" {
   }
 
   metadata = {
+    # user data is used by cloud-init to provision the system
     user-data = templatefile("${path.module}/templates/cloud_init.yaml", {
       warp_disk_device = "/dev/disk/by-id/google-${local.warp_disk_id}"
       ttyd_cert_base64 = base64encode(var.web_tls_cert)
       ttyd_key_base64  = base64encode(var.web_tls_key)
     })
+    # VM retrieves authorized ssh keys from 'ssh-keys' metadata key.
+    ssh_keys = var.ssh_public_key
   }
 }
