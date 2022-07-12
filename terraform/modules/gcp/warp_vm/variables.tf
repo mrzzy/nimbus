@@ -49,3 +49,8 @@ variable "web_tls_key" {
   The private key should be encoded in the PEM format.
   EOF
 }
+
+variable "ssh_public_key" {
+  type        = string
+  description = "Public SSH Key to authorize on WARP VM for access via SSH."
+}

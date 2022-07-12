@@ -12,6 +12,9 @@ locals {
   allow_ssh_tag       = "allow-ssh"
   allow_https_tag     = "allow-https"
   warp_allow_http_tag = "warp-allow-http"
+
+  # mrzzy's SSH public key
+  ssh_public_key = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
 
 terraform {
@@ -105,8 +108,9 @@ module "warp_vm" {
   )
   disk_size_gb = var.warp_disk_size_gb
 
-  web_tls_cert = module.tls_cert.full_chain_cert
-  web_tls_key  = module.tls_cert.private_key
+  web_tls_cert   = module.tls_cert.full_chain_cert
+  web_tls_key    = module.tls_cert.private_key
+  ssh_public_key = local.ssh_public_key
 }
 locals {
   warp_ip = (
@@ -121,10 +125,4 @@ module "dns" {
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
   routes = var.has_warp_vm ? { (local.warp_vm_subdomain) : local.warp_ip } : {}
-}
-
-# enroll project-wide ssh key for ssh access to VMs
-resource "google_compute_project_metadata_item" "ssh_keys" {
-  key   = "ssh-keys"
-  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
