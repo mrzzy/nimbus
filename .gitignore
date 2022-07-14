@@ -40,12 +40,6 @@ tag?
 # vim-projectionist
 .projections.json
 
-### Sealed Secrets
-# ignore the public key used encrypt secrets
-cert.pem
-# Dont commit secrets
-k8s/kustomize/wireguard/wg0.conf
-
 ### jsonnet
 # ignore jsonnet-bundler's vendor dir
 vendor/
@@ -54,3 +48,7 @@ vendor/
 ### Python
 # ignore python virtualenv
 /venv/
+
+### Kubernetes
+# ignore kubeconfig
+/.kubeconfig
