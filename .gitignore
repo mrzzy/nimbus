@@ -52,3 +52,6 @@ vendor/
 ### Kubernetes
 # ignore kubeconfig
 /.kubeconfig
+
+# helm charts
+/k8s/**/charts/
