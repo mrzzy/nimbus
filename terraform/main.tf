@@ -12,6 +12,7 @@ locals {
   allow_ssh_tag       = "allow-ssh"
   allow_https_tag     = "allow-https"
   warp_allow_http_tag = "warp-allow-http"
+  warp_allow_dev_tag  = "warp-allow-dev"
 
   # mrzzy's SSH public key
   ssh_public_key = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
@@ -87,6 +88,7 @@ module "vpc" {
     (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
     (local.allow_https_tag)     = ["0.0.0.0/0", "443"]
     (local.warp_allow_http_tag) = [var.warp_allow_ip, "80"]
+    (local.warp_allow_dev_tag)  = [var.warp_allow_ip, "8080"]
   }
 }
 
@@ -104,7 +106,9 @@ module "warp_vm" {
       local.allow_https_tag,
     ],
     # allow http for warp vm's http terminal if enabled
-    var.warp_http_terminal ? [local.warp_allow_http_tag] : []
+    var.warp_http_terminal ? [local.warp_allow_http_tag] : [],
+    # expose warp vm dev port if enabled
+    var.warp_allow_dev_port ? [local.warp_allow_http_tag] : []
   )
   disk_size_gb = var.warp_disk_size_gb
 
