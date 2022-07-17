@@ -40,6 +40,15 @@ variable "warp_allow_ip" {
   default     = "0.0.0.0/0"
 }
 
+variable "warp_allow_dev_port" {
+  type        = bool
+  description = <<-EOF
+    Whether to expose port 8080 to allow access to a development server for testing.
+    Example: Access development web server on port 8080 when doing Web API development.
+  EOF
+  default     = false
+}
+
 variable "gcp_service_account_key" {
   type        = string
   sensitive   = true
