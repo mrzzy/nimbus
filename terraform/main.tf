@@ -108,7 +108,7 @@ module "warp_vm" {
     # allow http for warp vm's http terminal if enabled
     var.warp_http_terminal ? [local.warp_allow_http_tag] : [],
     # expose warp vm dev port if enabled
-    var.warp_allow_dev_port ? [local.warp_allow_http_tag] : []
+    var.warp_allow_dev_port ? [local.warp_allow_dev_tag] : []
   )
   disk_size_gb = var.warp_disk_size_gb
 
