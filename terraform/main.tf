@@ -104,7 +104,7 @@ module "vpc" {
     },
     # create allow rules for WARP VM development ports
     {
-      for port in split(",", var.warp_allow_ports) :
+      for port in compact(split(",", var.warp_allow_ports)) :
       "warp-dev-${trim(port, " ")}" => {
         "tag"  = local.warp_allow_dev_tag,
         "cidr" = var.warp_allow_ip,
