@@ -43,7 +43,7 @@ variable "warp_allow_ip" {
 variable "warp_allow_ports" {
   type        = string
   description = "Addditional Comma-seperated ports to enable on WARP VM for development purposes."
-  default     = "69, 8888"
+  default     = ""
 }
 
 variable "gcp_service_account_key" {
