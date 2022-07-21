@@ -25,13 +25,16 @@ resource "google_compute_firewall" "sandbox" {
 
   name        = each.key
   network     = google_compute_network.sandbox.self_link
-  description = "Allow ingress traffic to instances tagged with '${each.key}' tag."
+  description = <<-EOF
+    Allow ingress traffic to port ${each.value["port"]} on instances
+    tagged with '${each.value["tag"]}' tag."
+  EOF
 
   direction = "INGRESS"
   allow {
     protocol = "tcp"
-    ports    = ["${each.value[1]}"]
+    ports    = ["${each.value["port"]}"]
   }
-  source_ranges = ["${each.value[0]}"]
-  target_tags   = [each.key]
+  source_ranges = ["${each.value["cidr"]}"]
+  target_tags   = [each.value["tag"]]
 }

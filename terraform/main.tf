@@ -85,10 +85,26 @@ module "vpc" {
   source = "./modules/gcp/vpc"
 
   ingress_allows = {
-    (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
-    (local.allow_https_tag)     = ["0.0.0.0/0", "443"]
-    (local.warp_allow_http_tag) = [var.warp_allow_ip, "80"]
-    (local.warp_allow_dev_tag)  = [var.warp_allow_ip, "8080"]
+    "ssh" = {
+      "tag"  = local.allow_ssh_tag,
+      "cidr" = "0.0.0.0/0",
+      "port" = "22",
+    },
+    "https" = {
+      "tag"  = local.allow_https_tag,
+      "cidr" = "0.0.0.0/0",
+      "port" = "443",
+    },
+    "http" = {
+      "tag"  = local.warp_allow_http_tag,
+      "cidr" = var.warp_allow_ip,
+      "port" = "80",
+    },
+    "dev" = {
+      "tag"  = local.warp_allow_dev_tag,
+      "cidr" = var.warp_allow_ip,
+      "port" = "8080",
+    },
   }
 }
 
