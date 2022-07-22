@@ -84,12 +84,34 @@ module "tls_cert" {
 module "vpc" {
   source = "./modules/gcp/vpc"
 
-  ingress_allows = {
-    (local.allow_ssh_tag)       = ["0.0.0.0/0", "22"]
-    (local.allow_https_tag)     = ["0.0.0.0/0", "443"]
-    (local.warp_allow_http_tag) = [var.warp_allow_ip, "80"]
-    (local.warp_allow_dev_tag)  = [var.warp_allow_ip, "8080"]
-  }
+  ingress_allows = merge(
+    {
+      "ssh" = {
+        "tag"  = local.allow_ssh_tag,
+        "cidr" = "0.0.0.0/0",
+        "port" = "22",
+      },
+      "https" = {
+        "tag"  = local.allow_https_tag,
+        "cidr" = "0.0.0.0/0",
+        "port" = "443",
+      },
+      "warp-http" = {
+        "tag"  = local.warp_allow_http_tag,
+        "cidr" = var.warp_allow_ip,
+        "port" = "80",
+      },
+    },
+    # create allow rules for WARP VM development ports
+    {
+      for port in compact(split(",", var.warp_allow_ports)) :
+      "warp-dev-${trim(port, " ")}" => {
+        "tag"  = local.warp_allow_dev_tag,
+        "cidr" = var.warp_allow_ip,
+        "port" = trim(port, " "),
+      }
+    }
+  )
 }
 
 # Deploy WARP Box development VM on GCP
@@ -104,11 +126,10 @@ module "warp_vm" {
     [
       local.allow_ssh_tag,
       local.allow_https_tag,
+      local.warp_allow_dev_tag,
     ],
     # allow http for warp vm's http terminal if enabled
     var.warp_http_terminal ? [local.warp_allow_http_tag] : [],
-    # expose warp vm dev port if enabled
-    var.warp_allow_dev_port ? [local.warp_allow_dev_tag] : []
   )
   disk_size_gb = var.warp_disk_size_gb
 
