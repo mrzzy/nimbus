@@ -38,7 +38,7 @@ on:
       warm_vm_allow_ports:
         type: string
         description: "WARP VM: Comma-separated ports to expose"
-        required: true
+        required: false
         default: ""
       # whether to enable warp vm's http web terminal
       warp_vm_http_term:
