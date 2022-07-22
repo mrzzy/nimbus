@@ -42,7 +42,7 @@ variable "warp_allow_ip" {
 
 variable "warp_allow_ports" {
   type        = string
-  description = "Addditional Comma-seperated ports to enable on WARP VM for development purposes."
+  description = "Additional Comma-seperated ports to enable on WARP VM for development purposes."
   default     = ""
 }
 
