@@ -8,6 +8,14 @@ resources:
   # Nginx ingress controller
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
 helmCharts:
+  # OAuth2 Proxy / Login page
   - name: oauth2-proxy
     version: 6.2.2
     repo: https://oauth2-proxy.github.io/manifests
+    releaseName: login
+    valuesInline:
+      ingress:
+        enabled: true
+        className: nginx
+        pathType: Prefix
+        hosts: ["auth.mrzzy.co"]
