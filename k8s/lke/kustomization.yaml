@@ -18,3 +18,4 @@ secretGenerator:
 
 patches:
   - oauth2-proxy/deployment.yaml
+  - oauth2-proxy/ingress.yaml

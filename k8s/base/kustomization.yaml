@@ -19,7 +19,3 @@ helmCharts:
         enabled: true
         className: nginx
         pathType: Prefix
-        hosts: ["auth.mrzzy.co"]
-        tls:
-        - hosts: ["auth.mrzzy.co"]
-          secretName: auth-tls
