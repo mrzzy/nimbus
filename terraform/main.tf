@@ -4,9 +4,8 @@
 #
 
 locals {
-  gcp_project_id    = "mrzzy-sandbox"
-  domain            = "mrzzy.co"
-  warp_vm_subdomain = "vm.warp"
+  domain      = "mrzzy.co"
+  domain_slug = replace(local.domain, ".", "-")
 
   # GCE tags for firewall rules
   allow_ssh_tag       = "allow-ssh"
@@ -68,16 +67,12 @@ module "iam" {
   project = local.gcp_project_id
 }
 
-# Issue TLS cert via ACME
+# Issue trusted wildcard TLS certificate for domain via ACME
 module "tls_cert" {
   source = "./modules/linode/tls_acme"
 
   common_name = local.domain
-  domains = [
-    for subdomain in [
-      (local.warp_vm_subdomain)
-    ] : "${subdomain}.${local.domain}"
-  ]
+  domains     = ["*.${local.domain}"]
 }
 
 # Shared VPC network VM instances reside on
@@ -149,5 +144,5 @@ module "dns" {
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
-  routes = var.has_warp_vm ? { (local.warp_vm_subdomain) : local.warp_ip } : {}
+  routes = var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {}
 }
