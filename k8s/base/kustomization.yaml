@@ -15,7 +15,11 @@ helmCharts:
     repo: https://oauth2-proxy.github.io/manifests
     releaseName: login
     valuesInline:
+      # expose oauth2 proxy via ingress
       ingress:
         enabled: true
         className: nginx
         pathType: Prefix
+      # only allow users with specific emails to authenticate
+      authenticatedEmailsFile:
+        enabled: true
