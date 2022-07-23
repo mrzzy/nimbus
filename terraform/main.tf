@@ -18,9 +18,6 @@ locals {
   # Linode deploy region
   linode_region = "ap-south" # singapore
 
-  # K8s Ingress external IP
-  k8s_ingress_ip = "172.104.38.188" # https://cloud.linode.com/nodebalancers/238823
-
   # mrzzy's SSH public key
   ssh_public_key = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
@@ -158,6 +155,15 @@ module "k8s" {
 
   machine_type = "g6-standard-2" # 2vCPU, 2GB
   n_workers    = 1
+
+  tls_certs = {
+    "${local.domain_slug}-tls" = {
+      "cert" = module.tls_cert.full_chain_cert,
+    }
+  }
+  tls_keys = {
+    "${local.domain_slug}-tls" = module.tls_cert.private_key,
+  }
 }
 
 # Linode: DNS zone & routes for mrzzy.co domain
@@ -168,7 +174,7 @@ module "dns" {
   # only create dns route for WARP VM if its deployed
   routes = merge({
     # dns routes for services served by k8s's ingress
-    "auth" : local.k8s_ingress_ip # oauth2-proxy oauth callbacks / login page
+    "auth" : module.k8s.ingress_ip # oauth2-proxy oauth callbacks / login page
     },
     var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {},
   )
