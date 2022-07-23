@@ -62,24 +62,7 @@ resource "kubernetes_secret" "tls" {
   }
 
   data = {
-    # convert PEM to DER by dropping BEGIN CERTIFICATE & END CERTIFICATE header / footer.
-    # k8s tls secrets stores TLS credentials in base64 encoded DER format
-    # https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets
-    "tls.crt" = base64encode(
-      join("\n",
-        slice(
-          split("\n", each.value["cert"]),
-          1, length(split("\n", each.value["cert"]))
-        )
-      )
-    )
-    "tls.key" = base64encode(
-      join("\n",
-        slice(
-          split("\n", var.tls_keys[each.key]),
-          1, length(split("\n", var.tls_keys[each.key]))
-        )
-      )
-    )
+    "tls.crt" = each.value["cert"],
+    "tls.key" = var.tls_keys[each.key],
   }
 }
