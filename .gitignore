@@ -55,3 +55,6 @@ vendor/
 
 # helm charts
 /k8s/**/charts/
+
+# secret env files
+.*.env
