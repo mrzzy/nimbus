@@ -149,6 +149,7 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
   value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 }
 
+# Linode: LKE Cluster
 module "k8s" {
   source = "./modules/linode/k8s"
   region = local.linode_region

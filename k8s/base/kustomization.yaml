@@ -7,8 +7,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
   # Nginx ingress controller
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+
 helmCharts:
-  # OAuth2 Proxy / Login page
+  # OAuth2 Proxy: authentication
   - name: oauth2-proxy
     version: 6.2.2
     repo: https://oauth2-proxy.github.io/manifests
