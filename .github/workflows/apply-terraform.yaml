@@ -35,7 +35,7 @@ on:
           - "warp-box"
           - "warp-box-dev"
       # list of comma separate ports to open on warp vm for development purposes
-      warm_vm_allow_ports:
+      warp_vm_allow_ports:
         type: string
         description: "WARP VM: Comma-separated ports to expose"
         required: false
