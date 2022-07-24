@@ -87,6 +87,7 @@ resource "google_compute_instance" "wrap_vm" {
     # user data is used by cloud-init to provision the system
     user-data = templatefile("${path.module}/templates/cloud_init.yaml", {
       warp_disk_device = "/dev/disk/by-id/google-${local.warp_disk_id}"
+      mountpoint       = "/home/mrzzy/disk"
       ttyd_cert_base64 = base64encode(var.web_tls_cert)
       ttyd_key_base64  = base64encode(var.web_tls_key)
     })
