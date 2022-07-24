@@ -18,6 +18,7 @@ repos:
   rev: v2.1.0
   hooks:
   - id: codespell
+    args: [-I, .codespellignore]
 
 # lint github actions workflows
 - repo: https://github.com/sirosen/check-jsonschema.git
