@@ -4,9 +4,9 @@ bootcmd:
   # verify that no fs exists on device before formatting
   - >-
     test -z "$(blkid ${warp_disk_device})" &&
-      mkfs.btrfs -L warp_disk ${ warp_disk_device }
-  # create mountpoint
-  - mkdir -p /home/mrzzy/disk
+      mkfs.btrfs -L warp_disk ${warp_disk_device}
+  # create mountpoint for warp's persisent disk
+  - mkdir -p ${mountpoint}
 
 write_files:
 # write TLS certificate & private key for the TTYD web terminal
@@ -22,8 +22,14 @@ write_files:
 
 mounts:
   # fstab entry to mount warp disk
-  - ["${warp_disk_device}", "/home/mrzzy/disk", "btrfs", "defaults", "0", "2"]
+  - ["${warp_disk_device}", "${mountpoint}", "btrfs", "defaults", "0", "2"]
 
 runcmd:
+  # create & mount btrfs subvolume to persist docker volumes in warp's persisent disk
+  - systemctl stop docker
+  - btrfs subvolume create ${mountpoint}/docker_volumes
+  - mount -t btrfs -o subvol=docker_volumes ${warp_disk_device} /var/lib/docker/volumes
+  - systemctl start docker
+
   # ensure warp disk is writeable by making the mrzzy user owner
-  - chown -R mrzzy:mrzzy /home/mrzzy/disk
+  - chown -R mrzzy:mrzzy ${mountpoint}
