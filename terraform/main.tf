@@ -7,11 +7,16 @@ locals {
   domain      = "mrzzy.co"
   domain_slug = replace(local.domain, ".", "-")
 
+  # GCP project
+  gcp_project_id = "mrzzy-sandbox"
   # GCE tags for firewall rules
   allow_ssh_tag       = "allow-ssh"
   allow_https_tag     = "allow-https"
   warp_allow_http_tag = "warp-allow-http"
   warp_allow_dev_tag  = "warp-allow-dev"
+
+  # Linode deploy region
+  linode_region = "ap-south" # singapore
 
   # mrzzy's SSH public key
   ssh_public_key = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
@@ -48,19 +53,20 @@ terraform {
 # Google Cloud Platform
 provider "google" {
   project = local.gcp_project_id
-  region  = "asia-southeast1"
+  region  = "asia-southeast1" # singapore
   zone    = "asia-southeast1-c"
 }
 
 # Linode Cloud
 provider "linode" {}
 
+
 # Lets Encrypt ACME TLS certificate issuer
 provider "acme" {
   server_url = var.acme_server_url
 }
 
-# Shared IAM resources
+# GCP: Shared IAM resources
 module "iam" {
   source = "./modules/gcp/iam"
 
@@ -75,7 +81,7 @@ module "tls_cert" {
   domains     = ["*.${local.domain}"]
 }
 
-# Shared VPC network VM instances reside on
+# GCP: Shared VPC network VM instances reside on
 module "vpc" {
   source = "./modules/gcp/vpc"
 
@@ -109,7 +115,7 @@ module "vpc" {
   )
 }
 
-# Deploy WARP Box development VM on GCP
+# GCP: Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
   source = "./modules/gcp/warp_vm"
@@ -137,8 +143,21 @@ locals {
     module.warp_vm.external_ip == null ? null : module.warp_vm.external_ip
   )
 }
+# GCP: enroll project-wide ssh key for ssh access to VMs
+resource "google_compute_project_metadata_item" "ssh_keys" {
+  key   = "ssh-keys"
+  value = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
+}
 
-# DNS zone & routes for mrzzy.co domain
+module "k8s" {
+  source = "./modules/linode/k8s"
+  region = local.linode_region
+
+  machine_type = "g6-standard-2" # 2vCPU, 2GB
+  n_workers    = 1
+}
+
+# Linode: DNS zone & routes for mrzzy.co domain
 module "dns" {
   source = "./modules/linode/dns"
 
