@@ -163,5 +163,5 @@ module "dns" {
 
   domain = "mrzzy.co"
   # only create dns route for WARP VM if its deployed
-  routes = var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {}
+  routes = var.has_warp_vm ? { "warp" : local.warp_ip } : {}
 }
