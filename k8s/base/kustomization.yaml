@@ -35,7 +35,10 @@ helmCharts:
         main:
           enabled: true
           ingressClassName: nginx
-        persistence:
-          cache:
-            enabled: true
-            size: 1Gi
+      # cache jellyfin in worker node specific directory
+      persistence:
+        cache:
+          enabled: true
+          type: emptyDir
+          size: 2Gi
+          accessMode: ReadWriteOnce
