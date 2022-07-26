@@ -28,3 +28,4 @@ configMapGenerator:
 patches:
   - oauth2-proxy/deployment.yaml
   - oauth2-proxy/ingress.yaml
+  - jellyfin/ingress.yaml
