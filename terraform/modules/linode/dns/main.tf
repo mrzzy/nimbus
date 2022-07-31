@@ -26,7 +26,7 @@ resource "linode_domain_record" "route" {
   domain_id = linode_domain.domain.id
 
   record_type = "A"
-  ttl_sec     = 300 # 5 minutes
+  ttl_sec     = 60 # 1 minutes
 
   name   = each.key
   target = each.value
