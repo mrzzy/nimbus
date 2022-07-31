@@ -157,6 +157,7 @@ module "k8s" {
   machine_type = "g6-standard-2" # 2vCPU, 2GB
   n_workers    = 1
 
+  # TLS credentials to add to the cluster as K8s secrets.
   tls_certs = {
     "${local.domain_slug}-tls" = {
       "cert" = module.tls_cert.full_chain_cert,
