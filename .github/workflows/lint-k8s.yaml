@@ -37,6 +37,4 @@ jobs:
             | base64 -d >${KUBECONFIG}
 
       - name: "Perform server-side Dry Run of K8s manifests"
-        run: |
-          kubectl apply -k base \
-            --dry-run='server'
+        run: kubectl kustomize --enable-helm ./lke | kubectl apply --dry-run=server -f -
