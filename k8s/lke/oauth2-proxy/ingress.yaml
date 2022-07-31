@@ -1,0 +1,26 @@
+#
+# Nimbus
+# K8s Deployment
+# OAuth2 Proxy ingress
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: login-oauth2-proxy
+spec:
+  rules:
+  - host: auth.mrzzy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: login-oauth2-proxy
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - auth.mrzzy.co
+    secretName: mrzzy-co-tls

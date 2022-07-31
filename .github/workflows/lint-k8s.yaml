@@ -1,0 +1,55 @@
+#
+# Nimbus
+# K8s
+# Lint K8s Manifests
+#
+
+name: "Lint & Diff K8s Manifests"
+on: push
+env:
+  KUBECONFIG: /tmp/kubeconfig
+jobs:
+  dry-run-k8s:
+    name: "Dry Run K8s Manifests"
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: k8s
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Set up linode CLI"
+        run: |
+          pip3 install linode-cli==5.22.0
+
+      # use gcloud to obtain credentials for kubectl
+      - name: "Install kubectl"
+        uses: azure/setup-kubectl@v2.0
+        with:
+           version: "v1.24.0"
+
+      - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
+        env:
+          LINODE_CLI_TOKEN: "${{ secrets.LINODE_LKE_TOKEN }}"
+        run: |
+          CLUSTER_ID=$(linode-cli lke clusters-list --json | jq '.[] | select(.label == "main") | .id')
+          linode-cli lke kubeconfig-view --json ${CLUSTER_ID} \
+            | jq --raw-output '.[0].kubeconfig' \
+            | base64 -d >${KUBECONFIG}
+
+      - name: "Perform server-side Dry Run of K8s manifests"
+        env:
+          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
+          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
+          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
+        run: kubectl kustomize --enable-helm ./lke | kubectl apply --dry-run=server -f -
+
+      - name: "Diff K8s manifests with current K8s Cluster's configuration"
+        env:
+          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
+          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
+          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
+        run: |
+          # kubectl diff returns status code = 1 when changes are detected,
+          # >1 if an actual error occurs
+          kubectl kustomize --enable-helm ./lke | kubectl diff -f - || EXIT_CODE=$?
+          test ${EXIT_CODE:-1} -eq 1
