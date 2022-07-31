@@ -7,6 +7,7 @@
 output "private_key" {
   description = "Issued TLS certificate's private key in PEM format."
   value       = acme_certificate.cert.private_key_pem
+  sensitive   = true
 }
 
 output "full_chain_cert" {
