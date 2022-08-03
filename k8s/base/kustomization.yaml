@@ -23,22 +23,3 @@ helmCharts:
       # only allow users with specific emails to authenticate
       authenticatedEmailsFile:
         enabled: true
-
-  # Jellyfin: media server
-  - name: jellyfin
-    version: 9.4.2
-    repo: https://k8s-at-home.com/charts/
-    releaseName: media
-    valuesInline:
-      # expose jellyfin via ingress
-      ingress:
-        main:
-          enabled: true
-          ingressClassName: nginx
-      # cache jellyfin in worker node specific directory
-      persistence:
-        cache:
-          enabled: true
-          type: emptyDir
-          size: 2Gi
-          accessMode: ReadWriteOnce

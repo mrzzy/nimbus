@@ -1,0 +1,36 @@
+#
+# Nimbus
+# K8s Deployment
+# Media Streaming Service
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+configMapGenerator:
+  - name: rtorrent-config
+    files:
+      - rtorrent.rc=rtorrent/rtorrent.rc
+resources:
+  - rtorrent/deployment.yaml
+helmCharts:
+  # Jellyfin: media server
+  - name: jellyfin
+    version: 9.4.2
+    repo: https://k8s-at-home.com/charts/
+    releaseName: media
+    valuesInline:
+      # expose jellyfin via ingress
+      ingress:
+        main:
+          enabled: true
+          ingressClassName: nginx
+      # cache jellyfin in worker node specific directory
+      persistence:
+        cache:
+          enabled: true
+          type: emptyDir
+          size: 2Gi
+          accessMode: ReadWriteOnce
+commonLabels:
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize
