@@ -1,0 +1,31 @@
+#
+# Nimbus
+# K8s Deployment: Media Streaming Server
+# RTorrent
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtorrent
+  labels:
+    app.kubernetes.io/name: rtorrent
+    app.kubernetes.io/instance: media-rtorrent
+    app.kubernetes.io/version: "0.9.8-r16"
+    app.kubernetes.io/component: torrent
+spec:
+  selector: {} # to be templated by kustomize
+  template:
+    spec:
+      containers:
+        - name: rtorrent
+          image: jesec/rtorrent:0.9.8-r16
+          imagePullPolicy: Always
+          volumeMounts:
+            # rtorrent reads config from /etc/rtorrent/rtorrent.rc by default
+            - mountPath: /etc/rtorrent
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: rtorrent-config
