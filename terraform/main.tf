@@ -178,6 +178,6 @@ module "dns" {
     "auth" : module.k8s.ingress_ip # oauth2-proxy oauth callbacks / login page
     },
     # only create dns route for WARP VM if its deployed
-    var.has_warp_vm ? { "vm.warp" : local.warp_ip } : {},
+    var.has_warp_vm ? { "warp" : local.warp_ip } : {},
   )
 }
