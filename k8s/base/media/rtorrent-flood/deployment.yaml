@@ -44,6 +44,13 @@ spec:
               name: data
             - mountPath: /session
               name: session
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            httpGet:
+              path: /
+              port: http
       volumes:
         - name: config
           configMap:
