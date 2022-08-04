@@ -8,11 +8,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rtorrent-flood
-  labels:
-    app.kubernetes.io/name: rtorrent-flood
-    app.kubernetes.io/instance: media-rtorrent-flood
-    app.kubernetes.io/version: "0.9.8-r16"
-    app.kubernetes.io/component: torrent
 spec:
   selector: {} # to be templated by kustomize
   template:
@@ -57,6 +52,6 @@ spec:
             name: rtorrent-config
         - name: data
           persistentVolumeClaim:
-            claimName: data
+            claimName: media-data
         - name: session
           emptyDir: {}

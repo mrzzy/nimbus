@@ -6,11 +6,14 @@
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  - pvc.yaml
   - deployment.yaml
   - service.yaml
-namePrefix: media-
 configMapGenerator:
   - name: rtorrent-config
     files:
       - rtorrent.rc
+namePrefix: media-
+commonLabels:
+    app.kubernetes.io/name: rtorrent-flood
+    app.kubernetes.io/instance: media-rtorrent-flood
+    app.kubernetes.io/component: torrent
