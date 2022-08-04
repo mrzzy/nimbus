@@ -1,0 +1,16 @@
+#
+# Nimbus
+# K8s Deployment: Media Streaming Server
+# Media volume claim
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

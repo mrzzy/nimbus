@@ -1,7 +1,7 @@
 #
 # Nimbus
-# K8s Deployment: Media Streaming Server
-# rTorrent-flood Deployment
+# K8s Deployment: Media Streaming Service
+# rTorrent-flood
 #
 
 apiVersion: apps/v1
@@ -42,13 +42,14 @@ spec:
               name: config
             - mountPath: /data
               name: data
-            - mountPath: /sessions
-              name: sessions
+            - mountPath: /session
+              name: session
       volumes:
         - name: config
           configMap:
             name: rtorrent-config
-        # TODO(mrzzy): create pvc claims for the following volume
         - name: data
           persistentVolumeClaim:
-            claimName: media-data
+            claimName: media
+        - name: session
+          emptyDir: {}
