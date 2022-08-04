@@ -57,6 +57,6 @@ spec:
             name: rtorrent-config
         - name: data
           persistentVolumeClaim:
-            claimName: media
+            claimName: data
         - name: session
           emptyDir: {}

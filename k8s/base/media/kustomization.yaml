@@ -6,7 +6,7 @@
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  # Rtorrent with Flood UI
+  # rtorrent with Flood UI
   - rtorrent-flood
 helmCharts:
   # Jellyfin: media server
@@ -22,6 +22,10 @@ helmCharts:
           type: emptyDir
           size: 2Gi
           accessMode: ReadWriteOnce
+
+# patch jellyfin deployment to mount media downloaded by rtorrent
+patches:
+  - patch-pvc.yaml
 commonLabels:
     app.kubernetes.io/part-of: media
     app.kubernetes.io/managed-by: kustomize
