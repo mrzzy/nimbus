@@ -1,0 +1,54 @@
+#
+# Nimbus
+# K8s Deployment: Media Streaming Server
+# rTorrent-flood Deployment
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtorrent-flood
+  labels:
+    app.kubernetes.io/name: rtorrent-flood
+    app.kubernetes.io/instance: media-rtorrent-flood
+    app.kubernetes.io/version: "0.9.8-r16"
+    app.kubernetes.io/component: torrent
+spec:
+  selector: {} # to be templated by kustomize
+  template:
+    spec:
+      containers:
+        - name: rtorrent
+          image: jesec/rtorrent-flood
+          imagePullPolicy: Always
+          env:
+            - name: FLOOD_OPTION_PORT
+              value: "3000"
+            - name: FLOOD_OPTION_ALLOWEDPATH
+              value: "/data"
+            # authentication delegated to ingress upstream
+            - name: FLOOD_OPTION_AUTH
+              value: "none"
+            # flood managed rtorrent daemon
+            - name: FLOOD_OPTION_RTCONFIG
+              value: /config/rtorrent.rc
+            - name: FLOOD_OPTION_RTSOCKET
+              value: /home/download/.local/share/rtorrent/rtorrent.sock
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /data
+              name: data
+            - mountPath: /sessions
+              name: sessions
+      volumes:
+        - name: config
+          configMap:
+            name: rtorrent-config
+        # TODO(mrzzy): create pvc claims for the following volume
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data
