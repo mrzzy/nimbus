@@ -29,6 +29,9 @@ spec:
               value: /config/rtorrent.rc
             - name: FLOOD_OPTION_RTSOCKET
               value: /home/download/.local/share/rtorrent/rtorrent.sock
+            - name: FLOOD_OPTION_BASEURI
+            # expects upstream requests with files in URL prefix
+              value: "/files/"
           ports:
             - containerPort: 3000
               name: http
@@ -44,7 +47,7 @@ spec:
             initialDelaySeconds: 0
             periodSeconds: 10
             httpGet:
-              path: /
+              path: /files/
               port: http
       volumes:
         - name: config
