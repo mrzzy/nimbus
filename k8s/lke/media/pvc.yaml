@@ -1,0 +1,15 @@
+#
+# Nimbus
+# K8s Deployment
+# Media Streaming Service PVC
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-data
+spec:
+  # default linode storage class retains the volume even after the pvc is deleted
+  # change the storage class to ensure volume gets deleted when pvc is deleted
+  # https://www.linode.com/docs/guides/deploy-volumes-with-the-linode-block-storage-csi-driver/
+  storageClassName: linode-block-storage
