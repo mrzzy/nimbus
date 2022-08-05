@@ -16,6 +16,7 @@ spec:
   - host: media.mrzzy.co
     http:
       paths:
+      # expose jellyfin service on media.mrzzy.co
       - backend:
           service:
             name: media-jellyfin
@@ -23,6 +24,7 @@ spec:
               number: 8096
         path: /
         pathType: Prefix
+      # expose flood service on media.mrzzy.co/files
       - backend:
           service:
             name: media-flood
