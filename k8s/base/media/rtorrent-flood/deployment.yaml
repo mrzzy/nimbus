@@ -28,7 +28,7 @@ spec:
             - name: FLOOD_OPTION_RTCONFIG
               value: /config/rtorrent.rc
             - name: FLOOD_OPTION_RTSOCKET
-              value: /home/download/.local/share/rtorrent/rtorrent.sock
+              value: /home/download/session/rpc.socket
             - name: FLOOD_OPTION_BASEURI
             # expects upstream requests with files in URL prefix
               value: "/files/"
@@ -40,8 +40,6 @@ spec:
               name: config
             - mountPath: /data
               name: data
-            - mountPath: /session
-              name: session
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 0
@@ -56,5 +54,3 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: media-data
-        - name: session
-          emptyDir: {}
