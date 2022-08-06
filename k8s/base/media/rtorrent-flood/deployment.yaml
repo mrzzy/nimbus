@@ -54,3 +54,5 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: media-data
+      securityContext:
+        fsGroup: 1001
