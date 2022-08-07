@@ -1,0 +1,15 @@
+#
+# Nimbus
+# K8s Deployment
+# LKE Overlay: Media Streaming Service
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - flood.yaml
+  - jellyfin.yaml
+namePrefix: media-
+commonLabels:
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize

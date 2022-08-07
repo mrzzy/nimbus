@@ -7,7 +7,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
   - ../base
-  - media/ingress.yaml
+  - ./media/ingress
 
 secretGenerator:
   # patch oauth2 proxy secret with actual secret values

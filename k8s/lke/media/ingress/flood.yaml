@@ -1,13 +1,13 @@
 #
 # Nimbus
 # K8s Deployment
-# Media Streaming Service Ingress
+# Media Streaming Service: Flood Ingress
 #
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: media
+  name: flood
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
     nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
@@ -17,14 +17,6 @@ spec:
   - host: media.mrzzy.co
     http:
       paths:
-      # expose jellyfin service on media.mrzzy.co
-      - backend:
-          service:
-            name: media-jellyfin
-            port:
-              number: 8096
-        path: /
-        pathType: Prefix
       # expose flood service on media.mrzzy.co/files
       - backend:
           service:
