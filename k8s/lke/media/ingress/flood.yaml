@@ -1,0 +1,31 @@
+#
+# Nimbus
+# K8s Deployment
+# Media Streaming Service: rtorrent-flood Ingress
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flood
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: media.mrzzy.co
+    http:
+      paths:
+      # expose flood service on media.mrzzy.co/files
+      - backend:
+          service:
+            name: media-flood
+            port:
+              number: 80
+        path: /files/
+        pathType: Prefix
+  tls:
+  - hosts:
+    - media.mrzzy.co
+    secretName: mrzzy-co-tls
