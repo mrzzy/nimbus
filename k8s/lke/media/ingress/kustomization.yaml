@@ -1,7 +1,7 @@
 #
 # Nimbus
 # K8s Deployment
-# LKE Overlay: Media Streaming Service
+# LKE Overlay: Media Streaming Service Ingresses
 #
 
 apiVersion: kustomize.config.k8s.io/v1beta1
