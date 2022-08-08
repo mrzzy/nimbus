@@ -1,0 +1,16 @@
+#
+# Nimbus
+# Media Streaming Server
+# Media Files Volume Claim
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

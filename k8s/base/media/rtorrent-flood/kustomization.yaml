@@ -1,0 +1,19 @@
+#
+# Nimbus
+# Media Streaming Service
+# rTorrent-flood
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - deployment.yaml
+  - service.yaml
+configMapGenerator:
+  - name: rtorrent-config
+    files:
+      - rtorrent.rc
+namePrefix: media-
+commonLabels:
+    app.kubernetes.io/name: rtorrent-flood
+    app.kubernetes.io/instance: media-rtorrent-flood
+    app.kubernetes.io/component: torrent
