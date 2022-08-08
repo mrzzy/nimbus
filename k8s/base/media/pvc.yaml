@@ -1,7 +1,7 @@
 #
 # Nimbus
 # Media Streaming Server
-# Media volume claim
+# Media Files Volume Claim
 #
 
 apiVersion: v1
