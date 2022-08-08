@@ -30,7 +30,7 @@ spec:
             - name: FLOOD_OPTION_RTSOCKET
               value: /home/download/session/rpc.socket
             - name: FLOOD_OPTION_BASEURI
-            # expects upstream requests with files in URL prefix
+            # expects upstream requests with '/files' URL prefix
               value: "/files/"
           ports:
             - containerPort: 3000
