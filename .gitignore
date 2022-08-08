@@ -40,10 +40,12 @@ tag?
 # vim-projectionist
 .projections.json
 
+# vim project files
+/.vim/
+
 ### jsonnet
 # ignore jsonnet-bundler's vendor dir
 vendor/
-
 
 ### Python
 # ignore python virtualenv

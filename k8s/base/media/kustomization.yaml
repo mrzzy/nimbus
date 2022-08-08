@@ -1,0 +1,34 @@
+#
+# Nimbus
+# K8s Deployment
+# Media Streaming Service
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  # persistent volume for storing media files
+  - pvc.yaml
+  # rtorrent with Flood UI
+  - rtorrent-flood
+helmCharts:
+  # Jellyfin: media server
+  - name: jellyfin
+    version: 9.4.2
+    repo: https://k8s-at-home.com/charts/
+    releaseName: media
+    valuesInline:
+      # cache jellyfin in worker node specific directory
+      persistence:
+        cache:
+          enabled: true
+          type: emptyDir
+          size: 2Gi
+          accessMode: ReadWriteOnce
+
+# patch jellyfin deployment to mount media downloaded by rtorrent
+patches:
+  - patch-pvc.yaml
+commonLabels:
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize
