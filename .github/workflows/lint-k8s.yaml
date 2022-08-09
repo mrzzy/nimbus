@@ -20,7 +20,7 @@ jobs:
       - uses: ./.github/actions/setup-lke
         with:
           linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
-          cluster-name: "name"
+          cluster-label: "main"
 
       - name: "Perform server-side Dry Run of K8s manifests"
         env:
