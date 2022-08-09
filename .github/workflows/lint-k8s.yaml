@@ -6,8 +6,6 @@
 
 name: "Lint & Diff K8s Manifests"
 on: push
-env:
-  KUBECONFIG: /tmp/kubeconfig
 jobs:
   dry-run-k8s:
     name: "Dry Run K8s Manifests"
@@ -17,7 +15,8 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup-lke
+      - name: "Setup kubectl access to LKE"
+        uses: ./.github/actions/setup-lke
         with:
           linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
           cluster-label: "main"
