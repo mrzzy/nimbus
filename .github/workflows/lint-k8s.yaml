@@ -1,13 +1,11 @@
 #
 # Nimbus
-# K8s
-# Lint K8s Manifests
+# CI
+# Lint K8s Workflow
 #
 
 name: "Lint & Diff K8s Manifests"
 on: push
-env:
-  KUBECONFIG: /tmp/kubeconfig
 jobs:
   dry-run-k8s:
     name: "Dry Run K8s Manifests"
@@ -17,24 +15,11 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v2
-      - name: "Set up linode CLI"
-        run: |
-          pip3 install linode-cli==5.22.0
-
-      # use gcloud to obtain credentials for kubectl
-      - name: "Install kubectl"
-        uses: azure/setup-kubectl@v2.0
+      - name: "Setup kubectl access to LKE"
+        uses: ./.github/actions/setup-lke
         with:
-           version: "v1.24.0"
-
-      - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
-        env:
-          LINODE_CLI_TOKEN: "${{ secrets.LINODE_LKE_TOKEN }}"
-        run: |
-          CLUSTER_ID=$(linode-cli lke clusters-list --json | jq '.[] | select(.label == "main") | .id')
-          linode-cli lke kubeconfig-view --json ${CLUSTER_ID} \
-            | jq --raw-output '.[0].kubeconfig' \
-            | base64 -d >${KUBECONFIG}
+          linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
+          cluster-label: "main"
 
       - name: "Perform server-side Dry Run of K8s manifests"
         env:

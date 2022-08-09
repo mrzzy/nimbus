@@ -1,0 +1,32 @@
+#
+# Nimbus
+# CI
+# Apply k8s manifests to LKE
+#
+
+name: "Apply K8s Manifests to LKE"
+on:
+  push:
+    branches: [main]
+jobs:
+  apply-k8s:
+    name: "Apply K8s Manifests"
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: k8s
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup kubectl access to LKE"
+        uses: ./.github/actions/setup-lke
+        with:
+          linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
+          cluster-label: "main"
+
+      - name: "Apply current K8s manifests to LKE"
+        env:
+          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
+          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
+          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
+        run: |
+          kubectl kustomize --enable-helm ./lke | kubectl apply -f -
