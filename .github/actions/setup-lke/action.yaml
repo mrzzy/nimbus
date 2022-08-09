@@ -17,6 +17,7 @@ runs:
   using: composite
   steps:
     - name: "Set up linode CLI"
+      shell: bash
       run: |
         pip3 install linode-cli==5.22.0
 
@@ -27,6 +28,7 @@ runs:
          version: "v1.24.0"
 
     - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
+      shell: bash
       env:
         LINODE_CLI_TOKEN: "${{ inputs.linode-token }}"
       run: |
