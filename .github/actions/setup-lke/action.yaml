@@ -12,8 +12,9 @@ inputs:
     required: true
   linode-token:
     description: "Access token to pass to the Linode CLI for authentication with Linode's API."
+    required: true
 runs:
-
+  using: composite
   steps:
     - name: "Set up linode CLI"
       run: |
