@@ -6,7 +6,8 @@
 
 name: "Apply K8s Manifests to LKE"
 on:
-  push: {}
+  push:
+    branches: [main]
 jobs:
   apply-k8s:
     name: "Apply K8s Manifests"
