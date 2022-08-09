@@ -32,11 +32,13 @@ runs:
       env:
         LINODE_CLI_TOKEN: "${{ inputs.linode-token }}"
       run: |
+        set -ex -o pipefail
         # query cluster id given cluster name
         CLUSTER_ID=$(linode-cli lke clusters-list --json \
           | jq '.[] | select(.label == "${{ inputs.cluster-label }}") | .id')
 
         # install kubeconfig: credentials for cluster access
+        mkdir -p ${HOME}/.kube
         linode-cli lke kubeconfig-view --json ${CLUSTER_ID} \
           | jq --raw-output '.[0].kubeconfig' \
           | base64 -d >${HOME}/.kube/config
