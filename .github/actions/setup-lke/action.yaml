@@ -1,0 +1,43 @@
+#
+# Nimbus
+# CI
+# Setup LKE Action
+#
+
+name: "Setup LKE"
+description: "Configures kubectl access to an Linode Kubernetes Cluster."
+inputs:
+  cluster-label:
+    description: "Label of the target LKE cluster to connect to."
+    required: true
+  linode-token:
+    description: "Access token to pass to the Linode CLI for authentication with Linode's API."
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: "Set up linode CLI"
+      shell: bash
+      run: |
+        pip3 install linode-cli==5.22.0
+
+    - name: "Install kubectl"
+      uses: azure/setup-kubectl@v2.0
+      with:
+         version: "v1.24.0"
+
+    - name: "Obtain credentials for kubectl to authenticate with the K8s Cluster"
+      shell: bash
+      env:
+        LINODE_CLI_TOKEN: "${{ inputs.linode-token }}"
+      run: |
+        set -ex -o pipefail
+        # query cluster id given cluster name
+        CLUSTER_ID=$(linode-cli lke clusters-list --json \
+          | jq '.[] | select(.label == "${{ inputs.cluster-label }}") | .id')
+
+        # install kubeconfig: credentials for cluster access
+        mkdir -p ${HOME}/.kube
+        linode-cli lke kubeconfig-view --json ${CLUSTER_ID} \
+          | jq --raw-output '.[0].kubeconfig' \
+          | base64 -d >${HOME}/.kube/config
