@@ -21,7 +21,6 @@ runs:
       run: |
         pip3 install linode-cli==5.22.0
 
-    # use gcloud to obtain credentials for kubectl
     - name: "Install kubectl"
       uses: azure/setup-kubectl@v2.0
       with:
