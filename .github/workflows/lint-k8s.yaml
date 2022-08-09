@@ -17,7 +17,7 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup-lke.yaml
+      - uses: ./.github/actions/setup-lke
         with:
           linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
           cluster-name: "name"
