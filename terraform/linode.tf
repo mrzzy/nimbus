@@ -35,10 +35,7 @@ module "k8s" {
 
 # Linode: DNS zone & routes for mrzzy.co domain
 locals {
-  warp_ip = (
-    # TODO(mrzzy): this conditional seems to do nothing, can we remove it?
-    module.warp_vm.external_ip == null ? null : module.warp_vm.external_ip
-  )
+  warp_ip = module.warp_vm.external_ip
 }
 module "dns" {
   source = "./modules/linode/dns"
