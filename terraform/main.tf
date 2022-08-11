@@ -19,6 +19,10 @@ terraform {
       source  = "vancluever/acme"
       version = ">=2.9.0, <2.10.0"
     }
+    b2 = {
+      source  = "Backblaze/b2"
+      version = "0.8.1"
+    }
   }
 
   # terraform cloud workspace to store terraform state
@@ -41,3 +45,6 @@ module "tls_cert" {
   common_name = local.domain
   domains     = ["*.${local.domain}"]
 }
+
+# Backblaze B2 Cloud Storage provider
+provider "b2" {}
