@@ -64,3 +64,9 @@ resource "b2_bucket" "volt_bkp" {
     mode      = "SSE-B2"
   }
 }
+
+# store media files for media streaming service
+resource "b2_bucket" "media" {
+  bucket_name = "${local.domain_slug}-media"
+  bucket_type = "allPrivate"
+}
