@@ -3,6 +3,11 @@
 # Terraform Deployment
 #
 
+locals {
+  domain      = "mrzzy.co"
+  domain_slug = replace(local.domain, ".", "-")
+}
+
 terraform {
   required_version = ">=1.2.0, <1.3.0"
 
@@ -48,3 +53,14 @@ module "tls_cert" {
 
 # Backblaze B2 Cloud Storage provider
 provider "b2" {}
+
+# off-site backup location for volt (laptop)
+resource "b2_bucket" "volt_bkp" {
+  bucket_name = "${local.domain_slug}-volt-backup"
+  bucket_type = "allPrivate"
+
+  default_server_side_encryption {
+    algorithm = "AES256"
+    mode      = "SSE-B2"
+  }
+}

@@ -4,9 +4,6 @@
 #
 
 locals {
-  domain      = "mrzzy.co"
-  domain_slug = replace(local.domain, ".", "-")
-
   # Linode deploy region
   linode_region = "ap-south" # singapore
 }
