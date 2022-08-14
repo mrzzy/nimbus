@@ -34,3 +34,5 @@ repos:
     args:
       - --args=-recursive -no-color
   - id: terraform_validate
+    args:
+      - --args=-no-color
