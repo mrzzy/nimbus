@@ -40,7 +40,7 @@ locals {
 module "dns" {
   source = "./modules/linode/dns"
 
-  domain = "mrzzy.co"
+  domain = local.domain
   routes = merge({
     # dns routes for services served by k8s's ingress
     "auth" : module.k8s.ingress_ip,  # oauth2-proxy oauth callbacks / login page
