@@ -53,7 +53,6 @@ module "tls_cert" {
 
 # Backblaze B2 Cloud Storage provider
 provider "b2" {}
-
 # off-site backup location for volt (laptop)
 resource "b2_bucket" "volt_bkp" {
   bucket_name = "${local.domain_slug}-volt-backup"
@@ -64,9 +63,16 @@ resource "b2_bucket" "volt_bkp" {
     mode      = "SSE-B2"
   }
 }
-
-# store media files for media streaming service
-resource "b2_bucket" "media" {
-  bucket_name = "${local.domain_slug}-media"
-  bucket_type = "allPrivate"
+# App Key to auth S3 CSI for provisioning B2 Bucket backed K8s Persistent Volumes
+resource "b2_application_key" "k8s_csi" {
+  key_name = "k8s-csi"
+  capabilities = [
+    "readBuckets",
+    "writeBuckets",
+    "listFiles",
+    "readFiles",
+    "shareFiles",
+    "writeFiles",
+    "deleteFiles",
+  ]
 }

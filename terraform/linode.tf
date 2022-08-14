@@ -6,6 +6,8 @@
 locals {
   # Linode deploy region
   linode_region = "ap-south" # singapore
+  # Backblaze B2 S3-compatible regional endpoint
+  b2_endpoint = "s3.us-west-001.backblazeb2.com"
 }
 
 # Linode Cloud
@@ -27,6 +29,13 @@ module "k8s" {
   }
   tls_keys = {
     "${local.domain_slug}-tls" = module.tls_cert.private_key,
+  }
+
+  # Configure S3 CSI to provision volumes backed by B2 buckets
+  s3_csi = {
+    access_key    = b2_application_key.k8s_csi.application_key    #gitleaks:allow
+    access_key_id = b2_application_key.k8s_csi.application_key_id #gitleaks:allow
+    s3_endpoint   = local.b2_endpoint
   }
 }
 
