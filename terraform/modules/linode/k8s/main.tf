@@ -75,9 +75,9 @@ resource "kubernetes_secret" "s3_csi" {
   }
 
   data = {
-    "endpoint"        = var.s3_csi["endpoint"],
-    "accessKeyID"     = var.s3_csi["access_key_id"],
-    "secretAccessKey" = var.s3_csi["access_key"],
+    "endpoint"        = var.s3_csi.s3_endpoint,
+    "accessKeyID"     = var.s3_csi.access_key_id,
+    "secretAccessKey" = var.s3_csi.access_key,
     "region"          = ""
   }
 }
