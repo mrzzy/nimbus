@@ -8,7 +8,9 @@ resources:
   # Nginx ingress controller
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
   # Media Streaming Service
-  - media
+  - ./media
+  # S3 CSI - Persistent Volume Provisioner
+  - ./csi-s3
 
 helmCharts:
   # OAuth2 Proxy: authentication
