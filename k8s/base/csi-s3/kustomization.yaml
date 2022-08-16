@@ -19,16 +19,17 @@ commonLabels:
 # https://github.com/ctrox/csi-s3/pull/70/files
 patchesJson6902:
   - target:
+      group: rbac.authorization.k8s.io
+      version: v1
       kind: ClusterRole
       name: external-attacher-runner
-      version: rbac.authorization.k8s.io/v1
     patch: |-
       - op: add
-        path: /rules
+        path: /rules/1
         value:
-          apiGroups: ["storage.k8s.io"]
-          resources: ["volumeattachments/status"]
-          verbs: ["patch"]
+         apiGroups: ["storage.k8s.io"]
+         resources: ["volumeattachments/status"]
+         verbs: ["patch"]
 images:
   - name: quay.io/k8scsi/csi-attacher
     newTag: v3.1.0
