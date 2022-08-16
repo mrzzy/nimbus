@@ -19,11 +19,13 @@ helmCharts:
     valuesInline:
       # cache jellyfin in worker node specific directory
       persistence:
+        config:
+          enabled: true
+          size: 1Gi
         cache:
           enabled: true
           type: emptyDir
           size: 2Gi
-          accessMode: ReadWriteOnce
 
 # patch jellyfin deployment to mount media downloaded by rtorrent
 patches:
