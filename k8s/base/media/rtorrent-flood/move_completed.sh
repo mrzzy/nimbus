@@ -5,13 +5,13 @@
 # Move Completed Script
 #
 
-set -e -o pipefail
+set -ex -o pipefail
 
 # Usage: move_completed.sh <DOWNLOAD> <SRCDIR> <DESTDIR>
 # Move the complete download the the given path to the given destination dir.
 #
 # Maintains the relative path of the download with the given source dir in the
-# destination dir when moving files. Echos the path of the moved download once moved.
+# destination dir when moving files.
 #
 # Arguments:
 #   <DOWNLOAD>    Absolute path to the downloads to move located within <SRCDIR>.
@@ -35,10 +35,3 @@ DESTPATH=$(printf "$DOWNLOAD" | sed -e "s:$SRCDIR:$DESTDIR:")
 DESTDIR=$(dirname "$DESTPATH")
 mkdir -p "$DESTPATH"
 mv -f "$DOWNLOAD" "$DESTPATH"
-
-# echo moved path
-if [[ -d ]]; then
-  echo "$DESTPATH"
-else
-  echo "$DESTDIR"
-fi

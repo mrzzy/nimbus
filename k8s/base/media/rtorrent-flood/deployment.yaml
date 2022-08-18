@@ -20,7 +20,7 @@ spec:
             - name: FLOOD_OPTION_PORT
               value: "3000"
             - name: FLOOD_OPTION_ALLOWEDPATH
-              value: "/cache/tv,/cache/movies,/data/tv,/data/movies"
+              value: "/cache/tv,/cache/movies,/media/tv,/media/movies"
             # authentication delegated to ingress upstream
             - name: FLOOD_OPTION_AUTH
               value: "none"
@@ -38,8 +38,8 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
-            - mountPath: /data
-              name: data
+            - mountPath: /media
+              name: media
             - mountPath: /cache
               name: cache
           readinessProbe:
@@ -53,7 +53,7 @@ spec:
         - name: config
           configMap:
             name: rtorrent-config
-        - name: data
+        - name: media
           persistentVolumeClaim:
             claimName: media-data
         - name: cache
