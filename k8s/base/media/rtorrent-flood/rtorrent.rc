@@ -26,6 +26,10 @@ method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",
 ## Create instance directories
 execute.throw = sh, -c, (cat,\
     "mkdir -p \"",(cfg.download),"\" ",\
+    "\"",(cfg.download),"/movies\" ",\
+    "\"",(cfg.download),"/tv\" ",\
+    "\"",(cfg.destdir),"/movies\" ",\
+    "\"",(cfg.destdir),"/tv\" ",\
     "\"",(cfg.logs),"\" ",\
     "\"",(cfg.session),"\" ",\
     "\"",(cfg.watch),"/load\" ",\

@@ -20,7 +20,7 @@ spec:
             - name: FLOOD_OPTION_PORT
               value: "3000"
             - name: FLOOD_OPTION_ALLOWEDPATH
-              value: "/cache,/data"
+              value: "/cache/tv,/cache/movies,/data/tv,/data/movies"
             # authentication delegated to ingress upstream
             - name: FLOOD_OPTION_AUTH
               value: "none"
