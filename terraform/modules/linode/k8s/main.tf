@@ -78,6 +78,7 @@ resource "kubernetes_secret" "s3_csi" {
     "endpoint"        = var.s3_csi.s3_endpoint,
     "accessKeyID"     = var.s3_csi.access_key_id,
     "secretAccessKey" = var.s3_csi.access_key,
+    # as we are not using Amazon S3, the region field is unused
     "region"          = ""
   }
 }
