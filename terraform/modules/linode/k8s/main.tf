@@ -50,7 +50,7 @@ data "kubernetes_service" "ingress" {
 }
 
 # K8s Secrets
-# tls
+# TLS
 resource "kubernetes_secret" "tls" {
   for_each = var.tls_certs
 
