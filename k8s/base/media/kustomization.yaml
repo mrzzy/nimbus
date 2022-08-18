@@ -26,7 +26,6 @@ helmCharts:
           enabled: true
           type: emptyDir
           size: 2Gi
-
 # patch jellyfin deployment to mount media downloaded by rtorrent
 patches:
   - patch-pvc.yaml
