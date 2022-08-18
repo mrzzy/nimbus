@@ -19,7 +19,6 @@ method.insert = cfg.destdir,  private|const|string, (cat,"/data/")
 method.insert = cfg.download, private|const|string, (cat,"/cache/")
 method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),"session/")
 method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
-method.insert = cfg.watch,    private|const|string, (cat,(cfg.basedir),"watch/")
 method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
 
 
@@ -31,10 +30,7 @@ execute.throw = sh, -c, (cat,\
     "\"",(cfg.destdir),"/movies\" ",\
     "\"",(cfg.destdir),"/tv\" ",\
     "\"",(cfg.logs),"\" ",\
-    "\"",(cfg.session),"\" ",\
-    "\"",(cfg.watch),"/load\" ",\
-    "\"",(cfg.watch),"/start\" ")
-
+    "\"",(cfg.session),"\" ")
 
 ## Listening port for incoming peer traffic (fixed; you can also randomize it)
 network.port_random.set = no
@@ -104,15 +100,9 @@ method.insert = d.data_path, simple,\
         (cat, (d.directory), /),\
         (cat, (d.directory), /, (d.name))"
 method.insert = d.session_file, simple, "cat=(session.path), (d.hash), .torrent"
+# TODO(mrzzy): refactor this into a bash script.
 method.insert = d.move_to_complete, simple, "d.directory.set=$argument.1=; execute=mkdir,-p,$argument.1=; execute=mv,-u,$argument.0=,$argument.1=; d.save_full_session="
 method.set_key = event.download.finished,move_complete,"d.move_to_complete=$d.data_path=,$cfg.destdir="
-
-
-## Watch directories (add more as you like, but use unique schedule names)
-## Add torrent
-schedule2 = watch_load, 11, 10, ((load.verbose, (cat, (cfg.watch), "load/*.torrent")))
-## Add & download straight away
-schedule2 = watch_start, 10, 10, ((load.start_verbose, (cat, (cfg.watch), "start/*.torrent")))
 
 
 ## Run the rTorrent process as a daemon in the background
