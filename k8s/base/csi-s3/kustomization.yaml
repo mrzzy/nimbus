@@ -1,0 +1,35 @@
+#
+# Nimbus
+# CSI S3 Kustomization
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  # S3 CSI - Persistent Volume Provisioner
+  - https://raw.githubusercontent.com/ctrox/csi-s3/v1.2.0-rc.2/deploy/kubernetes/attacher.yaml
+  - https://raw.githubusercontent.com/ctrox/csi-s3/v1.2.0-rc.2/deploy/kubernetes/provisioner.yaml
+  - https://raw.githubusercontent.com/ctrox/csi-s3/v1.2.0-rc.2/deploy/kubernetes/csi-s3.yaml
+  - https://raw.githubusercontent.com/ctrox/csi-s3/v1.2.0-rc.2/deploy/kubernetes/examples/storageclass.yaml
+commonLabels:
+    app.kubernetes.io/part-of: csi-s3
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize
+
+# patch to support kubernetes v1.22+
+# https://github.com/ctrox/csi-s3/pull/70/files
+patchesJson6902:
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRole
+      name: external-attacher-runner
+    patch: |-
+      - op: add
+        path: /rules/1
+        value:
+         apiGroups: ["storage.k8s.io"]
+         resources: ["volumeattachments/status"]
+         verbs: ["patch"]
+images:
+  - name: quay.io/k8scsi/csi-attacher
+    newTag: v3.1.0

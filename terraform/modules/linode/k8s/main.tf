@@ -49,7 +49,8 @@ data "kubernetes_service" "ingress" {
   }
 }
 
-# TLS K8s secrets
+# K8s Secrets
+# TLS
 resource "kubernetes_secret" "tls" {
   for_each = var.tls_certs
 
@@ -64,5 +65,20 @@ resource "kubernetes_secret" "tls" {
   data = {
     "tls.crt" = each.value["cert"],
     "tls.key" = var.tls_keys[each.key],
+  }
+}
+# S3 CSI credentials
+resource "kubernetes_secret" "s3_csi" {
+  metadata {
+    name      = "csi-s3-secret"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "endpoint"        = var.s3_csi.s3_endpoint,
+    "accessKeyID"     = var.s3_csi.access_key_id,
+    "secretAccessKey" = var.s3_csi.access_key,
+    # as we are not using Amazon S3, the region field is unused
+    "region"          = ""
   }
 }

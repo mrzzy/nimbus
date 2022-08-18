@@ -47,3 +47,19 @@ variable "tls_keys" {
     and the value should be a PEM encoded TLS private key.
   EOF
 }
+
+variable "s3_csi" {
+  type = object({
+    s3_endpoint   = string,
+    access_key_id = string,
+    access_key    = string,
+  })
+  sensitive   = true
+  default     = null
+  description = <<EOF
+    Credentials to pass to S3 CSI to provision Persistent Volumes on S3-compatible storage.
+
+    Passes the given config & credentials to the S3 CSI by applying a 'csi-s3-secret'
+    K8s Secret on the 'kube-system' namespace in the K8s Cluster.
+  EOF
+}
