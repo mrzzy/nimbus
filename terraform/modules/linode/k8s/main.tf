@@ -90,11 +90,10 @@ resource "kubernetes_secret" "csi-rclone" {
   }
 
   data = {
-    "remote"      = "b2",
-    "b2-endpoint" = var.s3_csi.s3_endpoint,
-    "b2-account"  = var.s3_csi.access_key_id,
-    "b2-key"      = var.s3_csi.access_key,
-    # permanently delete files on remote removal instead of hiding the files
-    "b2-hard-delete" = "true",
+    "remote"               = "s3",
+    "s3-provider"          = "Other", # any other S3 compatible provider
+    "s3-endpoint"          = var.s3_csi.s3_endpoint,
+    "s3-access-key-id"     = var.s3_csi.access_key_id,
+    "s3-secret-access-key" = var.s3_csi.access_key,
   }
 }
