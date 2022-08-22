@@ -11,6 +11,8 @@ resources:
   - ./media
   # S3 CSI - Persistent Volume Provisioner
   - ./csi-s3
+  # CSI Rclone - S3-like cloud storage backed Persistent Volumes
+  - ./csi-rclone
 
 helmCharts:
   # OAuth2 Proxy: authentication
