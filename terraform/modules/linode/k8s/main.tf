@@ -67,7 +67,7 @@ resource "kubernetes_secret" "tls" {
     "tls.key" = var.tls_keys[each.key],
   }
 }
-# S3 CSI credentials
+# CSI-S3 credentials
 resource "kubernetes_secret" "s3_csi" {
   metadata {
     name      = "csi-s3-secret"
@@ -79,6 +79,22 @@ resource "kubernetes_secret" "s3_csi" {
     "accessKeyID"     = var.s3_csi.access_key_id,
     "secretAccessKey" = var.s3_csi.access_key,
     # as we are not using Amazon S3, the region field is unused
-    "region"          = ""
+    "region" = ""
+  }
+}
+# CSI-Rclone credentials: csi-rclone implements persistent volumes on S3
+resource "kubernetes_secret" "csi-rclone" {
+  metadata {
+    name      = "rclone-secret"
+    namespace = "csi-rclone"
+  }
+
+  data = {
+    "remote"      = "b2",
+    "b2-endpoint" = var.s3_csi.s3_endpoint,
+    "b2-account"  = var.s3_csi.access_key_id,
+    "b2-key"      = var.s3_csi.access_key,
+    # permanently delete files on remote removal instead of hiding the files
+    "b2-hard-delete" = "true",
   }
 }
