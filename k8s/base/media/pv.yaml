@@ -13,6 +13,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteMany
+  # TODO(mrzzy): replace this with kustomize replacement
   capacity:
     storage: 10Gi
   # store media files in cheaper Backblaze B2 cloud object storage mounted via rclone

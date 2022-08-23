@@ -10,11 +10,11 @@ metadata:
   name: media-data
 spec:
   accessModes:
-  - ReadWriteOnce
-  # TODO(mrzzy): replace this with kustomize replacement
+  - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
+  storageClassName: rclone
   selector:
     matchLabels:
       stores: media-data
