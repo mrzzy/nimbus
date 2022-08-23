@@ -11,6 +11,10 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
+  # TODO(mrzzy): replace this with kustomize replacement
   resources:
     requests:
       storage: 10Gi
+  selector:
+    matchLabels:
+      stores: media-data

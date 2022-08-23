@@ -1,0 +1,14 @@
+#
+# Nimbus
+# Media Streaming Service
+# Persistent Volume Patch
+#
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-data
+spec:
+  csi:
+    volumeAttributes:
+      remotePath: mrzzy-co-media/csi-fs
