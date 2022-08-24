@@ -9,8 +9,6 @@ resources:
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
   # Media Streaming Service
   - ./media
-  # S3 CSI - Persistent Volume Provisioner
-  - ./csi-s3
   # CSI Rclone - S3-like cloud storage backed Persistent Volumes
   - ./csi-rclone
 
