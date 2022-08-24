@@ -9,6 +9,7 @@ kind: Deployment
 metadata:
   name: rtorrent-flood
 spec:
+  replicas: 1
   selector: {} # to be templated by kustomize
   template:
     spec:

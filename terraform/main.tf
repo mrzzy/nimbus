@@ -63,6 +63,12 @@ resource "b2_bucket" "volt_bkp" {
     mode      = "SSE-B2"
   }
 }
+# bucket for storing media files for Media Streaming Service (Jellyfin + rTorrent-flood)
+resource "b2_bucket" "media" {
+  bucket_name = "${local.domain_slug}-media"
+  bucket_type = "allPrivate"
+}
+
 # App Key to auth S3 CSI for provisioning B2 Bucket backed K8s Persistent Volumes
 resource "b2_application_key" "k8s_csi" {
   key_name = "k8s-csi"

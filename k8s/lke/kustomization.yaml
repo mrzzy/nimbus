@@ -27,6 +27,6 @@ configMapGenerator:
       - restricted_user_access=oauth2-proxy/authenticated_emails_file
 
 patches:
-  - oauth2-proxy/deployment.yaml
-  - oauth2-proxy/ingress.yaml
-  - media/pvc.yaml
+  - media/patch-pv.yaml
+  - oauth2-proxy/patch-deployment.yaml
+  - oauth2-proxy/patch-ingress.yaml
