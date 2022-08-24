@@ -21,3 +21,11 @@ spec:
   csi:
     driver: csi-rclone
     volumeHandle: 3618eb15-70e1-4454-92b3-b7df93700369
+    volumeAttributes:
+      # both jellyfin & rtorrent-flood pod's have a emptydir volume mounted at /cache
+      cache-dir: /cache
+      # enable full vfs cache mode to cache media files while jellyfin is streaming them
+      vfs-cache-mode: full
+      vfs-cache-max-size: 5G
+      # vfs performance: disable modefile
+      no-modtime: "true"
