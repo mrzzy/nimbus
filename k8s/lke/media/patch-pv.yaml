@@ -14,7 +14,7 @@ spec:
       remotePath: mrzzy-co-media/csi-fs
       # both jellyfin & rtorrent-flood pod's have a emptydir volume mounted at /cache
       cache-dir: /cache
-      # enable full vfs cache mode to cache media files while jellyfin is streaming them
+      # enable full read / write vfs cache mode to cache rtorrent-flood's writes & jellyfin's reads
       vfs-cache-mode: full
       vfs-cache-max-size: 5G
       # vfs performance: disable modefile
