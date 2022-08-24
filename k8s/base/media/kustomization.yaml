@@ -27,10 +27,22 @@ helmCharts:
           enabled: true
           type: emptyDir
           size: 10Gi
-# patch jellyfin deployment to mount media downloaded by rtorrent
-patches:
-  - patch-pvc.yaml
 commonLabels:
     app.kubernetes.io/part-of: media
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
+# patch jellyfin deployment to mount media downloaded by rtorrent
+patches:
+  - patch-pvc.yaml
+# match media-data PV's declared capacity to the size requested by the PVC
+replacements:
+  - source:
+      kind: PersistentVolumeClaim
+      name: media-data
+      fieldPath: spec.resources.requests.storage
+    targets:
+      - select:
+          kind: PersistentVolume
+          name: media-data
+        fieldPaths:
+          - spec.capacity.storage
