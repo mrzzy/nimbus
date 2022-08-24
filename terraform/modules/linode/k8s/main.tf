@@ -67,18 +67,18 @@ resource "kubernetes_secret" "tls" {
     "tls.key" = var.tls_keys[each.key],
   }
 }
-# S3 CSI credentials
-resource "kubernetes_secret" "s3_csi" {
+# CSI-Rclone credentials: csi-rclone implements persistent volumes on S3
+resource "kubernetes_secret" "csi-rclone" {
   metadata {
-    name      = "csi-s3-secret"
-    namespace = "kube-system"
+    name      = "rclone-secret"
+    namespace = "csi-rclone"
   }
 
   data = {
-    "endpoint"        = var.s3_csi.s3_endpoint,
-    "accessKeyID"     = var.s3_csi.access_key_id,
-    "secretAccessKey" = var.s3_csi.access_key,
-    # as we are not using Amazon S3, the region field is unused
-    "region"          = ""
+    "remote"               = "s3",
+    "s3-provider"          = "Other", # any other S3 compatible provider
+    "s3-endpoint"          = var.s3_csi.s3_endpoint,
+    "s3-access-key-id"     = var.s3_csi.access_key_id,
+    "s3-secret-access-key" = var.s3_csi.access_key,
   }
 }

@@ -1,0 +1,22 @@
+#
+# Nimbus
+# Media Streaming Service
+# Persistent Volume
+#
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-data
+  labels:
+    stores: media-data
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: "" # matches media data PVC storage requests
+  # store media files in cheaper Backblaze B2 cloud object storage mounted via rclone
+  storageClassName: rclone
+  csi:
+    driver: csi-rclone
+    volumeHandle: 3618eb15-70e1-4454-92b3-b7df93700369
