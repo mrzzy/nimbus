@@ -49,10 +49,11 @@ provider "acme" {
 }
 # Issue trusted wildcard TLS certificate for domain via ACME
 module "tls_cert" {
-  source = "./modules/linode/tls_acme"
+  source = "./modules/tls_acme"
 
-  common_name = local.domain
-  domains     = ["*.${local.domain}"]
+  dns_provider = "cloudflare"
+  common_name  = local.domain
+  domains      = ["*.${local.domain}"]
 }
 
 # Backblaze B2 Cloud Storage provider
