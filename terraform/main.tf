@@ -28,6 +28,10 @@ terraform {
       source  = "Backblaze/b2"
       version = "0.8.1"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "3.22.0"
+    }
   }
 
   # terraform cloud workspace to store terraform state
@@ -68,7 +72,6 @@ resource "b2_bucket" "media" {
   bucket_name = "${local.domain_slug}-media"
   bucket_type = "allPrivate"
 }
-
 # App Key to auth S3 CSI for provisioning B2 Bucket backed K8s Persistent Volumes
 resource "b2_application_key" "k8s_csi" {
   key_name = "k8s-csi"
