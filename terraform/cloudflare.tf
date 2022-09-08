@@ -33,12 +33,3 @@ data "cloudflare_zone" "domain" {
   account_id = local.cf_account_id
   name       = local.domain
 }
-resource "cloudflare_zone_settings_override" "domain" {
-  zone_id = data.cloudflare_zone.domain.zone_id
-  settings {
-    http2 = "on"
-    # enforce HTTPS for security
-    always_use_https         = "on"
-    automatic_https_rewrites = "on"
-  }
-}
