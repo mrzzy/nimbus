@@ -1,7 +1,7 @@
 #
 # Nimbus
 # Terraform Deployment: TLS ACME
-# Inputs Variables
+# Input Variables
 #
 
 variable "common_name" {
@@ -12,4 +12,9 @@ variable "common_name" {
 variable "domains" {
   type        = list(string)
   description = "List of domains to validate & authenticate in the TLS certificate issued."
+}
+
+variable "dns_provider" {
+  type        = string
+  description = "Name of DNS Provider performing the the DNS-01 ACME challenge."
 }

@@ -26,7 +26,7 @@ resource "acme_registration" "register" {
   email_address   = "program.nom@gmail.com"
 }
 
-# issue tls certificate via ACME
+# issue tls certificate via ACME using the DNS-01 challenge
 resource "acme_certificate" "cert" {
   account_key_pem           = acme_registration.register.account_key_pem
   common_name               = var.common_name
@@ -37,6 +37,6 @@ resource "acme_certificate" "cert" {
   revoke_certificate_on_destroy = false
 
   dns_challenge {
-    provider = "linode"
+    provider = var.dns_provider
   }
 }

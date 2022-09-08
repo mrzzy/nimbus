@@ -38,21 +38,3 @@ module "k8s" {
     s3_endpoint   = local.b2_endpoint
   }
 }
-
-# Linode: DNS zone & routes for mrzzy.co domain
-locals {
-  warp_ip = module.warp_vm.external_ip
-}
-module "dns" {
-  source = "./modules/linode/dns"
-
-  domain = local.domain
-  routes = merge({
-    # dns routes for services served by k8s's ingress
-    "auth" : module.k8s.ingress_ip,  # oauth2-proxy oauth callbacks / login page
-    "media" : module.k8s.ingress_ip, # jellyfin media server
-    },
-    # only create dns route for WARP VM if its deployed
-    var.has_warp_vm ? { "warp" : local.warp_ip } : {},
-  )
-}
