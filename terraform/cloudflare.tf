@@ -12,7 +12,7 @@ locals {
 # Cloudflare: expects access token provided via $CLOUDFLARE_API_TOKEN env var
 provider "cloudflare" {}
 
-# Cloudflare DNS: dns zone & routes for mrzzy.co domain
+# Cloudflare DNS: dns zone & routes for domain
 module "dns" {
   source = "./modules/cloudflare/dns"
 
@@ -26,4 +26,19 @@ module "dns" {
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { "warp" : local.warp_ip } : {},
   )
+}
+
+# Cloudflare settings for domain
+data "cloudflare_zone" "domain" {
+  account_id = local.cf_account_id
+  name       = local.domain
+}
+resource "cloudflare_zone_settings_override" "domain" {
+  zone_id = data.cloudflare_zone.domain.zone_id
+  settings {
+    http2 = "on"
+    # enforce HTTPS for security
+    always_use_https         = "on"
+    automatic_https_rewrites = "on"
+  }
 }
