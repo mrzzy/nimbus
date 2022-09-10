@@ -17,3 +17,4 @@ location / {
   proxy_set_header Connection "upgrade";
   proxy_read_timeout 300s; # wait 5mins before closing websockets
 }
+# vim:set ft=conf:

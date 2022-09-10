@@ -9,8 +9,9 @@ on:
 env:
   GCP_REGION: asia-southeast1
   GCP_PROJECT: mrzzy-sandbox
+  GCP_REPO: nimbus
 permissions:
-  # need for actions/checkout to clone repo
+  # needed for actions/checkout to clone repo
   contents: read
   # allow odic token to be issued for auth via GCP's workload identity pool
   id-token: write
@@ -26,7 +27,10 @@ jobs:
       - name: "Lint Dockerfile with Hadolint"
         run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
       - name: "Build Container"
-        run: docker build -t gcr.io/${GCP_PROJECT}/proxy-gae .
+        run: |
+          CONTAINER="${GCP_REGION}-docker.pkg.dev/gcr.io/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
+          echo "CONTAINER=${CONTAINER}" >>$GITHUB_ENV
+          docker build -t $CONTAINER .
       - name: "Authenticate to GCP with Workload Identity Federation"
         uses: google-github-actions/auth@v0.8.1
         with:
@@ -41,6 +45,6 @@ jobs:
             | tar xz docker-credential-gcr \
             && chmod +x docker-credential-gcr && sudo mv docker-credential-gcr /usr/local/bin
           # configure docker credentials
-          docker-credential-gcr configure-docker --registries=asia-southeast-1-docker.pkg.dev
+          docker-credential-gcr configure-docker --registries=${GCP_REGION}-docker.pkg.dev
       - name: "Push container to GCP Artifact Repository"
-        run: docker push gcr.io/${GCP_PROJECT}/proxy-gae
+        run: docker push $CONTAINER
