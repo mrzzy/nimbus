@@ -114,3 +114,10 @@ resource "google_artifact_registry_repository" "nimbus" {
   description   = "Stores containers built from github.com/mrzzy/nimbus's CI Pipeline."
   format        = "DOCKER"
 }
+# allow Github Actions workers to push containers to Artifact Registry
+resource "google_artifact_registry_repository_iam_member" "gh-actions" {
+  repository = google_artifact_registry_repository.nimbus.name
+  location   = google_artifact_registry_repository.nimbus.location
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:gh-actions-mrzzy-nimbus@mrzzy-sandbox.iam.gserviceaccount.com"
+}
