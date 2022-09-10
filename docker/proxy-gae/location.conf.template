@@ -1,0 +1,19 @@
+#
+# Nimbus
+# proxy-gae
+# Location conf template
+#
+
+
+location / {
+  # PROXY_URL templated env var that fsets the target URL which nginx proxies to
+  proxy_pass ${PROXY_URL}/;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+  # proxy directives needed for proxying websocket connections
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_read_timeout 300s; # wait 5mins before closing websockets
+}
