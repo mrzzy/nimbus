@@ -4,6 +4,8 @@
 #
 
 locals {
+  gh_repo = "mrzzy/nimbus"
+
   # GCP project
   gcp_project_id = "mrzzy-sandbox"
   gcp_region     = "asia-southeast1" # singapore
@@ -37,10 +39,8 @@ resource "google_project_service" "svc" {
 module "iam" {
   source = "./modules/gcp/iam"
 
-  project = local.gcp_project_id
-  allow_gh_actions = [
-    "mrzzy/nimbus"
-  ]
+  project          = local.gcp_project_id
+  allow_gh_actions = [local.gh_repo]
 }
 
 # GCP: Shared VPC network VM instances reside on
@@ -107,17 +107,16 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
   value = local.ssh_public_key
 }
 
-# GCP Artifact Registry to store containers built by CI
-resource "google_artifact_registry_repository" "nimbus" {
-  location      = local.gcp_region
-  repository_id = "nimbus"
-  description   = "Stores containers built from github.com/mrzzy/nimbus's CI Pipeline."
-  format        = "DOCKER"
+# Container Registry to store containers built by CI
+data "google_service_account" "nimbus" {
+  account_id = module.iam.gh_actions_service_account_ids[local.gh_repo]
 }
-# allow Github Actions workers to push containers to Artifact Registry
-resource "google_artifact_registry_repository_iam_member" "gh-actions" {
-  repository = google_artifact_registry_repository.nimbus.name
-  location   = google_artifact_registry_repository.nimbus.location
-  role       = "roles/artifactregistry.writer"
-  member     = "serviceAccount:gh-actions-mrzzy-nimbus@mrzzy-sandbox.iam.gserviceaccount.com"
+module "registry" {
+  source = "./modules/gcp/registry"
+
+  region = local.gcp_region
+  name   = "nimbus"
+  allow_writers = [
+    "serviceAccount:${data.google_service_account.nimbus.email}"
+  ]
 }
