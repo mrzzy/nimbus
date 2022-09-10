@@ -110,7 +110,7 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
 # GCP Artifact Registry to store containers built by CI
 resource "google_artifact_registry_repository" "nimbus" {
   location      = local.gcp_region
-  repository_id = "nimbus-containers"
+  repository_id = "nimbus"
   description   = "Stores containers built from github.com/mrzzy/nimbus's CI Pipeline."
   format        = "DOCKER"
 }

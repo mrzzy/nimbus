@@ -28,7 +28,7 @@ jobs:
         run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
       - name: "Build Container"
         run: |
-          CONTAINER="${GCP_REGION}-docker.pkg.dev/gcr.io/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
+          CONTAINER="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
           echo "CONTAINER=${CONTAINER}" >>$GITHUB_ENV
           docker build -t $CONTAINER .
       - name: "Authenticate to GCP with Workload Identity Federation"
