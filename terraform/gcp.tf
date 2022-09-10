@@ -6,6 +6,7 @@
 locals {
   # GCP project
   gcp_project_id = "mrzzy-sandbox"
+  gcp_region     = "asia-southeast1" # singapore
 
   # GCE tags for firewall rules
   allow_ssh_tag       = "allow-ssh"
@@ -18,8 +19,18 @@ locals {
 }
 provider "google" {
   project = local.gcp_project_id
-  region  = "asia-southeast1" # singapore
-  zone    = "asia-southeast1-c"
+  region  = local.gcp_region
+  zone    = "${local.gcp_region}-c"
+}
+
+# GCP enabled APIs
+resource "google_project_service" "svc" {
+  for_each = toset([
+    "artifactregistry.googleapis.com",
+    "container.googleapis.com",
+    "iam.googleapis.com"
+  ])
+  service = each.key
 }
 
 # GCP: Shared IAM resources
@@ -94,4 +105,12 @@ module "warp_vm" {
 resource "google_compute_project_metadata_item" "ssh_keys" {
   key   = "ssh-keys"
   value = local.ssh_public_key
+}
+
+# GCP Artifact Registry to store containers built by CI
+resource "google_artifact_registry_repository" "nimbus" {
+  location      = local.gcp_region
+  repository_id = "nimbus-containers"
+  description   = "Stores containers built from github.com/mrzzy/nimbus's CI Pipeline."
+  format        = "DOCKER"
 }
