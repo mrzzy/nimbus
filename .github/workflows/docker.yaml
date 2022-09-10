@@ -7,6 +7,7 @@ name: "Build & Push Docker Containers to GCP"
 on:
   push: {}
 env:
+  GCP_REGION: asia-southeast1
   GCP_PROJECT: mrzzy-sandbox
 permissions:
   # need for actions/checkout to clone repo
@@ -36,7 +37,7 @@ jobs:
           # install docker credential helper
           set -exu -o pipefail
           VERSION=2.1.6
-          curl -fsSL "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${VERSION}/docker-credential-gcr_linux_amd64-amd64.tar.gz" \
+          curl -fsSL "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${VERSION}/docker-credential-gcr_linux_amd64-${VERSION}.tar.gz" \
             | tar xz docker-credential-gcr \
             && chmod +x docker-credential-gcr && sudo mv docker-credential-gcr /usr/local/bin
           # configure docker credentials
