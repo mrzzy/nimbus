@@ -27,6 +27,9 @@ module "iam" {
   source = "./modules/gcp/iam"
 
   project = local.gcp_project_id
+  allow_gh_actions = [
+    "mrzzy/nimbus"
+  ]
 }
 
 # GCP: Shared VPC network VM instances reside on
