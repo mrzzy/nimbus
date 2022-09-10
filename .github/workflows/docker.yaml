@@ -8,6 +8,11 @@ on:
   push: {}
 env:
   GCP_PROJECT: mrzzy-sandbox
+permissions:
+  # need for actions/checkout to clone repo
+  contents: read
+  # allow odic token to be issued for auth via GCP's workload identity pool
+  id-token: write
 jobs:
   proxy-gae:
     name: "Build & Push proxy-gae Docker container"
