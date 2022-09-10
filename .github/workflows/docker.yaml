@@ -46,5 +46,6 @@ jobs:
             && chmod +x docker-credential-gcr && sudo mv docker-credential-gcr /usr/local/bin
           # configure docker credentials
           docker-credential-gcr configure-docker --registries=${GCP_REGION}-docker.pkg.dev
+          echo "https://${GCP_REGION}-docker.pkg.dev" | docker-credential-gcr get >/dev/null
       - name: "Push container to GCP Artifact Repository"
         run: docker push $CONTAINER
