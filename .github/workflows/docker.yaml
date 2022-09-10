@@ -21,3 +21,20 @@ jobs:
         run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
       - name: "Build Container"
         run: docker build -t gcr.io/${GCP_PROJECT}/proxy-gae .
+      - name: "Authenticate to GCP with Workload Identity Federation"
+        uses: google-github-actions/auth@v0.8.1
+        with:
+          workload_identity_provider: "projects/652407106283/locations/global/workloadIdentityPools/gh-actions-mrzzy-nimbus/providers/gh-oidc-provider-mrzzy-nimbus"
+          service_account: "gh-actions-mrzzy-nimbus@mrzzy-sandbox.iam.gserviceaccount.com"
+      - name: "Configure GCP docker credential helper"
+        run: |
+          # install docker credential helper
+          set -exu -o pipefail
+          VERSION=2.1.6
+          curl -fsSL "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${VERSION}/docker-credential-gcr_linux_amd64-amd64.tar.gz" \
+            | tar xz docker-credential-gcr \
+            && chmod +x docker-credential-gcr && sudo mv docker-credential-gcr /usr/local/bin
+          # configure docker credentials
+          docker-credential-gcr configure-docker --registries=asia-southeast-1-docker.pkg.dev
+      - name: "Push container to GCP Artifact Repository"
+        run: docker push gcr.io/${GCP_PROJECT}/proxy-gae
