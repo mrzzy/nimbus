@@ -52,7 +52,7 @@ module "gh_oidc" {
   sa_mapping = {
     "gh-actions" = {
       sa_name   = google_service_account.actions[each.key].id
-      attribute = "attribute.repository/github.com/${each.key}"
+      attribute = "attribute.repository/${each.key}"
     }
   }
 }
