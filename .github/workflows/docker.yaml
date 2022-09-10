@@ -1,0 +1,23 @@
+#
+# nimbus
+# Docker Container CI Pipeline
+#
+
+name: "Build & Push Docker Containers to GCP"
+on:
+  push: {}
+env:
+  GCP_PROJECT: mrzzy-sandbox
+jobs:
+  proxy-gae:
+    name: "Build & Push proxy-gae Docker container"
+    defaults:
+      run:
+        working-directory: docker/proxy-gae
+    runs-on: "ubuntu-20.04"
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Lint Dockerfile with Hadolint"
+        run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
+      - name: "Build Container"
+        run: docker build -t gcr.io/${GCP_PROJECT}/proxy-gae .
