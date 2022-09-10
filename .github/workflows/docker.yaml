@@ -31,21 +31,16 @@ jobs:
           CONTAINER="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
           echo "CONTAINER=${CONTAINER}" >>$GITHUB_ENV
           docker build -t $CONTAINER .
-      - name: "Authenticate to GCP with Workload Identity Federation"
+      - id: 'auth'
+        name: "Authenticate to GCP with Workload Identity Federation"
         uses: google-github-actions/auth@v0.8.1
         with:
           workload_identity_provider: "projects/652407106283/locations/global/workloadIdentityPools/gh-actions-mrzzy-nimbus/providers/gh-oidc-provider-mrzzy-nimbus"
           service_account: "gh-actions-mrzzy-nimbus@mrzzy-sandbox.iam.gserviceaccount.com"
-      - name: "Configure GCP docker credential helper"
+      - name: "Setup gcloud"
+        uses: 'google-github-actions/setup-gcloud@v0.6.0'
+      - name: "Setup docker push credentials"
         run: |
-          # install docker credential helper
-          set -exu -o pipefail
-          VERSION=2.1.6
-          curl -fsSL "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${VERSION}/docker-credential-gcr_linux_amd64-${VERSION}.tar.gz" \
-            | tar xz docker-credential-gcr \
-            && chmod +x docker-credential-gcr && sudo mv docker-credential-gcr /usr/local/bin
-          # configure docker credentials
-          docker-credential-gcr configure-docker --registries=${GCP_REGION}-docker.pkg.dev
-          echo "https://${GCP_REGION}-docker.pkg.dev" | docker-credential-gcr get >/dev/null
+          gcloud auth configure-docker asia-southeast1-docker.pkg.dev
       - name: "Push container to GCP Artifact Repository"
         run: docker push $CONTAINER
