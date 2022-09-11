@@ -43,4 +43,6 @@ jobs:
         run: |
           gcloud auth configure-docker asia-southeast1-docker.pkg.dev
       - name: "Push container to GCP Artifact Repository"
+        # only enable push on main branch
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: docker push $CONTAINER
