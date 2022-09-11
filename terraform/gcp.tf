@@ -116,32 +116,35 @@ module "warp_vm" {
   ssh_public_key = local.ssh_public_key
 }
 # deploy proxy on Google App Engine to warp vm to bypass corperate firewall
-resource "google_app_engine_flexible_app_version" "warp_proxy_v0" {
+resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
   # only deploy proxy if warp VM is also enabled
   count = var.has_warp_vm ? 1 : 0
 
+  version_id                = "v1"
   runtime                   = "custom"
   service                   = "default"
   delete_service_on_destroy = true
-  version_id                = "v0"
+  serving_status            = "SERVING"
+
   deployment {
     container {
-      image = "${module.registry.repo_prefix}/proxy-gae"
+      image = "${module.registry.repo_prefix}/proxy-gae@sha256:4690f24469239639dc34444615a9fa1f5a96a4c1cfbcf022792166788a7f94e9"
     }
   }
   env_variables = {
     PROXY_URL = "https://warp.${local.domain}"
   }
   liveness_check {
-    path = "/"
+    path = "/health"
   }
   readiness_check {
-    path = "/"
+    path = "/health"
   }
   manual_scaling {
     instances = 1
   }
 }
+
 
 # GCP: enroll project-wide ssh key for ssh access to VMs
 resource "google_compute_project_metadata_item" "ssh_keys" {
