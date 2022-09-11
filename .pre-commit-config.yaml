@@ -36,3 +36,8 @@ repos:
   - id: terraform_validate
     args:
       - --args=-no-color
+# lint dockerfiles
+- repo: https://github.com/hadolint/hadolint
+  rev: v2.10.0
+  hooks:
+    - id: hadolint-docker
