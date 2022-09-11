@@ -115,16 +115,14 @@ module "warp_vm" {
   web_tls_key    = module.tls_cert.private_key
   ssh_public_key = local.ssh_public_key
 }
-# proxy on Google App Engine to provide access to WARP VM behind a corporate firewall. 
+# proxy on Google App Engine to provide access to WARP VM behind a corporate firewall.
 resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
-  # only deploy proxy if warp VM is also enabled
-  count = var.has_warp_vm ? 1 : 0
-
   version_id                = "v1"
   runtime                   = "custom"
   service                   = "default"
   delete_service_on_destroy = true
-  serving_status            = "SERVING"
+  # only deploy proxy if warp VM is also enabled
+  serving_status = var.has_warp_vm ? "SERVING" : "STOPPED"
 
   deployment {
     container {
