@@ -30,7 +30,8 @@ resource "google_project_service" "svc" {
   for_each = toset([
     "artifactregistry.googleapis.com",
     "container.googleapis.com",
-    "iam.googleapis.com"
+    "iam.googleapis.com",
+    "appengine.googleapis.com"
   ])
   service = each.key
 }
@@ -77,6 +78,20 @@ module "vpc" {
   )
 }
 
+# GCP: Container Registry to store containers built by CI
+data "google_service_account" "nimbus" {
+  account_id = module.iam.gh_actions_service_account_ids[local.gh_repo]
+}
+module "registry" {
+  source = "./modules/gcp/registry"
+
+  region = local.gcp_region
+  name   = "nimbus"
+  allow_writers = [
+    "serviceAccount:${data.google_service_account.nimbus.email}"
+  ]
+}
+
 # GCP: Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
@@ -100,23 +115,33 @@ module "warp_vm" {
   web_tls_key    = module.tls_cert.private_key
   ssh_public_key = local.ssh_public_key
 }
+# deploy proxy on Google App Engine to warp vm to bypass corperate firewall
+resource "google_app_engine_flexible_app_version" "warp_proxy" {
+  runtime                   = "custom"
+  service                   = "warp-proxy"
+  delete_service_on_destroy = true
+
+  deployment {
+    container {
+      image = "${module.registry.repo_prefix}/proxy-gae"
+    }
+  }
+  env_variables = {
+    PROXY_URL = "https://warp.${local.domain}"
+  }
+  liveness_check {
+    path = "/"
+  }
+  readiness_check {
+    path = "/"
+  }
+  manual_scaling {
+    instances = 1
+  }
+}
 
 # GCP: enroll project-wide ssh key for ssh access to VMs
 resource "google_compute_project_metadata_item" "ssh_keys" {
   key   = "ssh-keys"
   value = local.ssh_public_key
-}
-
-# Container Registry to store containers built by CI
-data "google_service_account" "nimbus" {
-  account_id = module.iam.gh_actions_service_account_ids[local.gh_repo]
-}
-module "registry" {
-  source = "./modules/gcp/registry"
-
-  region = local.gcp_region
-  name   = "nimbus"
-  allow_writers = [
-    "serviceAccount:${data.google_service_account.nimbus.email}"
-  ]
 }
