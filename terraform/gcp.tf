@@ -116,11 +116,14 @@ module "warp_vm" {
   ssh_public_key = local.ssh_public_key
 }
 # deploy proxy on Google App Engine to warp vm to bypass corperate firewall
-resource "google_app_engine_flexible_app_version" "warp_proxy" {
-  runtime                   = "custom"
-  service                   = "warp-proxy"
-  delete_service_on_destroy = true
+resource "google_app_engine_flexible_app_version" "warp_proxy_v0" {
+  # only deploy proxy if warp VM is also enabled
+  count = var.has_warp_vm ? 1 : 0
 
+  runtime                   = "custom"
+  service                   = "default"
+  delete_service_on_destroy = true
+  version_id                = "v0"
   deployment {
     container {
       image = "${module.registry.repo_prefix}/proxy-gae"
