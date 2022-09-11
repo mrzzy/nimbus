@@ -7,7 +7,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">=4.22.0, <4.23.0"
+      version = ">=4.22.0"
     }
   }
 }
@@ -32,4 +32,27 @@ resource "google_service_account" "warp_builder" {
   Service Account for WARP VM's Packer builder to build WARP VM images on
   GCE VM instances.
   EOF
+}
+
+# Workload Identity Pool & Service Account to authenticate Github Action's runners
+resource "google_service_account" "actions" {
+  for_each    = toset(var.allow_gh_actions)
+  project     = var.project
+  account_id  = format("gh-actions-%s", replace(each.key, "/", "-"))
+  description = "Service account to authenticate github.com/${each.key}'s Github Actions Runners"
+}
+module "gh_oidc" {
+  for_each   = toset(var.allow_gh_actions)
+  source     = "github.com/terraform-google-modules/terraform-google-github-actions-runners//modules/gh-oidc"
+  project_id = var.project
+  # workload identity pool & provider
+  pool_id     = format("gh-actions-%s", replace(each.key, "/", "-"))
+  provider_id = format("gh-oidc-provider-%s", replace(each.key, "/", "-"))
+  # service accounts authenticated identities are authorised to impersonate
+  sa_mapping = {
+    "gh-actions" = {
+      sa_name   = google_service_account.actions[each.key].id
+      attribute = "attribute.repository/${each.key}"
+    }
+  }
 }
