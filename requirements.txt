@@ -1,2 +1,2 @@
-pre-commit==2.10.1
+pre-commit==2.20.0
 detect-secrets==0.14.3
