@@ -15,7 +15,7 @@ resources:
 helmCharts:
   # OAuth2 Proxy: authentication
   - name: oauth2-proxy
-    version: 6.2.2
+    version: 6.2.7
     repo: https://oauth2-proxy.github.io/manifests
     releaseName: login
     valuesInline:
