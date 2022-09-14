@@ -16,7 +16,7 @@ jobs:
       run:
         working-directory: k8s
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: "Setup kubectl access to LKE"
         uses: ./.github/actions/setup-lke
         with:
