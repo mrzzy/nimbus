@@ -6,8 +6,10 @@
 
 # Proxy all requests to PROXY_URL
 location / {
-  # PROXY_URL templated env var that fsets the target URL which nginx proxies to
-  proxy_pass ${PROXY_URL}/;
+  # PROXY_URL env var the target URL which nginx proxies to
+  # force dns resolution at runtime by pass target url as nginx var to proxy_pass
+  set $target_url ${PROXY_URL}/;
+  proxy_pass $target_url;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
