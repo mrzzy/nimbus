@@ -22,7 +22,7 @@ runs:
         pip3 install linode-cli==5.22.0
 
     - name: "Install kubectl"
-      uses: azure/setup-kubectl@v2.0
+      uses: azure/setup-kubectl@v2.1
       with:
          version: "v1.24.0"
 
