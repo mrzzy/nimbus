@@ -23,7 +23,7 @@ provider "registry.terraform.io/hashicorp/tls" {
 
 provider "registry.terraform.io/vancluever/acme" {
   version     = "2.10.0"
-  constraints = "<2.10.1"
+  constraints = "< 2.10.1"
   hashes = [
     "h1:Bg7Hnu5H505bhdvdfvF8mmqOwtVi2uc3eNED4ekLc1M=",
     "h1:Di9rgfFffMM9WN1s0QBbnHWy4FoHGwONnXel4sCWYq0=",
