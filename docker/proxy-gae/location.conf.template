@@ -8,8 +8,9 @@
 location / {
   # PROXY_URL env var the target URL which nginx proxies to
   # force dns resolution at runtime by pass target url as nginx var to proxy_pass
-  set $target_url ${PROXY_URL}/;
-  proxy_pass $target_url;
+  set $target_url ${PROXY_URL};
+  # when variables are used with proxy_pass, the request URL must be explicitly passed.
+  proxy_pass $target_url$request_uri;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
