@@ -43,6 +43,9 @@ tag?
 # vim project files
 /.vim/
 
+# dotenv
+.env
+
 ### jsonnet
 # ignore jsonnet-bundler's vendor dir
 vendor/
