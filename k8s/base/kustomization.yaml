@@ -7,6 +7,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
   # Nginx ingress controller
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+  # K8s Metrics Server
+  - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
   # Media Streaming Service
   - ./media
   # CSI Rclone - S3-like cloud storage backed Persistent Volumes

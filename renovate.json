@@ -10,9 +10,21 @@
   "regexManagers": [
     {
       "fileMatch": "^k8s/.*/kustomization.yaml$",
-      "matchStrings": ["(?<depName>kubernetes\\/ingress-nginx)\\/controller-(?<version>.*)\\/"],
+      "matchStrings": [
+        "(?<depName>kubernetes\\/ingress-nginx)\\/controller-(?<version>.*)\\/"
+      ],
       "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose",
       "extractVersionTemplate": "^controller-$(?<version>.*)$"
+    },
+    {
+      "fileMatch": "^k8s/.*/kustomization.yaml$",
+      "matchStrings": [
+        "(?<depName>kubenetes-sigs\\/metrics-server)\\/releases\\/download\\/(?<version>.*)\\/"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose",
+      "extractVersionTemplate": "^$(?<version>v.*)$"
     }
   ]
 }
