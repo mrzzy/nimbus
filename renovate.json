@@ -6,5 +6,13 @@
   ],
   "reviewers": [
     "mrzzy"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": "^k8s/.*/kustomization.yaml$",
+      "matchStrings": ["(?<depName>kubernetes\\/ingress-nginx)\\/controller-(?<version>.*)\\/"],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^controller-$(?<version>.*)$"
+    }
   ]
 }
