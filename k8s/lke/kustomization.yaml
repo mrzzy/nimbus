@@ -30,3 +30,17 @@ patches:
   - media/patch-pv.yaml
   - oauth2-proxy/patch-deployment.yaml
   - oauth2-proxy/patch-ingress.yaml
+
+patchesJson6902:
+  # patch Metrics Server to disable TLS when scraping Linode worker's kubelet as
+  # Linode does not configure with the correct TLS certificate.
+  # https://github.com/kubernetes-sigs/metrics-server/issues/1025
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: metrics-server
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-1
+        value: --kubelet-insecure-tls
