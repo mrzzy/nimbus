@@ -77,8 +77,6 @@ jobs:
           TF_VAR_warp_allow_ports: "${{ github.event.inputs.warp_vm_allow_ports }}"
           TF_VAR_warp_http_terminal: "${{ github.event.inputs.warp_vm_http_term }}"
           TF_VAR_warp_allow_ip: "${{ github.event.inputs.warp_vm_allow_ip }}"
-          # use LetsEncrypt's production server to issue trusted TLS certificates
-          TF_VAR_acme_server_url: "https://acme-v02.api.letsencrypt.org/directory"
         run: >
           terraform apply
           -auto-approve=true
