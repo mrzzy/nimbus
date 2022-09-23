@@ -145,8 +145,15 @@ resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
   manual_scaling {
     instances = 1
   }
-}
 
+  lifecycle {
+    # GAE automatically assigns service to the default service account
+    # direct terraform to ignore this change.
+    ignore_changes = [
+      service_account
+    ]
+  }
+}
 
 # GCP: enroll project-wide ssh key for ssh access to VMs
 resource "google_compute_project_metadata_item" "ssh_keys" {
