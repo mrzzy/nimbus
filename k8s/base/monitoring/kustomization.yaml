@@ -1,0 +1,16 @@
+#
+# Nimbus
+# K8s Deployment
+# Monitoring
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - namespace.yaml
+helmCharts:
+  # Kube Prometheus: Prometheus, Grafana & Prometheus Operator
+  - name: kube-prometheus-stack
+    version: 40.1.0
+    repo: https://prometheus-community.github.io/helm-charts
+    releaseName: monitor
+    namespace: monitoring
