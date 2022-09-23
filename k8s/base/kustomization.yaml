@@ -5,17 +5,20 @@
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  # Nginx ingress controller
+  # Nginx Ingress Controller
+  # Ingress: Nginx
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
   # K8s Metrics Server
   - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
-  # Media Streaming Service
+  # Media Server: Jellyfin & Rtorrent
   - ./media
-  # CSI Rclone - S3-like cloud storage backed Persistent Volumes
+  # CSI Rclone: S3-like cloud storage backed Persistent Volumes
   - ./csi-rclone
+  # Monitoring: Prometheus, Grafana
+  - ./monitoring
 
 helmCharts:
-  # OAuth2 Proxy: authentication
+  # Authentication: OAuth2 Proxy
   - name: oauth2-proxy
     version: 6.2.7
     repo: https://oauth2-proxy.github.io/manifests
