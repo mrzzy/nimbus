@@ -73,7 +73,7 @@ resource "b2_bucket" "media" {
   bucket_name = "${local.domain_slug}-media"
   bucket_type = "allPrivate"
 }
-# bucket for storing logs for Monitoring (Loki)
+# bucket for storing logs (Loki)
 resource "b2_bucket" "logs" {
   bucket_name = "${local.domain_slug}-logs"
   bucket_type = "allPrivate"
@@ -84,6 +84,19 @@ resource "b2_application_key" "k8s_csi" {
   capabilities = [
     "readBuckets",
     "writeBuckets",
+    "listFiles",
+    "readFiles",
+    "shareFiles",
+    "writeFiles",
+    "deleteFiles",
+  ]
+}
+# App Key to auth Loki for persisting logs
+resource "b2_application_key" "k8s_loki" {
+  key_name  = "k8s-loki"
+  bucket_id = b2_bucket.logs.id
+  capabilities = [
+    "readBuckets",
     "listFiles",
     "readFiles",
     "shareFiles",
