@@ -79,11 +79,9 @@ resource "b2_bucket" "logs" {
   bucket_type = "allPrivate"
 }
 # App Key to auth S3 CSI for provisioning B2 Bucket backed K8s Persistent Volumes
-resource "b2_application_key" "k8s_csi" {
-  key_name = "k8s-csi"
-  capabilities = [
+locals {
+  b2_capabilities = [
     "readBuckets",
-    "writeBuckets",
     "listFiles",
     "readFiles",
     "shareFiles",
@@ -91,16 +89,13 @@ resource "b2_application_key" "k8s_csi" {
     "deleteFiles",
   ]
 }
+resource "b2_application_key" "k8s_csi" {
+  key_name     = "k8s-csi"
+  capabilities = concat(local.b2_capabilities, ["writeBuckets"])
+}
 # App Key to auth Loki for persisting logs
 resource "b2_application_key" "k8s_loki" {
-  key_name  = "k8s-loki"
-  bucket_id = b2_bucket.logs.id
-  capabilities = [
-    "readBuckets",
-    "listFiles",
-    "readFiles",
-    "shareFiles",
-    "writeFiles",
-    "deleteFiles",
-  ]
+  key_name     = "k8s-loki"
+  bucket_id    = b2_bucket.logs.id
+  capabilities = local.b2_capabilities
 }
