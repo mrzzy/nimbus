@@ -31,10 +31,21 @@ module "k8s" {
     "${local.domain_slug}-tls" = module.tls_cert.private_key,
   }
 
-  # Configure S3 CSI to provision volumes backed by B2 buckets
-  s3_csi = {
-    access_key    = b2_application_key.k8s_csi.application_key    #gitleaks:allow
-    access_key_id = b2_application_key.k8s_csi.application_key_id #gitleaks:allow
-    s3_endpoint   = local.b2_endpoint
+  secret_keys = [
+    "rclone",
+  ]
+  secrets = {
+    # CSI-Rclone credentials: csi-rclone implements persistent volumes on S3
+    "rclone" = {
+      name      = "rclone-secret"
+      namespace = "csi-rclone"
+      data = {
+        "remote"               = "s3",
+        "s3-provider"          = "Other", # any other S3 compatible provider
+        "s3-endpoint"          = local.b2_endpoint,
+        "s3-access-key-id"     = b2_application_key.k8s_csi.application_key_id, #gitleaks:allow
+        "s3-secret-access-key" = b2_application_key.k8s_csi.application_key,    #gitleaks:allow
+      }
+    },
   }
 }
