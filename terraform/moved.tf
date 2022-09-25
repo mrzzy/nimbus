@@ -4,7 +4,7 @@
 # Moved Tombstones
 #
 
-# Tombstones for resources moved into child modules
+# Tombstones for moved resources
 moved {
   from = google_compute_disk.warp_disk
   to   = module.warp_vm.google_compute_disk.warp_disk
@@ -23,4 +23,9 @@ moved {
 moved {
   from = module.gce.google_compute_network.sandbox
   to   = module.vpc.google_compute_network.sandbox
+}
+
+moved {
+  from = module.k8s.kubernetes_secret.csi-rclone
+  to   = module.k8s.kubernetes_secret.opaque["rclone"]
 }
