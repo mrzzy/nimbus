@@ -147,10 +147,11 @@ resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
   }
 
   lifecycle {
-    # GAE automatically assigns service to the default service account
-    # direct terraform to ignore this change.
     ignore_changes = [
-      service_account
+      # GAE automatically assigns service to the default service account
+      service_account,
+      # whether the service is serving requests is controlled at the application level
+      serving_status
     ]
   }
 }
