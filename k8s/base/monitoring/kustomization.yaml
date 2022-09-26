@@ -61,3 +61,9 @@ helmCharts:
       monitoring:
         serviceMonitor:
           enabled: true
+  # Log Forwarder: Promtail
+  - namespace: monitoring
+    releaseName: logs
+    name: promtail
+    version: 6.4.0
+    repo: https://grafana.github.io/helm-charts
