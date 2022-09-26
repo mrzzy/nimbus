@@ -33,6 +33,7 @@ module "k8s" {
 
   secret_keys = [
     "rclone",
+    "loki-s3",
   ]
   secrets = {
     # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
@@ -45,6 +46,16 @@ module "k8s" {
         "s3-endpoint"          = "https://${local.b2_endpoint}"
         "s3-access-key-id"     = b2_application_key.k8s_csi.application_key_id, #gitleaks:allow
         "s3-secret-access-key" = b2_application_key.k8s_csi.application_key,    #gitleaks:allow
+      }
+    },
+    "loki-s3" = {
+      name      = "loki-s3-credentials"
+      namespace = "monitoring"
+      data = {
+        "S3_ENDPOINT"          = local.b2_endpoint,
+        "S3_ACCESS_KEY_ID"     = b2_application_key.k8s_loki.application_key_id, #gitleaks:allow
+        "S3_SECRET_ACCESS_KEY" = b2_application_key.k8s_loki.application_key,    #gitleaks:allow
+        "LOKI_LOG_BUCKET"      = b2_bucket.logs.bucket_name,
       }
     },
   }
