@@ -35,14 +35,14 @@ module "k8s" {
     "rclone",
   ]
   secrets = {
-    # CSI-Rclone credentials: csi-rclone implements persistent volumes on S3
+    # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
     "rclone" = {
       name      = "rclone-secret"
       namespace = "csi-rclone"
       data = {
         "remote"               = "s3",
         "s3-provider"          = "Other", # any other S3 compatible provider
-        "s3-endpoint"          = local.b2_endpoint,
+        "s3-endpoint"          = "https://${local.b2_endpoint}"
         "s3-access-key-id"     = b2_application_key.k8s_csi.application_key_id, #gitleaks:allow
         "s3-secret-access-key" = b2_application_key.k8s_csi.application_key,    #gitleaks:allow
       }
