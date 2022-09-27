@@ -50,21 +50,6 @@ data "kubernetes_service" "ingress" {
 }
 
 # K8s Secrets
-# TLS
-resource "kubernetes_secret" "tls" {
-  for_each = var.tls_certs
-  type     = "kubernetes.io/tls"
-  metadata {
-    name = each.value
-    # default to the 'default' k8s namespace if unspecified
-    namespace = lookup(each.value, "namespace", "default")
-  }
-
-  data = {
-    "tls.crt" = each.value["cert"],
-    "tls.key" = var.tls_keys[each.key],
-  }
-}
 # Opaque
 resource "kubernetes_secret" "opaque" {
   for_each = toset(var.secret_keys)
