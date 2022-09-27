@@ -23,60 +23,40 @@ helmCharts:
     name: kube-prometheus-stack
     version: 40.1.0
     repo: https://prometheus-community.github.io/helm-charts
+    valuesInline:
+      grafana:
+        grafana.ini:
+          paths:
+            data: /var/lib/grafana/
+            logs: /var/log/grafana
+            plugins: /var/lib/grafana/plugins
+            provisioning: /etc/grafana/provisioning
+          log:
+            mode: console
+          # delegate authentication to proxy authentication proxy using headers forwarded by ingress
+          auth.proxy:
+            enabled: true
+            header_name: X-Auth-Request-User
+            header_property: username
+            auto_sign_up: true
+            headers: "Email:X-Auth-Request-Email"
+        additionalDataSources:
+          # add loki as a grafana datasource for logs
+          - version: 1
+            orgId: 1
+            uid: loki
+            name: loki
+            access: proxy
+            editable: false
+            type: loki
+            url: http://loki-gateway.monitoring.svc.cluster.local
   # Logging: Loki
   - namespace: monitoring
     releaseName: log
     name: loki
     version: 3.1.0
     repo: https://grafana.github.io/helm-charts
-    valuesInline:
-      loki:
-        auth_enabled: false
-        # loki by default requires a quorum of 2/3 writes for a log entry to be ingested
-        # lower replication_factor to 1 in order to allow the no. of write (ingester)
-        # replicas to be lowered.
-        commonConfig:
-          replication_factor: 1
-      # use s3 as a data store to persist logs ingested into loki
-      # pass s3 credentials to loki by populating environment with credentials &
-      # configuring loki to load them from the environment
-        storage:
-          type: s3
-          s3:
-            endpoint: '${S3_ENDPOINT}'
-            accessKeyId: '${S3_ACCESS_KEY_ID}'
-            secretAccessKey: '${S3_SECRET_ACCESS_KEY}'
-          bucketNames:
-            ruler: '${LOKI_LOG_BUCKET}'
-            chunks: '${LOKI_LOG_BUCKET}'
-            admin: '${LOKI_LOG_BUCKET}'
-      read:
-        replicas: 1
-        extraArgs:
-          - "-config.expand-env=true"
-        extraEnvFrom:
-          - secretRef:
-              name: loki-s3-credentials
-      write:
-        replicas: 1
-        extraArgs:
-          - "-config.expand-env=true"
-        extraEnvFrom:
-          - secretRef:
-              name: loki-s3-credentials
-      monitoring:
-        # monitor Loki's metrics with Prometheus
-        serviceMonitor:
-          enabled: true
-        # disable self monitoring as its too heavy for our use case:
-        # it needs grafana agent operator to deployed as well.
-        selfMonitoring:
-          enabled: false
-          grafanaAgent:
-            installOperator: false
-        # disable grafana dashboards as it relies on selfMonitoring
-        dashboards:
-          enabled: false
+    valuesFile: ./loki-values.yaml
   # Log Forwarder: promtail
   - namespace: monitoring
     releaseName: logs
