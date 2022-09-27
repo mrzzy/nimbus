@@ -26,7 +26,9 @@ jobs:
           OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
           OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
           OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
-        run: kubectl kustomize --enable-helm ./lke | kubectl apply --server-side --dry-run=server -f -
+        run: >
+          kubectl kustomize --enable-helm ./lke |
+          kubectl apply --server-side --force-conflicts --dry-run=server -f -
 
       - name: "Diff K8s manifests with current K8s Cluster's configuration"
         env:
