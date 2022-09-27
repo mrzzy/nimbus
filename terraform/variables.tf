@@ -55,8 +55,8 @@ variable "gcp_service_account_key" {
 variable "acme_server_url" {
   type        = string
   description = "URL of the ACME server to use to obtain TLS certificates from."
-  # defaults to Lets Encrypt staging which issues self-signed test certificates.
-  default = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  # use LetsEncrypt's production server to issue trusted TLS certificates
+  default = "https://acme-v02.api.letsencrypt.org/directory"
 }
 
 variable "proxy_gae_tag" {
