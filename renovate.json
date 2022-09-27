@@ -11,7 +11,7 @@
     {
       "fileMatch": "^k8s/.*/kustomization.yaml$",
       "matchStrings": [
-        "(?<depName>kubernetes\\/ingress-nginx)\\/controller-(?<version>.*)\\/"
+        "(?<depName>kubernetes\\/ingress-nginx)\\/controller-(?<currentValue>.*)\\/"
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose",
@@ -20,7 +20,7 @@
     {
       "fileMatch": "^k8s/.*/kustomization.yaml$",
       "matchStrings": [
-        "(?<depName>kubenetes-sigs\\/metrics-server)\\/releases\\/download\\/(?<version>.*)\\/"
+        "(?<depName>kubenetes-sigs\\/metrics-server)\\/releases\\/download\\/(?<currentValue>.*)\\/"
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose",
