@@ -24,6 +24,21 @@ helmCharts:
     version: 40.1.0
     valuesInline:
       grafana:
+        grafana.ini:
+          paths:
+            data: /var/lib/grafana/
+            logs: /var/log/grafana
+            plugins: /var/lib/grafana/plugins
+            provisioning: /etc/grafana/provisioning
+          log:
+            mode: console
+          # delegate authentication to proxy authentication proxy using headers forwarded by ingress
+          auth.proxy:
+            enabled: true
+            header_name: X-Auth-Request-User
+            header_property: username
+            auto_sign_up: true
+            headers: "Email:X-Auth-Request-Email"
         additionalDataSources:
           # add loki as a grafana datasource for logs
           - version: 1
