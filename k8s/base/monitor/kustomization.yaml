@@ -22,6 +22,18 @@ helmCharts:
     releaseName: monitor
     name: kube-prometheus-stack
     version: 40.1.0
+    valuesInline:
+      grafana:
+        additionalDataSources:
+          # add loki as a grafana datasource for logs
+          - version: 1
+            orgId: 1
+            uid: loki
+            name: loki
+            access: proxy
+            editable: false
+            type: loki
+            url: http://loki-gateway.monitoring.svc.cluster.local
   # Logging: Loki
   - namespace: monitoring
     releaseName: log
