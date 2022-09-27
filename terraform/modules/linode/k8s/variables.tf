@@ -60,6 +60,6 @@ variable "secrets" {
     data      = map(string)
   }))
   sensitive   = true
-  description = "Map of key (set in 'secret_keys') to K8s Opaque Secrets create on the K8s Cluster."
+  description = "Map of key (set in 'secret_keys') to K8s Opaque Secrets, to create on the K8s Cluster."
   default     = {}
 }
