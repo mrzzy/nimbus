@@ -15,7 +15,7 @@ resources:
   # CSI Rclone: S3-like cloud storage backed Persistent Volumes
   - ./csi-rclone
   # Monitoring: Prometheus, Grafana
-  - ./monitoring
+  - ./monitor
 
 helmCharts:
   # Authentication: OAuth2 Proxy
