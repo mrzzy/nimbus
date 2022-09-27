@@ -78,3 +78,7 @@ helmCharts:
       # monitor promtail's metrics with Prometheus
       serviceMonitor:
         enabled: true
+
+# corce all resources to deploy in monitoring namespace
+# needed as Loki's helm chart does not respect the namespace set at helmCharts level
+namespace: monitoring
