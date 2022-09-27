@@ -32,8 +32,6 @@ helmCharts:
     valuesInline:
       loki:
         auth_enabled: false
-        commonConfig:
-          replication_factor: 1
       # use s3 as a data store to persist logs ingested into loki
       # pass s3 credentials to loki by populating environment with credentials &
       # configuring loki to load them from the environment
@@ -57,13 +55,26 @@ helmCharts:
           - "-config.expand-env=true"
         extraEnvFrom:
           - secret: loki-s3-credentials
-      # monitor Loki with Prometheus
       monitoring:
+        # monitor Loki's metrics with Prometheus
         serviceMonitor:
           enabled: true
-  # Log Forwarder: Promtail
+        # disable self monitoring as its too heavy for our use case:
+        # it needs grafana agent operator to deployed as well.
+        selfMonitoring:
+          enabled: false
+          grafanaAgent:
+            installOperator: false
+        # disable grafana dashboards as it relies on selfMonitoring
+        dashboards:
+          enabled: false
+  # Log Forwarder: promtail
   - namespace: monitoring
     releaseName: logs
     name: promtail
     version: 6.4.0
     repo: https://grafana.github.io/helm-charts
+    valuesInline:
+      # monitor promtail's metrics with Prometheus
+      serviceMonitor:
+        enabled: true
