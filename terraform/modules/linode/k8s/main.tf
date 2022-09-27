@@ -55,7 +55,7 @@ resource "kubernetes_secret" "tls" {
   for_each = var.tls_certs
   type     = "kubernetes.io/tls"
   metadata {
-    name = each.key
+    name = each.value
     # default to the 'default' k8s namespace if unspecified
     namespace = lookup(each.value, "namespace", "default")
   }
@@ -68,6 +68,8 @@ resource "kubernetes_secret" "tls" {
 # Opaque
 resource "kubernetes_secret" "opaque" {
   for_each = toset(var.secret_keys)
+
+  type = var.secrets[each.value].type
   metadata {
     name      = var.secrets[each.value].name
     namespace = var.secrets[each.value].namespace
