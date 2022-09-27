@@ -1,31 +1,34 @@
 #
 # Nimbus
 # K8s Deployment
-# Media Streaming Service: rtorrent-flood Ingress
+# Monitoring: Grafana Ingress
 #
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: flood
+  name: monitor-grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/part-of: monitoring
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
     nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-Email, X-Auth-Request-User"
 spec:
   ingressClassName: nginx
   rules:
-  - host: media.mrzzy.co
+  - host: monitor.mrzzy.co
     http:
       paths:
-      # expose flood service on media.mrzzy.co/files
       - backend:
           service:
-            name: media-flood
+            name: monitor-grafana
             port:
               number: 80
-        path: /files/
+        path: /
         pathType: Prefix
   tls:
   - hosts:
-    - media.mrzzy.co
+    - monitor.mrzzy.co
     secretName: mrzzy-co-tls
