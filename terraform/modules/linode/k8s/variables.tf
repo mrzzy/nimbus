@@ -50,16 +50,21 @@ variable "tls_keys" {
 
 variable "secret_keys" {
   type        = set(string)
-  description = "Keys used to identify secrets specified in 'secrets' var."
+  description = <<-EOF
+    Keys used to identify secrets specified in 'secrets' var.
+    Each key should correspond to an entry in the 'secrets' var.
+  EOF
+  default     = []
 }
 
 variable "secrets" {
   type = map(object({
+    namespace = optional(string, "default"),
     name      = string,
-    namespace = string,
+    type      = optional(string, "Opaque"),
     data      = map(string)
   }))
   sensitive   = true
-  description = "Map of key (set in 'secret_keys') to K8s Opaque Secrets, to create on the K8s Cluster."
+  description = "Map of K8s Secrets to create in the cluster within the given namespace."
   default     = {}
 }
