@@ -49,12 +49,14 @@ helmCharts:
         extraArgs:
           - "-config.expand-env=true"
         extraEnvFrom:
-          - secret: loki-s3-credentials
+          - secretRef:
+              name: loki-s3-credentials
       write:
         extraArgs:
           - "-config.expand-env=true"
         extraEnvFrom:
-          - secret: loki-s3-credentials
+          - secretRef:
+              name: loki-s3-credentials
       monitoring:
         # monitor Loki's metrics with Prometheus
         serviceMonitor:
