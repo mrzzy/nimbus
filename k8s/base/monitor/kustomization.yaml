@@ -22,6 +22,10 @@ helmCharts:
     releaseName: monitor
     name: kube-prometheus-stack
     version: 40.1.0
+    valuesInline:
+      grafana:
+        ingress:
+          enabled: true
   # Logging: Loki
   - namespace: monitoring
     releaseName: log
