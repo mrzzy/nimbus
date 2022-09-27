@@ -48,18 +48,18 @@ variable "tls_keys" {
   EOF
 }
 
-variable "s3_csi" {
-  type = object({
-    s3_endpoint   = string,
-    access_key_id = string,
-    access_key    = string,
-  })
-  sensitive   = true
-  default     = null
-  description = <<EOF
-    Credentials to pass to S3 CSI to provision Persistent Volumes on S3-compatible storage.
+variable "secret_keys" {
+  type        = set(string)
+  description = "Keys used to identify secrets specified in 'secrets' var."
+}
 
-    Passes the given config & credentials to the S3 CSI by applying a 'csi-s3-secret'
-    K8s Secret on the 'kube-system' namespace in the K8s Cluster.
-  EOF
+variable "secrets" {
+  type = map(object({
+    name      = string,
+    namespace = string,
+    data      = map(string)
+  }))
+  sensitive   = true
+  description = "Map of key (set in 'secret_keys') to K8s Opaque Secrets, to create on the K8s Cluster."
+  default     = {}
 }

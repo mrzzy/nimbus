@@ -53,9 +53,7 @@ data "kubernetes_service" "ingress" {
 # TLS
 resource "kubernetes_secret" "tls" {
   for_each = var.tls_certs
-
-  type = "kubernetes.io/tls"
-
+  type     = "kubernetes.io/tls"
   metadata {
     name = each.key
     # default to the 'default' k8s namespace if unspecified
@@ -67,18 +65,12 @@ resource "kubernetes_secret" "tls" {
     "tls.key" = var.tls_keys[each.key],
   }
 }
-# CSI-Rclone credentials: csi-rclone implements persistent volumes on S3
-resource "kubernetes_secret" "csi-rclone" {
+# Opaque
+resource "kubernetes_secret" "opaque" {
+  for_each = toset(var.secret_keys)
   metadata {
-    name      = "rclone-secret"
-    namespace = "csi-rclone"
+    name      = var.secrets[each.value].name
+    namespace = var.secrets[each.value].namespace
   }
-
-  data = {
-    "remote"               = "s3",
-    "s3-provider"          = "Other", # any other S3 compatible provider
-    "s3-endpoint"          = var.s3_csi.s3_endpoint,
-    "s3-access-key-id"     = var.s3_csi.access_key_id,
-    "s3-secret-access-key" = var.s3_csi.access_key,
-  }
+  data = var.secrets[each.value].data
 }
