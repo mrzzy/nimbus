@@ -21,21 +21,22 @@ module "k8s" {
   machine_type = "g6-standard-2" # 2vCPU, 2GB
   n_workers    = 1
 
-  # TLS credentials to add to the cluster as K8s secrets.
-  tls_certs = {
-    "${local.domain_slug}-tls" = {
-      "cert" = module.tls_cert.full_chain_cert,
-    }
-  }
-  tls_keys = {
-    "${local.domain_slug}-tls" = module.tls_cert.private_key,
-  }
-
   secret_keys = [
+    "default-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
   secrets = {
+    # TLS credentials to add to the cluster as K8s secrets.
+    "default-${local.domain_slug}-tls" = {
+      name      = "${local.domain_slug}-tls"
+      type      = "kubernetes.io/tls"
+      namespace = "default",
+      data = {
+        "tls.crt" = module.tls_cert.full_chain_cert,
+        "tls.key" = module.tls_cert.private_key,
+      }
+    },
     # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
     "rclone" = {
       name      = "rclone-secret"
