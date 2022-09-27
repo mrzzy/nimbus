@@ -23,6 +23,7 @@ module "k8s" {
 
   secret_keys = [
     "default-${local.domain_slug}-tls",
+    "monitoring-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
@@ -32,6 +33,15 @@ module "k8s" {
       name      = "${local.domain_slug}-tls"
       type      = "kubernetes.io/tls"
       namespace = "default",
+      data = {
+        "tls.crt" = module.tls_cert.full_chain_cert,
+        "tls.key" = module.tls_cert.private_key,
+      }
+    },
+    "monitoring-${local.domain_slug}-tls" = {
+      name      = "${local.domain_slug}-tls"
+      type      = "kubernetes.io/tls"
+      namespace = "monitoring",
       data = {
         "tls.crt" = module.tls_cert.full_chain_cert,
         "tls.key" = module.tls_cert.private_key,
