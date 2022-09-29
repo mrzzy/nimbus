@@ -31,7 +31,7 @@
       "matchStrings": [
         "terraform_version: (?<currentValue>.*)"
       ],
-      "depNameTemplate": "terraform",
+      "depNameTemplate": "hashicorp/terraform",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "hashicorp",
       "extractVersionTemplate": "v(?<version>.*)"
