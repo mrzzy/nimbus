@@ -25,6 +25,16 @@
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose",
       "extractVersionTemplate": "^$(?<version>v.*)$"
+    },
+    {
+      "fileMatch": "^.github/workflows/*.yaml",
+      "matchStrings": [
+        "terraform_version: (?<currentValue>.*)"
+      ],
+      "depNameTemplate": "terraform",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "hashicorp",
+      "extractVersionTemplate": "v(?<version>.*)"
     }
   ]
 }
