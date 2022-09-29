@@ -27,7 +27,7 @@
       "extractVersionTemplate": "^$(?<version>v.*)$"
     },
     {
-      "fileMatch": "^.github/workflows/*.yaml",
+      "fileMatch": "^\\.github/workflows/.*\\.yaml",
       "matchStrings": [
         "terraform_version: (?<currentValue>.*)"
       ],
