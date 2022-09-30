@@ -4,7 +4,7 @@
 # Lint Pipeline
 #
 
-name: "Lint Terraform"
+name: "Lint & Plan Terraform"
 on: push
 jobs:
   lint-terraform:
