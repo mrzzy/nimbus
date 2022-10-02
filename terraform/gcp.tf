@@ -95,7 +95,7 @@ module "registry" {
 # GCP: Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
-  source = "github.com/mrzzy/warp//deploy/terraform/gcp_vm"
+  source = "github.com/mrzzy/warp//deploy/terraform/gcp_vm?ref=8310bb8962a1dbeb3928b2172a3ddb52f32555da"
 
   enabled      = var.has_warp_vm
   image        = var.warp_image
