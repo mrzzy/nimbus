@@ -14,6 +14,17 @@ on:
         type: boolean
         description: "WARP VM: Deploy?"
         required: true
+      # whether to enable warp vm's proxy
+      warp_vm_enable_proxy:
+        type: boolean
+        description: "WARP VM: Enable Proxy?"
+        required: true
+      # list of comma separate ports to open on warp vm for development purposes
+      warp_vm_allow_ports:
+        type: string
+        description: "WARP VM: Comma-separated ports to expose"
+        required: false
+        default: ""
       # warp vm machine type setting to control cpu, ram & cost of deployed vm
       warp_vm_machine_type:
         type: choice
@@ -35,12 +46,6 @@ on:
         options:
           - "warp-box"
           - "warp-box-dev"
-      # list of comma separate ports to open on warp vm for development purposes
-      warp_vm_allow_ports:
-        type: string
-        description: "WARP VM: Comma-separated ports to expose"
-        required: false
-        default: ""
       # whether to enable warp vm's http web terminal
       warp_vm_http_term:
         type: boolean
@@ -53,7 +58,6 @@ on:
         required: true
         # by default, allow traffic from all ip addresses
         default: "0.0.0.0/0"
-
 jobs:
   apply-terraform:
     name: "Apply Terraform deployment"
@@ -78,6 +82,7 @@ jobs:
           TF_VAR_warp_allow_ports: "${{ github.event.inputs.warp_vm_allow_ports }}"
           TF_VAR_warp_http_terminal: "${{ github.event.inputs.warp_vm_http_term }}"
           TF_VAR_warp_allow_ip: "${{ github.event.inputs.warp_vm_allow_ip }}"
+          TF_VAR_has_warp_proxy: "${{ github.event.inputs.warp_vm_enable_proxy }}"
         run: >
           terraform apply
           -auto-approve=true
