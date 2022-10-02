@@ -100,6 +100,8 @@ module "warp_vm" {
   enabled      = var.has_warp_vm
   image        = var.warp_image
   machine_type = var.warp_machine_type
+  disk_type    = "pd-ssd"
+
   tags = concat(
     [
       local.allow_ssh_tag,
