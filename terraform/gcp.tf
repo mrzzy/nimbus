@@ -120,7 +120,7 @@ resource "google_app_engine_application" "warp_proxy" {
   project     = local.gcp_project_id
   location_id = local.gcp_region
   # only enable proxy if warp VM is also enabled
-  serving_status = var.has_warp_vm ? "SERVING" : "USER_DISABLED"
+  serving_status = (var.has_warp_vm && var.has_warp_proxy) ? "SERVING" : "USER_DISABLED"
 }
 resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
   version_id                = "v1"
