@@ -132,7 +132,7 @@ resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
 
   deployment {
     container {
-      image = "${module.registry.repo_prefix}/proxy-gae${var.proxy_gae_tag}"
+      image = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
     }
   }
   env_variables = {
