@@ -88,4 +88,4 @@ jobs:
           -auto-approve=true
           -var="warp_machine_type=$(
             echo '${{ github.event.inputs.warp_vm_machine_type }}' | cut -d ' ' -f 1 -n
-          )"kjk
+          )"
