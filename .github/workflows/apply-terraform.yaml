@@ -14,6 +14,7 @@ on:
         type: boolean
         description: "WARP VM: Deploy?"
         required: true
+      # whether to enable warp vm's proxy
       warp_vm_enable_proxy:
         type: boolean
         description: "WARP VM: Enable Proxy?"
@@ -37,7 +38,6 @@ on:
           - "e2-standard-2 - 2CPU, 8GB"
           - "e2-standard-4 - 4CPU, 16GB"
           - "e2-standard-8 - 8CPU, 32GB"
-      # whether to enable warp vm's proxy
       # set vm image used to start warp vm
       warp_vm_image:
         type: choice
