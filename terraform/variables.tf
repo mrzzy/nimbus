@@ -64,9 +64,3 @@ variable "acme_server_url" {
   # use LetsEncrypt's production server to issue trusted TLS certificates
   default = "https://acme-v02.api.letsencrypt.org/directory"
 }
-
-variable "proxy_gae_tag" {
-  type        = string
-  description = "Image tag of the proxy-gae docker container to deploy. "
-  default     = "@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
-}
