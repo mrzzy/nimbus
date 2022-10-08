@@ -8,6 +8,8 @@ name: "Lint & Diff K8s Manifests"
 on: push
 jobs:
   dry-run-k8s:
+    env:
+      KUBECTL_FLAGS: "--server-side --force-conflicts"
     name: "Dry Run K8s Manifests"
     runs-on: ubuntu-20.04
     defaults:
@@ -28,7 +30,7 @@ jobs:
           OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
         run: >
           kubectl kustomize --enable-helm ./lke |
-          kubectl apply --server-side --force-conflicts --dry-run=server -f -
+          kubectl apply ${KUBECTL_FLAGS} --dry-run=server -f -
 
       - name: "Diff K8s manifests with current K8s Cluster's configuration"
         env:
@@ -38,5 +40,6 @@ jobs:
         run: |
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
-          kubectl kustomize --enable-helm ./lke | kubectl diff -f - || EXIT_CODE=$?
+          kubectl kustomize --enable-helm ./lke | \
+            kubectl diff ${KUBECTL_FLAGS} -f - || EXIT_CODE=$?
           test ${EXIT_CODE:-1} -eq 1
