@@ -1,0 +1,21 @@
+#
+# Nimbus
+# Calibre Web Deployment
+# Library Persistent Volume
+#
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: calibre-library
+  labels:
+    stores: calibre-library
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: "" # matches PVC storage requests
+  storageClassName: rclone
+  csi:
+    driver: csi-rclone
+    volumeHandle: ecfd06f6-ea6b-46ea-ab50-493d033a2e17

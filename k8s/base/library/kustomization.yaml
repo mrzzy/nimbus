@@ -6,8 +6,23 @@
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
+- library-pv.yaml
+- library-pvc.yaml
+- settings-pvc.yaml
 - deployment.yaml
 commonLabels:
     app.kubernetes.io/part-of: library
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
+# match calibre library PV's declared capacity to the size requested by the PVC
+replacements:
+  - source:
+      kind: PersistentVolumeClaim
+      name: calibre-library
+      fieldPath: spec.resources.requests.storage
+    targets:
+      - select:
+          kind: PersistentVolume
+          name: calibre-library
+        fieldPaths:
+          - spec.capacity.storage
