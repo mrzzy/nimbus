@@ -1,0 +1,13 @@
+#
+# Nimbus
+# K8s Deployment
+# Library Service
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+- deployment.yaml
+commonLabels:
+    app.kubernetes.io/part-of: library
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize
