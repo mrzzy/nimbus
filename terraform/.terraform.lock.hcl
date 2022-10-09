@@ -134,7 +134,7 @@ provider "registry.terraform.io/linode/linode" {
 
 provider "registry.terraform.io/vancluever/acme" {
   version     = "2.11.1"
-  constraints = "<2.11.2"
+  constraints = "< 2.11.2"
   hashes = [
     "h1:0ui1PbZXxeaF7SlsTzd4U1gUWzyfrHIxRa2gmeafT58=",
     "h1:39QZNuzrFs4wo7RnT9S2xgtXYG5z7JOGVpBGc1ynxJ8=",
