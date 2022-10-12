@@ -21,7 +21,7 @@ helmCharts:
   - namespace: monitoring
     releaseName: monitor
     name: kube-prometheus-stack
-    version: 40.5.0
+    version: 41.3.2
     repo: https://prometheus-community.github.io/helm-charts
     valuesInline:
       grafana:
