@@ -113,7 +113,7 @@ provider "registry.terraform.io/hashicorp/tls" {
 
 provider "registry.terraform.io/linode/linode" {
   version     = "1.29.3"
-  constraints = "<1.29.4"
+  constraints = "< 1.29.4"
   hashes = [
     "h1:0wA711SXXUuh7wK6FBQ4O/2OHK6Qir688rx9I14rukI=",
     "h1:FyLnp6VeJvjOy428VEzGNnxnSuC4ZpdR5CdvsxUPxEM=",
