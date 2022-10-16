@@ -18,7 +18,7 @@ module "k8s" {
   source = "./modules/linode/k8s"
   region = local.linode_region
 
-  machine_type = "g6-standard-2" # 2vCPU, 2GB
+  machine_type = "g6-dedicated-2" # 2vCPU, 4GB
   n_workers    = 1
 
   secret_keys = [
