@@ -7,7 +7,7 @@ terraform {
   required_providers {
     linode = {
       source  = "linode/linode"
-      version = "<1.29.4"
+      version = "<1.29.5"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
