@@ -18,7 +18,7 @@ terraform {
     }
     linode = {
       source  = "linode/linode"
-      version = "<1.29.4"
+      version = "<1.29.5"
     }
     acme = {
       source  = "vancluever/acme"
