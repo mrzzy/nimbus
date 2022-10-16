@@ -54,7 +54,7 @@ module "k8s" {
       data = {
         "remote"               = "s3",
         "s3-provider"          = "Other", # any other S3 compatible provider
-        "s3-endpoint"          = "https://${local.b2_endpoint}"
+        "s3-endpoint"          = local.b2_endpoint,
         "s3-access-key-id"     = b2_application_key.k8s_csi.application_key_id, #gitleaks:allow
         "s3-secret-access-key" = b2_application_key.k8s_csi.application_key,    #gitleaks:allow
       }
