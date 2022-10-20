@@ -36,7 +36,7 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
 
 provider "registry.terraform.io/hashicorp/google" {
   version     = "4.41.0"
-  constraints = "<4.41.1"
+  constraints = "< 4.41.1"
   hashes = [
     "h1:25VSM8jkWyfy9bfh2oNjrnhCLdvlu1h4n7r3ibRkxIs=",
     "h1:2Bl3jLwdZpzp70yuCIxfn7gL/858f0I/Cv7yuzRySM0=",
