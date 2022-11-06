@@ -48,11 +48,6 @@ monitoring:
     enabled: false
     grafanaAgent:
       installOperator: false
-    lokiCanary:
-      enabled: false
   # disable grafana dashboards as it relies on selfMonitoring
   dashboards:
     enabled: false
-# disable helm test as it requires self monitoring to be enabled
-test:
-  enabled: false
