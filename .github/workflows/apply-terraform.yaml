@@ -1,4 +1,4 @@
-#
+}
 # Nimbus
 # Terraform
 # Deploy Pipeline
@@ -40,12 +40,10 @@ on:
           - "e2-standard-8 - 8CPU, 32GB"
       # set vm image used to start warp vm
       warp_vm_image:
-        type: choice
+        type: string
         description: "WARP VM: Boot Image"
         required: true
-        options:
-          - "warp-box"
-          - "warp-box-dev"
+        default: "warp-box"
       # whether to enable warp vm's http web terminal
       warp_vm_http_term:
         type: boolean
