@@ -117,6 +117,11 @@ module "warp_vm" {
   web_tls_key    = module.tls_cert.private_key
   ssh_public_key = local.ssh_public_key
 }
+# GCP: enroll project-wide ssh key for ssh access to VMs
+resource "google_compute_project_metadata_item" "ssh_keys" {
+  key   = "ssh-keys"
+  value = local.ssh_public_key
+}
 # proxy on Google App Engine to provide access to WARP VM behind a corporate firewall.
 resource "google_app_engine_application" "warp_proxy" {
   project     = local.gcp_project_id
@@ -124,42 +129,9 @@ resource "google_app_engine_application" "warp_proxy" {
   # only enable proxy if warp VM is also enabled
   serving_status = (var.has_warp_vm && var.has_warp_proxy) ? "SERVING" : "USER_DISABLED"
 }
-resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
-  version_id                = "v1"
-  runtime                   = "custom"
-  service                   = "default"
-  delete_service_on_destroy = true
 
-  deployment {
-    container {
-      image = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
-    }
-  }
-  env_variables = {
-    PROXY_URL = "https://warp.${local.domain}"
-  }
-  liveness_check {
-    path = "/health"
-  }
-  readiness_check {
-    path = "/health"
-  }
-  manual_scaling {
-    instances = 1
-  }
-
-  lifecycle {
-    ignore_changes = [
-      # GAE automatically assigns service to the default service account
-      service_account,
-      # whether the service is serving requests is controlled at the application level
-      serving_status
-    ]
-  }
-}
-
-# GCP: enroll project-wide ssh key for ssh access to VMs
-resource "google_compute_project_metadata_item" "ssh_keys" {
-  key   = "ssh-keys"
-  value = local.ssh_public_key
+module "warp_proxy_service" {
+  source    = "./modules/gcp/gae_proxy"
+  container = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
+  proxy_url = "https://warp.${local.domain}"
 }
