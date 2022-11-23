@@ -6,13 +6,17 @@
 
 FROM nginx:1.23.2-alpine
 
-RUN mkdir -p \
+RUN mkdir -p /app \
   # create log dir expected by Google App Engine
-  /var/log/app_engine \
+  /var/log/app_engine
+WORKDIR /app
 
-# Copy nginx configuration. This sets up the behavior of nginx.
-COPY nginx.conf /etc/nginx/nginx.conf
+# install python & pip modules
+RUN apk add --no-cache python3=3.10.8-r0 py3-pip=22.1.1-r0
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-# default target URL nginx proxies to
-ENV PROXY_URL=http://example.com
-EXPOSE 8080
+# copy source code
+COPY entrypoint.sh /docker-entrypoint.d/5-template-entrypoint.sh
+RUN chmod u+x /docker-entrypoint.d/5-template-entrypoint.sh
+COPY * /app/
