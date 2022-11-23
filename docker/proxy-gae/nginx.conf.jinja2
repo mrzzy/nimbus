@@ -1,0 +1,50 @@
+#
+# Nimbus
+# proxy-gae
+# Nginx Config
+#
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    # Log to directories expected by Google App Engine
+    # Logs will appear on the Google Developer's Console when logged to this directory.
+    access_log /var/log/app_engine/app.log;
+    error_log /var/log/app_engine/app.log;
+    # use cloudflare dns to resolve DNS names
+    resolver 1.1.1.1;
+
+    server {
+        # Google App Engine expects the runtime to serve HTTP traffic from port 8080.
+        listen 8080 default_server;
+        # allow any server DNS name to be passed via HTTP host header
+        server_name _;
+
+        # serve healthcheck used by Google App Engine to verify if nginx is ready
+        location = /health {
+            return 200 ok;
+        }
+
+        # proxy routes
+        {%- for route, target in proxy_spec.items() %}
+        # {{ route }} -> {{ target }}
+        location {{ route }} {
+            # force dns resolution at runtime by pass target url as nginx var to proxy_pass
+            set $target_url {{ target }};
+            # when variables are used with proxy_pass, the request URL must be explicitly passed.
+            proxy_pass $target_url$request_uri;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            # proxy directives needed for proxying websocket connections
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_read_timeout 300s; # wait 5mins before closing websockets
+        }
+        {%- endfor %}
+    }
+}
+# vim: ft=nginx.jinja2
