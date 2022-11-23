@@ -26,12 +26,11 @@ if __name__ == "__main__":
         "proxy_spec",
         type=parse_proxy,
         help=dedent(
+            """Specify routes that should be proxied in the format:
+            '/<ROUTE>=<TARGET> [/<ROUTE>=<TARGET2> ...]'
+            Example: '/proxy=https://proxy.me' will proxy all requests sent to
+            '/proxy/target/url' to 'https://proxy.me/target/url'
             """
-        Specify routes that should be proxied in the format:
-        '/<ROUTE>=<TARGET> [/<ROUTE>=<TARGET2> ...]'
-        Example: '/proxy=https://proxy.me' will proxy all requests sent to
-        '/proxy/target/url' to 'https://proxy.me/target/url'
-        """
         ),
     )
     parser.add_argument(
