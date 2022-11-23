@@ -131,7 +131,7 @@ resource "google_app_engine_application" "warp_proxy" {
 }
 
 module "warp_proxy_service" {
-  source    = "./modules/gcp/gae_proxy"
+  source    = "./modules/gcp/proxy_gae"
   container = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
   proxy_url = "https://warp.${local.domain}"
 }
