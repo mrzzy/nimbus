@@ -13,9 +13,7 @@ terraform {
   }
 }
 
-
-# proxy on Google App Engine to provide access to WARP VM behind a corporate firewall.
-resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
+resource "google_app_engine_flexible_app_version" "v1" {
   version_id                = "v1"
   runtime                   = "custom"
   service                   = "default"

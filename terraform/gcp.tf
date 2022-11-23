@@ -122,12 +122,12 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
   key   = "ssh-keys"
   value = local.ssh_public_key
 }
-# proxy on Google App Engine to provide access to WARP VM behind a corporate firewall.
-resource "google_app_engine_application" "warp_proxy" {
-  project     = local.gcp_project_id
-  location_id = local.gcp_region
-  # only enable proxy if warp VM is also enabled
-  serving_status = (var.has_warp_vm && var.has_warp_proxy) ? "SERVING" : "USER_DISABLED"
+
+# proxy on Google App Engine to bypass corporate firewall.
+resource "google_app_engine_application" "app" {
+  project        = local.gcp_project_id
+  location_id    = local.gcp_region
+  serving_status = var.has_warp_proxy ? "SERVING" : "USER_DISABLED"
 }
 
 module "warp_proxy_service" {
