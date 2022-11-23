@@ -27,7 +27,7 @@ resource "google_app_engine_flexible_app_version" "warp_proxy_v1" {
     }
   }
   env_variables = {
-    PROXY_URL = var.proxy_url
+    PROXY_SPEC = var.proxy_spec
   }
   liveness_check {
     path = "/health"
