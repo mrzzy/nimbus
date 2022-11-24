@@ -17,12 +17,6 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: "0"
-
-      - name: Flag Secrets
-        uses: DariuszPorowski/github-action-gitleaks@v2
-
       - name: "Setup kubectl access to LKE"
         uses: ./.github/actions/setup-lke
         with:
