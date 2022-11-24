@@ -123,15 +123,18 @@ resource "google_compute_project_metadata_item" "ssh_keys" {
   value = local.ssh_public_key
 }
 
-# proxy on Google App Engine to bypass corporate firewall.
+# Google App Engine (GAE) Proxy
 resource "google_app_engine_application" "app" {
   project        = local.gcp_project_id
   location_id    = local.gcp_region
-  serving_status = var.has_warp_proxy ? "SERVING" : "USER_DISABLED"
+  serving_status = var.has_gae_proxy ? "SERVING" : "USER_DISABLED"
 }
 
-module "warp_proxy_service" {
-  source     = "./modules/gcp/proxy_gae"
-  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
-  proxy_spec = "/=https://warp.${local.domain}"
+module "proxy_service" {
+  source    = "./modules/gcp/proxy_gae"
+  container = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
+  proxy_spec = join(" ", [
+    # proxy requests to warp vm's web terminal
+    "/warp/=https://warp.${local.domain}"
+  ])
 }

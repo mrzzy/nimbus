@@ -38,5 +38,5 @@ moved {
 
 moved {
   from = google_app_engine_flexible_app_version.warp_proxy_v1
-  to   = module.warp_proxy_service.google_app_engine_flexible_app_version.v1
+  to   = module.proxy_service.google_app_engine_flexible_app_version.v1
 }
