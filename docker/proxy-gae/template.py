@@ -16,7 +16,7 @@ def parse_proxy(spec_str: str) -> Dict[str, str]:
     specs = [route.split("=") for route in spec_str.split()]
 
     # strip trailing '/' for standardization
-    spec = dict([(route.strip("/"), route.strip("/")) for route, target in specs])
+    spec = dict([(route.rstrip("/"), target.rstrip("/")) for route, target in specs])
 
     # check: no reserved routes
     if "/health" in spec:
