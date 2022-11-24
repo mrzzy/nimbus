@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 # copy source code
 COPY entrypoint.sh /docker-entrypoint.d/5-template-entrypoint.sh
 RUN chmod u+x /docker-entrypoint.d/5-template-entrypoint.sh
-COPY * /app/
+COPY nginx.conf.jinja2 template.py /app/
