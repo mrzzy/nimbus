@@ -30,10 +30,11 @@ http {
         # proxy routes
         {%- for route, target in proxy_spec.items() %}
         # {{ route }} -> {{ target }}
-        location {{ route }} {
+        location {{ route }}/ {
             # force dns resolution at runtime by pass target url as nginx var to proxy_pass
             set $target_url {{ target }};
             # when variables are used with proxy_pass, the request URL must be explicitly passed.
+            # trailing '/' is already included in the request url
             proxy_pass $target_url$request_uri;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

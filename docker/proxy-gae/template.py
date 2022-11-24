@@ -13,9 +13,15 @@ from jinja2 import Environment, FileSystemLoader, PackageLoader
 
 def parse_proxy(spec_str: str) -> Dict[str, str]:
     """Parse the given proxy spec into a dictionary of routes to target"""
-    spec = dict([route.split("=") for route in spec_str.split()])
+    specs = [route.split("=") for route in spec_str.split()]
+
+    # strip trailing '/' for standardization
+    spec = dict([(route.strip("/"), route.strip("/")) for route, target in specs])
+
+    # check: no reserved routes
     if "/health" in spec:
         raise ValueError("'/health' route is reserved for health checks.")
+
     return spec
 
 
