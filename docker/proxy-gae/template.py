@@ -8,6 +8,7 @@ import re, os
 from argparse import ArgumentParser
 from textwrap import dedent
 from typing import Dict
+from dns.resolver import Resolver
 from jinja2 import Environment, FileSystemLoader, PackageLoader
 
 
@@ -50,7 +51,8 @@ if __name__ == "__main__":
     # template nginx config
     env = Environment(loader=FileSystemLoader(os.getcwd()), autoescape=True)
     nginx_conf = env.get_template("nginx.conf.jinja2").render(
-        proxy_spec=args.proxy_spec
+        proxy_spec=args.proxy_spec,
+        nameservers=" ".join(Resolver().nameservers),
     )
 
     with open(args.output_path, "w") as f:

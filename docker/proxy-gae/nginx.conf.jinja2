@@ -14,7 +14,7 @@ http {
     access_log /var/log/app_engine/app.log;
     error_log /var/log/app_engine/app.log;
     # use docker's default nameserver to resolve DNS
-    resolver 127.0.0.11;
+    resolver {{ nameservers }};
 
     server {
         # Google App Engine expects the runtime to serve HTTP traffic from port 8080.
