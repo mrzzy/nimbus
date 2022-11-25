@@ -48,7 +48,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # template nginx config
-    env = Environment(loader=FileSystemLoader(os.getcwd()))
+    env = Environment(loader=FileSystemLoader(os.getcwd()), autoescape=True)
     nginx_conf = env.get_template("nginx.conf.jinja2").render(
         proxy_spec=args.proxy_spec
     )
