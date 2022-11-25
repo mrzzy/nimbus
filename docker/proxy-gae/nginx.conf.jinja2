@@ -30,9 +30,14 @@ http {
         # proxy routes
         {%- for route, target in proxy_spec.items() %}
         # {{ route }} -> {{ target }}
+        # redirect to route with trailing slash if request omits it
         location = {{ route }} {
-            # redirect to route with trailing slash if request omits it
-            return 301 $scheme://$http_x_forwarded_host{{ route }}/;
+            # handle case where we are running behind a proxy by using
+            # the original hostname the user connected to from the X-Forwarded-Host header
+            if ($http_x_forwarded_host) {
+                return 301 $scheme://$http_x_forwarded_host{{ route }}/;
+            }
+            return 301 {{ route }}/;
         }
         location {{ route }}/ {
             # force dns resolution at runtime by pass target url as nginx var to proxy_pass
