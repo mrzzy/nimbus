@@ -40,8 +40,9 @@ tag?
 # vim-projectionist
 .projections.json
 
-# vim project files
+# vim
 /.vim/
+Session.vim
 
 # dotenv
 .env
