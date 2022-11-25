@@ -12,8 +12,14 @@ on:
       # whether to enable warp vm's proxy
       deploy_gae_proxy:
         type: boolean
-        description: "Enable GAE Proxy?"
+        description: "GAE Proxy: Deploy?"
         required: true
+      gae_proxy_spec:
+        type: string
+        description: "GAE Proxy: Routes"
+        required: true
+        default: "/warp=https://warp.mrzzy.co "
+
       # WARP VM inputs
       # setting: whether to deploy the warp vm
       deploy_warp_vm:
@@ -82,6 +88,7 @@ jobs:
           TF_VAR_warp_http_terminal: "${{ github.event.inputs.warp_vm_http_term }}"
           TF_VAR_warp_allow_ip: "${{ github.event.inputs.warp_vm_allow_ip }}"
           TF_VAR_has_gae_proxy: "${{ github.event.inputs.deploy_gae_proxy }}"
+          TF_VAR_gae_proxy_spec: "${{ github.event.inputs.gae_proxy_spec }}"
         run: >
           terraform apply
           -auto-approve=true
