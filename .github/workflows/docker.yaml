@@ -3,7 +3,7 @@
 # Docker Container CI Pipeline
 #
 
-name: "Build & Push Docker Containers to GCP"
+name: "Publish Docker Containers to GCP"
 on:
   push: {}
 env:
@@ -17,7 +17,7 @@ permissions:
   id-token: write
 jobs:
   proxy-gae:
-    name: "Build & Push proxy-gae Docker container"
+    name: "Build, Test & Push proxy-gae Docker container"
     defaults:
       run:
         working-directory: docker/proxy-gae
@@ -28,6 +28,10 @@ jobs:
         run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
       - name: "Lint Python with black"
         run: black .
+      - name: "Test Container"
+        run:
+          pip install -r requirements-dev.txt
+          python3 test/test.py
       - name: "Build Container"
         run: |
           CONTAINER="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
