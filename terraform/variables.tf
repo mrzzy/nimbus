@@ -52,6 +52,12 @@ variable "has_gae_proxy" {
   default     = true
 }
 
+variable "gae_proxy_spec" {
+  type        = string
+  description = "Specify routes that should be proxied by GAE Proxy."
+  default     = ""
+}
+
 variable "gcp_service_account_key" {
   type        = string
   sensitive   = true

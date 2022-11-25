@@ -131,10 +131,7 @@ resource "google_app_engine_application" "app" {
 }
 
 module "proxy_service" {
-  source    = "./modules/gcp/proxy_gae"
-  container = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
-  proxy_spec = join(" ", [
-    # proxy requests to warp vm's web terminal
-    "/warp/=https://warp.${local.domain}"
-  ])
+  source     = "./modules/gcp/proxy_gae"
+  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:22904f18493ec9b544a57e9f217488266778799b151b3d318b111b2ab447fca1"
+  proxy_spec = var.gae_proxy_spec
 }
