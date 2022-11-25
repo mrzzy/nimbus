@@ -30,8 +30,9 @@ jobs:
         run: pip3 install -r requirements-dev.txt
       - name: "Lint Python with black"
         run: black --check --verbose .
-      - name: "Test Container"
-        run: python3 test/test.py
+      - name: "End to End Test Container"
+        working-directory: docker/proxy-gae/test
+        run: python3 test.py
       - name: "Build Container"
         run: |
           CONTAINER="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
