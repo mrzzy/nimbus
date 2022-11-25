@@ -3,7 +3,7 @@
 # Docker Container CI Pipeline
 #
 
-name: "Build & Push Docker Containers to GCP"
+name: "Publish Docker Containers to GCP"
 on:
   push: {}
 env:
@@ -17,7 +17,7 @@ permissions:
   id-token: write
 jobs:
   proxy-gae:
-    name: "Build & Push proxy-gae Docker container"
+    name: "Build, Test & Push proxy-gae Docker container"
     defaults:
       run:
         working-directory: docker/proxy-gae
@@ -26,6 +26,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: "Lint Dockerfile with Hadolint"
         run: docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
+      - name: "Install pip dependencies"
+        run: pip3 install -r requirements-dev.txt
+      - name: "Lint Python with black"
+        run: black --check --verbose .
+      - name: "End to End Test Container"
+        working-directory: docker/proxy-gae/test
+        run: python3 test.py
       - name: "Build Container"
         run: |
           CONTAINER="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${GCP_REPO}/proxy-gae"
@@ -43,6 +50,10 @@ jobs:
         run: |
           gcloud auth configure-docker asia-southeast1-docker.pkg.dev
       - name: "Push container to GCP Artifact Repository"
+        run: docker push $CONTAINER
+      - name: "Push container to GCP Artifact Repository (main)"
         # only enable push on main branch
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: docker push $CONTAINER
+        run: |
+          docker tag $CONTAINER $CONTAINER:main
+          docker push $CONTAINER:main

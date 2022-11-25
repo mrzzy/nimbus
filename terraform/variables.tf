@@ -46,10 +46,16 @@ variable "warp_allow_ports" {
   default     = ""
 }
 
-variable "has_warp_proxy" {
+variable "has_gae_proxy" {
   type        = bool
-  description = "Whether to deploy a proxy on Google App Engine to proxy WARP VM."
+  description = "Whether to deploy Google App Engine Proxy."
   default     = true
+}
+
+variable "gae_proxy_spec" {
+  type        = string
+  description = "Specify routes that should be proxied by GAE Proxy."
+  default     = ""
 }
 
 variable "gcp_service_account_key" {

@@ -29,3 +29,14 @@ moved {
   from = module.k8s.kubernetes_secret.csi-rclone
   to   = module.k8s.kubernetes_secret.opaque["rclone"]
 }
+
+
+moved {
+  from = google_app_engine_application.warp_proxy
+  to   = google_app_engine_application.app
+}
+
+moved {
+  from = google_app_engine_flexible_app_version.warp_proxy_v1
+  to   = module.proxy_service.google_app_engine_flexible_app_version.v1
+}

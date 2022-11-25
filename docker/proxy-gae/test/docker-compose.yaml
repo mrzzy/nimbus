@@ -1,0 +1,18 @@
+#
+# Nimbus
+# Proxy GAE
+# End to End Test Docker Compose
+#
+
+services:
+  proxy-gae:
+    build: ..
+    ports: ["8080:8080"]
+    environment:
+      # multiple proxy routes to the same target
+      PROXY_SPEC: "/target=http://target /alternate=http://target"
+
+  target:
+    image: nginx:1.23.2-alpine
+    volumes: ["./nginx.conf:/etc/nginx/nginx.conf:ro"]
+    ports: ["8081:80"]
