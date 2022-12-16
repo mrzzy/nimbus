@@ -132,6 +132,6 @@ resource "google_app_engine_application" "app" {
 
 module "proxy_service" {
   source     = "./modules/gcp/proxy_gae"
-  container  = "${module.registry.repo_prefix}/proxy-gae:main"
+  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:6cdfba6b7366c9c0f1897565cef1ddaad4ef4ee2a7af99824c254bba00b0c4ed"
   proxy_spec = var.gae_proxy_spec
 }
