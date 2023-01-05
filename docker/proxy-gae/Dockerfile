@@ -4,7 +4,7 @@
 # proxy-gae
 #
 
-FROM nginx:1.23.2-alpine
+FROM nginx:1.23.3-alpine
 
 RUN mkdir -p /app \
   # create log dir expected by Google App Engine
@@ -12,7 +12,7 @@ RUN mkdir -p /app \
 WORKDIR /app
 
 # install python & pip modules
-RUN apk add --no-cache python3=3.10.9-r0 py3-pip=22.1.1-r0
+RUN apk add --no-cache python3=3.10.9-r1 py3-pip=22.3.1-r1
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
