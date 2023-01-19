@@ -19,7 +19,7 @@ terraform {
 # Deploy a single node k8s cluster on Linode
 resource "linode_lke_cluster" "main" {
   label       = "main"
-  k8s_version = "1.24"
+  k8s_version = var.k8s_version
   region      = var.region
 
   pool {

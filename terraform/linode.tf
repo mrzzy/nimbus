@@ -15,8 +15,9 @@ provider "linode" {}
 
 # Linode: LKE Cluster
 module "k8s" {
-  source = "./modules/linode/k8s"
-  region = local.linode_region
+  source      = "./modules/linode/k8s"
+  k8s_version = "1.24"
+  region      = local.linode_region
 
   machine_type = "g6-dedicated-2" # 2vCPU, 4GB
   n_workers    = 1
