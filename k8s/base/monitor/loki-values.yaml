@@ -26,6 +26,9 @@ loki:
       admin: '${LOKI_LOG_BUCKET}'
 read:
   replicas: 1
+  # loki read split into read & backend components in https://github.com/grafana/loki/pull/7650
+  # deploy the legacy loki read before the split.
+  legacyReadTarget: true
   extraArgs:
     - "-config.expand-env=true"
   extraEnvFrom:
