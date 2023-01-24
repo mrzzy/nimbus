@@ -7,7 +7,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: calibre-library
+  name: library-data
 spec:
   accessModes:
   - ReadWriteMany
@@ -17,4 +17,4 @@ spec:
   storageClassName: rclone
   selector:
     matchLabels:
-      stores: calibre-library
+      stores: library-data

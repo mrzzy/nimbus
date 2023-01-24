@@ -15,7 +15,7 @@ secretGenerator:
     behavior: replace
     # unset env vars in env file will be read from the execution environment
     # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#configmapgenerator
-    env: oauth2-proxy/secret.env
+    env: oauth2-proxy/.secret.env
 
 configMapGenerator:
   - name: login-oauth2-proxy
@@ -27,9 +27,10 @@ configMapGenerator:
       - restricted_user_access=oauth2-proxy/authenticated_emails_file
 
 patches:
-  - media/patch-pv.yaml
-  - oauth2-proxy/patch-deployment.yaml
-  - oauth2-proxy/patch-ingress.yaml
+  - path: media/patch-pv.yaml
+  - path: library/patch-pv.yaml
+  - path: oauth2-proxy/patch-deployment.yaml
+  - path: oauth2-proxy/patch-ingress.yaml
 
 patchesJson6902:
   # patch Metrics Server to disable TLS when scraping Linode worker's kubelet as

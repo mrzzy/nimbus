@@ -1,6 +1,6 @@
 #
 # Nimbus
-# K8s Deployment
+# Library Service
 # Calibre Web Deployment
 #
 
@@ -34,4 +34,4 @@ spec:
             claimName: calibre-web-settings
         - name: library
           persistentVolumeClaim:
-            claimName: calibre-library
+            claimName: library-data

@@ -18,11 +18,11 @@ commonLabels:
 replacements:
   - source:
       kind: PersistentVolumeClaim
-      name: calibre-library
+      name: library-data
       fieldPath: spec.resources.requests.storage
     targets:
       - select:
           kind: PersistentVolume
-          name: calibre-library
+          name: library-data
         fieldPaths:
           - spec.capacity.storage
