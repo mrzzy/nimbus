@@ -26,9 +26,6 @@ loki:
       admin: '${LOKI_LOG_BUCKET}'
 read:
   replicas: 1
-  # loki read split into read & backend components in https://github.com/grafana/loki/pull/7650
-  # deploy the legacy loki read before the split.
-  legacyReadTarget: true
   extraArgs:
     - "-config.expand-env=true"
   extraEnvFrom:
@@ -42,7 +39,12 @@ write:
     - secretRef:
         name: loki-s3-credentials
 backend:
-  replicas: 0
+  replicas: 1
+  extraArgs:
+    - "-config.expand-env=true"
+  extraEnvFrom:
+    - secretRef:
+        name: loki-s3-credentials
 monitoring:
   # monitor Loki's metrics with Prometheus
   serviceMonitor:
