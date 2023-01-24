@@ -9,6 +9,7 @@ resources:
   - flood.yaml
   - jellyfin.yaml
   - grafana.yaml
+  - calibre-web.yaml
 commonLabels:
   app.kubernetes.io/managed-by: kustomize
   app.kubernetes.io/created-by: kustomize

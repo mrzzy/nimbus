@@ -1,0 +1,16 @@
+#
+# Nimbus
+# Calibre Web Deployment
+# Settings Persistent Volume Claim
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: calibre-web-settings
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

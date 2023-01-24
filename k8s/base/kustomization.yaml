@@ -16,6 +16,8 @@ resources:
   - ./csi-rclone
   # Monitoring: Prometheus, Grafana
   - ./monitor
+  # EBook Library: Calibre Web
+  - ./library
 
 helmCharts:
   # Authentication: OAuth2 Proxy
