@@ -1,15 +1,15 @@
 #
 # Nimbus
-# Calibre Web Deployment
+# Library Service
 # Library Persistent Volume
 #
 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: calibre-library
+  name: library-data
   labels:
-    stores: calibre-library
+    stores: library-data
 spec:
   accessModes:
   - ReadWriteMany
