@@ -27,9 +27,10 @@ configMapGenerator:
       - restricted_user_access=oauth2-proxy/authenticated_emails_file
 
 patches:
-  - media/patch-pv.yaml
-  - oauth2-proxy/patch-deployment.yaml
-  - oauth2-proxy/patch-ingress.yaml
+  - path: media/patch-pv.yaml
+  - path: library/patch-pv.yaml
+  - path: oauth2-proxy/patch-deployment.yaml
+  - path: oauth2-proxy/patch-ingress.yaml
 
 patchesJson6902:
   # patch Metrics Server to disable TLS when scraping Linode worker's kubelet as

@@ -1,0 +1,30 @@
+#
+# Nimbus
+# K8s Deployment
+# Library Service
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+namePrefix: library-
+resources:
+- library-pv.yaml
+- library-pvc.yaml
+- settings-pvc.yaml
+- deployment.yaml
+- service.yaml
+commonLabels:
+    app.kubernetes.io/part-of: library
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kustomize
+# match calibre library PV's declared capacity to the size requested by the PVC
+replacements:
+  - source:
+      kind: PersistentVolumeClaim
+      name: library-data
+      fieldPath: spec.resources.requests.storage
+    targets:
+      - select:
+          kind: PersistentVolume
+          name: library-data
+        fieldPaths:
+          - spec.capacity.storage

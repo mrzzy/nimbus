@@ -1,0 +1,16 @@
+#
+# Nimbus
+# Library Service
+# Persistent Volume Patch
+#
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: library-data
+spec:
+  csi:
+    volumeAttributes:
+      remotePath: mrzzy-co-library
+      # vfs performance: disable modefile
+      no-modtime: "true"
