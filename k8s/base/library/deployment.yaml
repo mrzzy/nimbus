@@ -34,4 +34,4 @@ spec:
             claimName: calibre-web-settings
         - name: library
           persistentVolumeClaim:
-            claimName: library-data
+            claimName: data
