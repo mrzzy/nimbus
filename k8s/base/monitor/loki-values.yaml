@@ -41,6 +41,8 @@ write:
   extraEnvFrom:
     - secretRef:
         name: loki-s3-credentials
+backend:
+  replicas: 0
 monitoring:
   # monitor Loki's metrics with Prometheus
   serviceMonitor:
