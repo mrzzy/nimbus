@@ -23,6 +23,7 @@ module "dns" {
     "auth" : module.k8s.ingress_ip,    # oauth2-proxy oauth callbacks / login page
     "media" : module.k8s.ingress_ip,   # jellyfin media server
     "monitor" : module.k8s.ingress_ip, # Grafana monitoring
+    "library" : module.k8s.ingress_ip, # Ebook Library
     },
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { "warp" : local.warp_ip } : {},
