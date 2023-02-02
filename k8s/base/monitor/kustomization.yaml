@@ -61,7 +61,7 @@ helmCharts:
   - namespace: monitoring
     releaseName: logs
     name: promtail
-    version: 6.8.1
+    version: 6.8.2
     repo: https://grafana.github.io/helm-charts
     valuesInline:
       # monitor promtail's metrics with Prometheus
