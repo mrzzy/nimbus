@@ -37,7 +37,7 @@ flowchart LR
         subgraph lke[Kubernetes Engine]
             direction LR
             ingress[ingress-nginx] <--> oauth[OAuth2 Proxy]
-            ingress <--> media & monitoring
+            ingress <--> media & monitoring & calibre-web[Calibre-Web]
             subgraph media[Media Namespace]
                 torrent[Rtorrent & Flood UI] -->  media-svr[Jellyfin Server]
             end
@@ -54,6 +54,7 @@ flowchart LR
 User-facing services hosted on Nimbus:
 - [WARP](https://github.com/mrzzy/warp): portable development environment based on Cloud VM
 - [Jellyfin](https://jellyfin.org/): media server for personal media consumption.
+- [Calibre-Web](https://github.com/janeczku/calibre-web): web eBook library for browsing & reading books.
 
 ## License
 MIT.
