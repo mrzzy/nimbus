@@ -20,6 +20,7 @@ method.insert = cfg.download, private|const|string, (cat,(cfg.basedir)"/cache/")
 # TODO(mrzzy): session should be be persisted to keep downlaods across restarts.
 method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),"session/")
 method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
+# TODO(mrzzy): log to stdout
 method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
 
 
