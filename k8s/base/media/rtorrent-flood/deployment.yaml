@@ -21,7 +21,7 @@ spec:
             - name: FLOOD_OPTION_PORT
               value: "3000"
             - name: FLOOD_OPTION_ALLOWEDPATH
-              value: "/cache,/media"
+              value: "/home/download/cache,/home/download/media"
             # authentication delegated to ingress upstream
             - name: FLOOD_OPTION_AUTH
               value: "none"
@@ -37,11 +37,11 @@ spec:
             - containerPort: 3000
               name: http
           volumeMounts:
-            - mountPath: /config
+            - mountPath: /home/download/config
               name: config
-            - mountPath: /media
+            - mountPath: /home/download/media
               name: media
-            - mountPath: /cache
+            - mountPath: /home/download/cache
               name: cache
           readinessProbe:
             failureThreshold: 3
