@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: rtorrent
-          image: jesec/rtorrent
+          image: jesec/rtorrent-flood
+          imagePullPolicy: Always
           ports:
             - containerPort: 6881
               name: rtorrent
@@ -26,6 +27,7 @@ spec:
             name: media
           - mountPath: /home/download/shared
             name: shared
+          command: ["rtorrent"]
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 0
@@ -38,7 +40,7 @@ spec:
             - name: FLOOD_OPTION_PORT
               value: "3000"
             - name: FLOOD_OPTION_ALLOWEDPATH
-              value: "/home/download/shared"
+              value: "/home/download/shared/downloads"
             # authentication delegated to ingress upstream
             - name: FLOOD_OPTION_AUTH
               value: "none"
