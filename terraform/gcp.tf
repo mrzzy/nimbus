@@ -100,7 +100,7 @@ module "warp_vm" {
   enabled      = var.has_warp_vm
   image        = var.warp_image
   machine_type = var.warp_machine_type
-  disk_type    = "pd-ssd"
+  disk_type    = "pd-balanced"
 
   tags = concat(
     [
