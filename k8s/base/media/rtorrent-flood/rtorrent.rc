@@ -20,7 +20,6 @@ method.insert = cfg.destdir,  private|const|string, (cat,(cfg.basedir),"media/")
 method.insert = cfg.download, private|const|string, (cat,(cfg.basedir),"shared/downloads/")
 method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),"shared/session/")
 method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
-# TODO(mrzzy): log to stdout
 method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent.log")
 method.insert = cfg.move_completed,  private|const|string, (cat,(cfg.config),"move_completed.sh")
 
