@@ -15,21 +15,36 @@ spec:
     spec:
       containers:
         - name: rtorrent
-          image: jesec/rtorrent-flood
-          imagePullPolicy: Always
+          image: jesec/rtorrent
+          ports:
+            - containerPort: 6881
+              name: rtorrent
+          volumeMounts:
+          - mountPath: /home/download/.config/rtorrent
+            name: config
+          - mountPath: /home/download/media
+            name: media
+          - mountPath: /home/download/shared
+            name: shared
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: rtorrent
+        - name: flood
+          image: jesec/flood
           env:
             - name: FLOOD_OPTION_PORT
               value: "3000"
             - name: FLOOD_OPTION_ALLOWEDPATH
-              value: "/home/download/cache,/home/download/media"
+              value: "/home/download/shared"
             # authentication delegated to ingress upstream
             - name: FLOOD_OPTION_AUTH
               value: "none"
             # flood managed rtorrent daemon
-            - name: FLOOD_OPTION_RTCONFIG
-              value: /home/download/config/rtorrent.rc
             - name: FLOOD_OPTION_RTSOCKET
-              value: /home/download/cache/session/rpc.socket
+              value: /home/download/shared/session/rpc.socket
             - name: FLOOD_OPTION_BASEURI
             # expects upstream requests with '/files' URL prefix
               value: "/files/"
@@ -37,12 +52,8 @@ spec:
             - containerPort: 3000
               name: http
           volumeMounts:
-            - mountPath: /home/download/config
-              name: config
-            - mountPath: /home/download/media
-              name: media
-            - mountPath: /home/download/cache
-              name: cache
+            - mountPath: /home/download/shared
+              name: shared
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 0
@@ -55,9 +66,10 @@ spec:
           configMap:
             name: rtorrent-config
         - name: media
-          persistentVolumeClaim:
-            claimName: media-data
-        - name: cache
+          emptyDir: {}
+          # persistentVolumeClaim:
+          #   claimName: media-data
+        - name: shared
           emptyDir: {}
       securityContext:
         fsGroup: 1001
