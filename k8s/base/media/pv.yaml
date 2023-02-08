@@ -14,7 +14,7 @@ spec:
   accessModes:
   - ReadWriteMany
   capacity:
-    storage: "" # matches media data PVC storage requests
+    storage: "" # media-data PVC storage requests interpolated here
   # store media files in cheaper Backblaze B2 cloud object storage mounted via rclone
   storageClassName: rclone
   csi:
