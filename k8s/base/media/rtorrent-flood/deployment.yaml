@@ -68,9 +68,8 @@ spec:
           configMap:
             name: rtorrent-config
         - name: media
-          emptyDir: {}
-          # persistentVolumeClaim:
-          #   claimName: media-data
+          persistentVolumeClaim:
+            claimName: media-data
         - name: shared
           emptyDir: {}
       securityContext:
