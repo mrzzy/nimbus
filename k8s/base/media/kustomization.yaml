@@ -33,7 +33,7 @@ commonLabels:
     app.kubernetes.io/created-by: kustomize
 # patch jellyfin deployment to mount media downloaded by rtorrent
 patches:
-  - patch-pvc.yaml
+  - path: patch-pvc.yaml
 # match media-data PV's declared capacity to the size requested by the PVC
 replacements:
   - source:
