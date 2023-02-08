@@ -27,9 +27,9 @@ spec:
               value: "none"
             # flood managed rtorrent daemon
             - name: FLOOD_OPTION_RTCONFIG
-              value: /config/rtorrent.rc
+              value: /home/download/config/rtorrent.rc
             - name: FLOOD_OPTION_RTSOCKET
-              value: /home/download/session/rpc.socket
+              value: /home/download/cache/session/rpc.socket
             - name: FLOOD_OPTION_BASEURI
             # expects upstream requests with '/files' URL prefix
               value: "/files/"
