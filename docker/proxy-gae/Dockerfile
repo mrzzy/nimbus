@@ -12,7 +12,7 @@ RUN mkdir -p /app \
 WORKDIR /app
 
 # install python & pip modules
-RUN apk add --no-cache python3=3.10.9-r1 py3-pip=22.3.1-r1
+RUN apk add --no-cache python3=3.11.2-r0 py3-pip=22.3.1-r1
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
