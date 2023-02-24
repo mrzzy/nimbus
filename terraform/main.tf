@@ -14,7 +14,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "< 4.53.2"
+      version = "< 4.54.1"
     }
     linode = {
       source  = "linode/linode"
