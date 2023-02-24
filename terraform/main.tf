@@ -22,7 +22,7 @@ terraform {
     }
     acme = {
       source  = "vancluever/acme"
-      version = "<2.12.1"
+      version = "< 2.13.2"
     }
     b2 = {
       source  = "Backblaze/b2"
