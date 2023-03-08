@@ -128,6 +128,10 @@ resource "google_app_engine_application" "app" {
   project        = local.gcp_project_id
   location_id    = local.gcp_region
   serving_status = var.has_gae_proxy ? "SERVING" : "USER_DISABLED"
+
+  timeouts {
+    update = "6m"
+  }
 }
 
 module "proxy_service" {
