@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Linode Kubernetes Engine
+# Terraform Deployment: Google Kubernetes Engine
 #
 
 terraform {
@@ -18,8 +18,9 @@ terraform {
 
 # GKE Cluster
 resource "google_container_cluster" "main" {
-  name     = "main"
-  location = var.region
+  name = "main"
+  # create zonal cluster
+  location = "${var.region}-c"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -29,11 +30,17 @@ resource "google_container_cluster" "main" {
 }
 
 # Primary GKE Worker node poolt in terraform
+data "google_container_engine_versions" "k8s" {
+  # suffix '.' to prevent unintend versions starting with same prefix from matching
+  version_prefix = "${var.k8s_version}."
+}
 resource "google_container_node_pool" "primary" {
-  cluster    = google_container_cluster.main.name
-  name       = "primary"
-  location   = var.region
-  version    = var.k8s_version
+  cluster  = google_container_cluster.main.name
+  name     = "primary"
+  location = google_container_cluster.main.location
+  version = (
+    data.google_container_engine_versions.k8s.release_channel_latest_version["RELEASE"]
+  )
   node_count = var.n_workers
 
   node_config {
