@@ -53,11 +53,13 @@ resource "google_container_node_pool" "primary" {
 locals {
   master_auth = google_container_cluster.main.master_auth.0
 }
+
+# use google provider's access token to authenticate k8s provider
+data "google_client_config" "provider" {}
 provider "kubernetes" {
   host                   = google_container_cluster.main.endpoint
+  token                  = data.google_client_config.provider.access_token
   cluster_ca_certificate = base64decode(local.master_auth.cluster_ca_certificate)
-  client_certificate     = base64decode(local.master_auth.client_certificate)
-  client_key             = base64decode(local.master_auth.client_key)
 }
 
 # K8s Secrets
