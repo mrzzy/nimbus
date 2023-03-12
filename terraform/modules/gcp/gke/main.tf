@@ -57,7 +57,7 @@ locals {
 # use google provider's access token to authenticate k8s provider
 data "google_client_config" "provider" {}
 provider "kubernetes" {
-  host                   = google_container_cluster.main.endpoint
+  host                   = "https://${google_container_cluster.main.endpoint}"
   token                  = data.google_client_config.provider.access_token
   cluster_ca_certificate = base64decode(local.master_auth.cluster_ca_certificate)
 }
