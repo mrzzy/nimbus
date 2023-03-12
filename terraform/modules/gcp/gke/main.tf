@@ -63,7 +63,7 @@ provider "kubernetes" {
 # K8s Secrets
 # Opaque
 resource "kubernetes_secret" "opaque" {
-  for_each = toset(keys(var.secrets))
+  for_each = toset(var.secret_keys)
   type     = var.secrets[each.value].type
   metadata {
     name      = var.secrets[each.value].name

@@ -34,6 +34,7 @@ variable "secret_keys" {
   description = <<-EOF
     Keys used to identify secrets specified in 'secrets' var.
     Each key should correspond to an entry in the 'secrets' var.
+    These keys are used to iterate over 'secrets' as secret values cannot be iterated over with terraform's for_each.
   EOF
   default     = []
 }
