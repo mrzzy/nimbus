@@ -6,8 +6,6 @@
 locals {
   # Linode deploy region
   linode_region = "ap-south" # singapore
-  # Backblaze B2 S3-compatible regional endpoint
-  b2_endpoint = "https://s3.us-west-004.backblazeb2.com"
 }
 
 # Linode Cloud
