@@ -4,6 +4,7 @@
 # End to End Test
 #
 
+from time import sleep
 from testcontainers.compose import DockerCompose
 import requests
 
@@ -17,14 +18,17 @@ if __name__ == "__main__":
         # wait for proxy target to start listening for requests
         c.wait_for("http://localhost:8081")
 
-        for route, status in {
+        for host, route, expected_status in [
             # test: proxy returns 404 on undefined routes
-            "/undefined": 404,
+            ["undefined", "/", 404],
             # test: proxy returns 200 on proxied routes
-            "/target/test/e2e": 200,
-            "/alternate/test/e2e": 200,
-        }.items():
-            print(
-                f"{PROXY_URL}{route}", requests.get(f"{PROXY_URL}{route}").status_code
-            )
-            assert requests.get(f"{PROXY_URL}{route}").status_code == status
+            ["target", "/test/e2e", 200],
+            ["alt.target", "/test/e2e", 200],
+        ]:
+            got_status = requests.get(
+                f"{PROXY_URL}{route}",
+                headers={"Host": host},
+            ).status_code
+            print(f"GET http://{host}{route} {got_status}")
+
+            assert expected_status == got_status

@@ -9,8 +9,8 @@ services:
     build: ..
     ports: ["8080:8080"]
     environment:
-      # multiple proxy routes to the same target
-      PROXY_SPEC: "/target=http://target /alternate=http://target"
+      # multiple proxy hosts to the same target
+      PROXY_SPEC: "target=http://target alt.target=http://target"
 
   target:
     image: nginx:1.23.2-alpine
