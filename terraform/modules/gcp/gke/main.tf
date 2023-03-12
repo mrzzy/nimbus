@@ -28,7 +28,7 @@ resource "google_container_cluster" "main" {
   initial_node_count       = 1
 }
 
-# Primary GKE Worker node pool
+# Primary GKE Worker node poolt in terraform
 resource "google_container_node_pool" "primary" {
   cluster    = google_container_cluster.main.name
   name       = "primary"
@@ -62,8 +62,15 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(local.master_auth.cluster_ca_certificate)
 }
 
-# K8s Secrets
-# Opaque
+# K8s namespaces to deploy secrets in
+resource "kubernetes_namespace" "name" {
+  for_each = toset(var.secret_keys)
+  metadata {
+    name = var.secrets[each.value].namespace
+  }
+}
+
+# K8s Opaque secrets
 resource "kubernetes_secret" "opaque" {
   for_each = toset(var.secret_keys)
   type     = var.secrets[each.value].type
