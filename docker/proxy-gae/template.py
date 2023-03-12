@@ -19,9 +19,9 @@ def parse_proxy(spec_str: str) -> Dict[str, str]:
     # strip trailing '/' for standardization
     spec = dict([(route.rstrip("/"), target.rstrip("/")) for route, target in specs])
 
-    # check: no reserved routes
-    if "/health" in spec:
-        raise ValueError("'/health' route is reserved for health checks.")
+    # check: no empty hosts
+    if "" in spec:
+        raise ValueError("Proxy specs with no host are not supported.")
 
     return spec
 
@@ -33,10 +33,10 @@ if __name__ == "__main__":
         "proxy_spec",
         type=parse_proxy,
         help=dedent(
-            """Specify routes that should be proxied in the format:
-            '/<ROUTE>=<TARGET> [/<ROUTE>=<TARGET2> ...]'
-            Example: '/proxy=https://proxy.me' will proxy all requests sent to
-            '/proxy/target/url' to 'https://proxy.me/target/url'
+            """Specify hosts that should be proxied in the format:
+            '<HOST>=<TARGET> [<HOST>=<TARGET2> ...]'
+            Example: 'proxy.host=https://target.host' will proxy all requests sent to
+            'proxy.host/target/url' to 'https://target.host/target/url'
             """
         ),
     )
@@ -54,6 +54,5 @@ if __name__ == "__main__":
         proxy_spec=args.proxy_spec,
         nameservers=" ".join(Resolver().nameservers),
     )
-
     with open(args.output_path, "w") as f:
         f.write(nginx_conf)
