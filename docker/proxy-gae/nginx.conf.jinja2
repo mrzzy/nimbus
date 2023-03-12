@@ -13,8 +13,35 @@ http {
     # Logs will appear on the Google Developer's Console when logged to this directory.
     access_log /var/log/app_engine/app.log;
     error_log /var/log/app_engine/app.log;
-    # use docker's default nameserver to resolve DNS
+    # dns nameservers
     resolver {{ nameservers }};
+
+    # proxy routes
+    {%- for host, target in proxy_spec.items() %}
+    # {{ host }} -> {{ target }}
+    server {
+        # Google App Engine expects the runtime to serve HTTP traffic from port 8080.
+        listen 8080;
+        server_name {{ host }};
+
+        location / {
+            # force dns resolution at runtime by pass target url as nginx var to proxy_pass
+            set $target_url {{ target }};
+            # when variables are used with proxy_pass, the request URL must be explicitly passed.
+            proxy_pass $target_url;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Host $host;
+
+            # proxy directives needed for proxying websocket connections
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_read_timeout 300s; # wait 5mins before closing websockets
+        }
+    }
+    {%- endfor %}
+
 
     server {
         # Google App Engine expects the runtime to serve HTTP traffic from port 8080.
@@ -26,38 +53,6 @@ http {
         location = /health {
             return 200 ok;
         }
-
-        # proxy routes
-        {%- for route, target in proxy_spec.items() %}
-        # /{{ route }} -> {{ target }}
-        # redirect to route with trailing slash if request omits it
-        {% if route != "" %}
-        location = {{ route }} {
-            # handle case where we are running behind a proxy by using
-            # the original hostname the user connected to from the X-Forwarded-Host header
-            if ($http_x_forwarded_host) {
-                return 301 $scheme://$http_x_forwarded_host{{ route }}/;
-            }
-            return 301 {{ route }}/;
-        }
-        {% endif %}
-        location {{ route }}/ {
-            # force dns resolution at runtime by pass target url as nginx var to proxy_pass
-            set $target_url {{ target }};
-            # strip route prefix from request url
-            rewrite {{ route }}/(.*) /$1 break;
-            # when variables are used with proxy_pass, the request URL must be explicitly passed.
-            proxy_pass $target_url;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-            # proxy directives needed for proxying websocket connections
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_read_timeout 300s; # wait 5mins before closing websockets
-        }
-        {%- endfor %}
     }
 }
 # vim: ft=nginx.jinja2
