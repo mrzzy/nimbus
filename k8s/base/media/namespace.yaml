@@ -1,0 +1,10 @@
+#
+# Nimbus
+# K8s Deployment
+# Media
+#
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: media

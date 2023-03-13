@@ -13,7 +13,6 @@ configMapGenerator:
     files:
       - rtorrent.rc
       - move_completed.sh
-namePrefix: media-
 commonLabels:
     app.kubernetes.io/name: rtorrent-flood
     app.kubernetes.io/instance: media-rtorrent-flood

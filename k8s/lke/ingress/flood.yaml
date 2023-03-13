@@ -7,7 +7,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: media-flood
+  name: flood
+  namespace: media
   labels:
     app.kubernetes.io/part-of: media
   annotations:
@@ -22,7 +23,7 @@ spec:
       # expose flood service on media.mrzzy.co/files
       - backend:
           service:
-            name: media-flood
+            name: flood
             port:
               number: 80
         path: /files/
