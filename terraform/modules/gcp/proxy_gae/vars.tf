@@ -24,7 +24,7 @@ variable "project_id" {
   description = "ID of the GCP project that GAEProxy will deploy to."
 }
 
-variable "gae_region_id" {
+variable "region" {
   type        = string
-  description = "Abbrevated code assigned to GAE apps deployed in specific region."
+  description = "GCP Region that GAEProxy will deploy to."
 }
