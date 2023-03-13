@@ -30,13 +30,18 @@ if __name__ == "__main__":
     # parse command line arguments
     parser = ArgumentParser(description="Template nginx.conf for Proxy GAE")
     parser.add_argument(
+        "hostname",
+        type=str,
+        help="Root hostname from which sub-hosts specified on proxy_spec are relative",
+    )
+    parser.add_argument(
         "proxy_spec",
         type=parse_proxy,
         help=dedent(
-            """Specify hosts that should be proxied in the format:
+            """Specify sub-hosts that should be proxied in the format:
             '<HOST>=<TARGET> [<HOST>=<TARGET2> ...]'
-            Example: 'proxy.host=https://target.host' will proxy all requests sent to
-            'proxy.host/target/url' to 'https://target.host/target/url'
+            Example: 'proxy=https://target.host' will proxy all requests sent to
+            'proxy.<hostname>/target/url' to 'https://target.host/target/url'
             """
         ),
     )
@@ -51,6 +56,7 @@ if __name__ == "__main__":
     # template nginx config
     env = Environment(loader=FileSystemLoader(os.getcwd()), autoescape=True)
     nginx_conf = env.get_template("nginx.conf.jinja2").render(
+        root=args.hostname,
         proxy_spec=args.proxy_spec,
         nameservers=" ".join(Resolver().nameservers),
     )

@@ -8,7 +8,7 @@ from time import sleep
 from testcontainers.compose import DockerCompose
 import requests
 
-PROXY_URL = "http://localhost:8080"
+PROXY_HOST = "localhost:8080"
 
 if __name__ == "__main__":
     with DockerCompose(
@@ -25,10 +25,11 @@ if __name__ == "__main__":
             ["target", "/test/e2e", 200],
             ["alt.target", "/test/e2e", 200],
         ]:
+            full_host = f"{host}.{PROXY_HOST}"
             got_status = requests.get(
-                f"{PROXY_URL}{route}",
-                headers={"Host": host},
+                f"http://{PROXY_HOST}{route}",
+                headers={"Host": full_host},
             ).status_code
-            print(f"GET http://{host}{route} {got_status}")
+            print(f"GET http://{full_host}{route} {got_status}")
 
             assert expected_status == got_status
