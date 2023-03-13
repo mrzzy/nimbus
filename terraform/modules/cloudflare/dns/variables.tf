@@ -22,4 +22,5 @@ variable "routes" {
 variable "cnames" {
   type        = map(string)
   description = "Map of DNS CNAME routes to create with subdomain prefix as key & target hostname as value."
+  default     = {}
 }
