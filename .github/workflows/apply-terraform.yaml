@@ -18,7 +18,7 @@ on:
         type: string
         description: "GAE Proxy: Routes"
         required: true
-        default: "vm=https://warp.mrzzy.co "
+        default: "/warp=https://warp.mrzzy.co "
 
       # WARP VM inputs
       # setting: whether to deploy the warp vm

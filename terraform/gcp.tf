@@ -135,10 +135,7 @@ resource "google_app_engine_application" "app" {
 }
 
 module "proxy_service" {
-  project_id = local.gcp_project_id
-  region     = local.gcp_region
-
   source     = "./modules/gcp/proxy_gae"
-  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:d26a6537aba6a7a2d895f5f31769124fe8bb337159b6d83a238bb1e1811e50ae"
+  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:6cdfba6b7366c9c0f1897565cef1ddaad4ef4ee2a7af99824c254bba00b0c4ed"
   proxy_spec = var.has_gae_proxy ? var.gae_proxy_spec : ""
 }

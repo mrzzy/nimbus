@@ -10,7 +10,6 @@ services:
     ports: ["8080:8080"]
     environment:
       # multiple proxy hosts to the same target
-      HOSTNAME: "localhost:8080"
       PROXY_SPEC: "target=http://target alt.target=http://target"
 
   target:

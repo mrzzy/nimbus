@@ -7,7 +7,6 @@
 locals {
   cf_account_id = "3a282e33c95eef3f663f0fc3e028b6df"
   warp_ip       = module.warp_vm.external_ip
-  proxy_host    = module.proxy_service.hostname
 }
 
 # Cloudflare: expects access token provided via $CLOUDFLARE_API_TOKEN env var
@@ -28,14 +27,6 @@ module "dns" {
     },
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { "warp" : local.warp_ip } : {},
-  )
-  # create cname dns routes based on proxy spec if proxy_service is deployed
-  cnames = (
-    (var.has_warp_vm && var.has_gae_proxy) ?
-    {
-      for match in regexall("(?P<host>[\\w\\.]+)=", var.gae_proxy_spec) :
-      "${match.host}.warp" => local.proxy_host
-    } : {}
   )
 }
 
