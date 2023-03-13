@@ -29,15 +29,16 @@ resource "google_container_cluster" "main" {
   initial_node_count       = 1
 }
 
-# Primary GKE Worker node poolt in terraform
+# Primary GKE Worker node pool in terraform
 data "google_container_engine_versions" "k8s" {
-  # suffix '.' to prevent unintend versions starting with same prefix from matching
-  version_prefix = "${var.k8s_version}."
+  # suffix '-' to prevent unintend versions starting with same prefix from matching
+  version_prefix = "${var.k8s_version}-"
 }
 resource "google_container_node_pool" "primary" {
   cluster  = google_container_cluster.main.name
   name     = "primary"
   location = google_container_cluster.main.location
+  # deploy latest version from stable channel matching given k8s_version
   version = (
     data.google_container_engine_versions.k8s.release_channel_latest_version["STABLE"]
   )
