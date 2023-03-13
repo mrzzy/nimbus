@@ -39,7 +39,7 @@ resource "google_container_node_pool" "primary" {
   name     = "primary"
   location = google_container_cluster.main.location
   version = (
-    data.google_container_engine_versions.k8s.release_channel_latest_version["RELEASE"]
+    data.google_container_engine_versions.k8s.release_channel_latest_version["STABLE"]
   )
   node_count = var.n_workers
 
