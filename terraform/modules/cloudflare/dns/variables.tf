@@ -18,3 +18,8 @@ variable "routes" {
   type        = map(string)
   description = "Map of DNS A routes to create with subdomain prefix as key & IP as value."
 }
+
+variable "cnames" {
+  type        = map(string)
+  description = "Map of DNS CNAME routes to create with subdomain prefix as key & target hostname as value."
+}
