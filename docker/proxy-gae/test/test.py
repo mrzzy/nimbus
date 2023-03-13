@@ -31,5 +31,4 @@ if __name__ == "__main__":
                 headers={"Host": full_host},
             ).status_code
             print(f"GET http://{full_host}{route} {got_status}")
-
             assert expected_status == got_status
