@@ -28,13 +28,3 @@ resource "cloudflare_record" "route" {
   name  = each.key
   value = each.value
 }
-
-resource "cloudflare_record" "cname" {
-  for_each = var.cnames
-  zone_id  = cloudflare_zone.domain.id
-
-  type  = "CNAME"
-  ttl   = 60 # 1 min
-  name  = each.key
-  value = each.value
-}

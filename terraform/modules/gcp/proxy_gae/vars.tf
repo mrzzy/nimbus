@@ -18,13 +18,3 @@ variable "proxy_spec" {
     '/proxy/target/url' to 'https://proxy.me/target/url'
   EOF
 }
-
-variable "project_id" {
-  type        = string
-  description = "ID of the GCP project that GAEProxy will deploy to."
-}
-
-variable "region" {
-  type        = string
-  description = "GCP Region that GAEProxy will deploy to."
-}

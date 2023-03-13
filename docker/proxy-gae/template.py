@@ -35,8 +35,8 @@ if __name__ == "__main__":
         help=dedent(
             """Specify hosts that should be proxied in the format:
             '<HOST>=<TARGET> [<HOST>=<TARGET2> ...]'
-            Example: 'proxy=https://target.host' will proxy all requests sent to
-            'proxy.*/target/url' to 'https://target.host/target/url'
+            Example: 'proxy.host=https://target.host' will proxy all requests sent to
+            'proxy.host/target/url' to 'https://target.host/target/url'
             """
         ),
     )
