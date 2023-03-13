@@ -26,7 +26,7 @@ terraform {
     }
     b2 = {
       source  = "Backblaze/b2"
-      version = "0.8.3"
+      version = "0.8.4"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
