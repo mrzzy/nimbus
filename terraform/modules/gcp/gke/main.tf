@@ -59,8 +59,11 @@ resource "google_container_node_pool" "primary" {
 # Configure Terraform provider for Kubernetes access to GKE cluster
 locals {
   master_auth = google_container_cluster.main.master_auth.0
+  k8s_labels = {
+    "app.kubernetes.io/created-by" = "terraform"
+    "app.kubernetes.io/managed-by" = "terraform"
+  }
 }
-
 # use google provider's access token to authenticate k8s provider
 data "google_client_config" "provider" {}
 provider "kubernetes" {
@@ -73,10 +76,10 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "name" {
   for_each = toset(var.secret_keys)
   metadata {
-    name = var.secrets[each.value].namespace
+    name   = var.secrets[each.value].namespace
+    labels = local.k8s_labels
   }
 }
-
 # K8s Opaque secrets
 resource "kubernetes_secret" "opaque" {
   for_each = toset(var.secret_keys)
@@ -84,6 +87,7 @@ resource "kubernetes_secret" "opaque" {
   metadata {
     name      = var.secrets[each.value].name
     namespace = var.secrets[each.value].namespace
+    labels    = local.k8s_labels
   }
   data = var.secrets[each.value].data
 }
