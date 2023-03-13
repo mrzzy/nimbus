@@ -18,11 +18,11 @@ http {
 
     # proxy routes
     {%- for host, target in proxy_spec.items() %}
-    # {{ host }} -> {{ target }}
+    # {{ host }}.{{ root }} -> {{ target }}
     server {
         # Google App Engine expects the runtime to serve HTTP traffic from port 8080.
         listen 8080;
-        server_name {{ host }};
+        server_name {{ host }}.{{ root }};
 
         location / {
             # force dns resolution at runtime by pass target url as nginx var to proxy_pass
