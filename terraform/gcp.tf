@@ -135,7 +135,11 @@ resource "google_app_engine_application" "app" {
 }
 
 module "proxy_service" {
-  source     = "./modules/gcp/proxy_gae"
-  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:6cdfba6b7366c9c0f1897565cef1ddaad4ef4ee2a7af99824c254bba00b0c4ed"
+  source    = "./modules/gcp/proxy_gae"
+  container = "${module.registry.repo_prefix}/proxy-gae@sha256:6cdfba6b7366c9c0f1897565cef1ddaad4ef4ee2a7af99824c254bba00b0c4ed"
+
   proxy_spec = var.has_gae_proxy ? var.gae_proxy_spec : ""
+  project_id = google_app_engine_application.app.project
+  # "as" is assigned by Google based on deployment region
+  gae_region_id = "as"
 }

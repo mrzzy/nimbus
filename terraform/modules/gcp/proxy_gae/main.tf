@@ -13,6 +13,12 @@ terraform {
   }
 }
 
+locals {
+  # google app engine will route requests to the proxy via hostname:
+  # "<PROJECT>.<REGION>.r.appspot.com"
+  # https://cloud.google.com/appengine/docs/legacy/standard/python/how-requests-are-routed
+  proxy_host = "${var.project_id}.${var.gae_region_id}.r.appspot.com"
+}
 resource "google_app_engine_flexible_app_version" "v1" {
   version_id                = "v1"
   runtime                   = "custom"
@@ -26,6 +32,7 @@ resource "google_app_engine_flexible_app_version" "v1" {
   }
   env_variables = {
     PROXY_SPEC = var.proxy_spec
+    HOSTNAME   = local.proxy_host
   }
   liveness_check {
     path = "/health"
