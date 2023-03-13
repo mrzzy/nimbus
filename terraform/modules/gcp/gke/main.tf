@@ -73,11 +73,11 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(local.master_auth.cluster_ca_certificate)
 }
 
-# K8s namespaces to deploy secrets in
+# K8s namespaces to deploy
 resource "kubernetes_namespace" "name" {
-  for_each = toset(var.secret_keys)
+  for_each = toset(var.namespaces)
   metadata {
-    name   = var.secrets[each.value].namespace
+    name   = each.value
     labels = local.k8s_labels
   }
 }

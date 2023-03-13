@@ -29,6 +29,12 @@ variable "service_account_email" {
   description = "Email of the GCP service account used to authenticate K8s workloads on GCP."
 }
 
+variable "namespaces" {
+  type        = set(string)
+  description = "List of Kubernetes namespaces to create on the GKE cluster."
+  default     = []
+}
+
 variable "secret_keys" {
   type        = set(string)
   description = <<-EOF

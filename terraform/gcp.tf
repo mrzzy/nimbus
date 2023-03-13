@@ -156,14 +156,19 @@ module "gke" {
   n_workers             = 1
   service_account_email = module.iam.gke_service_account_email
 
+  # K8s Namespaces to deploy
+  namespaces = [
+    "csi-rclone",
+    "monitoring",
+  ]
+
+  # K8s Secrets to deploy
   secret_keys = [
     "default-${local.domain_slug}-tls",
     "monitoring-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
-
-  # K8s Secrets to deploy
   secrets = {
     # TLS credentials to add to the cluster as K8s secrets.
     "default-${local.domain_slug}-tls" = {
