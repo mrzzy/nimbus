@@ -26,14 +26,17 @@ module "dns" {
     "monitor" : module.k8s.ingress_ip, # Grafana monitoring
     "library" : module.k8s.ingress_ip, # EBook Library
     },
-    # create direct dns route for WARP VM if its deployed without proxy
-    (var.has_warp_vm && !var.has_gae_proxy) ? { "warp" : local.warp_ip } : {},
+    # only create dns route for WARP VM if its deployed
+    var.has_warp_vm ? { "warp" : local.warp_ip } : {},
   )
-  # create dns route to WARP VM via proxy if deployed with proxy
-  cnames = (var.has_warp_vm && var.has_gae_proxy) ? merge(
-    { "warp" : local.proxy_host },
-    { for match in regexall("(?P<host>[\\w\\.]+)=") : match.host => local.proxy_host },
-  ) : {}
+  # create cname dns routes based on proxy spec if proxy_service is deployed
+  cnames = (
+    (var.has_warp_vm && var.has_gae_proxy) ?
+    {
+      for match in regexall("(?P<host>[\\w\\.]+)=", var.gae_proxy_spec) :
+      "${match.host}.warp" => local.proxy_host
+    } : {}
+  )
 }
 
 # Cloudflare settings for domain
