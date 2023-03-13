@@ -5,17 +5,18 @@
 #
 
 apiVersion: kustomize.config.k8s.io/v1beta1
-namePrefix: library-
+namespace: library
 resources:
+- namespace.yaml
 - library-pv.yaml
 - library-pvc.yaml
 - settings-pvc.yaml
 - deployment.yaml
 - service.yaml
 commonLabels:
-    app.kubernetes.io/part-of: library
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: kustomize
+  app.kubernetes.io/part-of: library
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/created-by: kustomize
 # match calibre library PV's declared capacity to the size requested by the PVC
 replacements:
   - source:

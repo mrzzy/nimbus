@@ -7,7 +7,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: library-calibre-web
+  name: calibre-web
+  namespace: library
   labels:
     app.kubernetes.io/part-of: library
   annotations:
@@ -22,7 +23,7 @@ spec:
       paths:
       - backend:
           service:
-            name: library-calibre-web
+            name: calibre-web
             port:
               number: 80
         path: /
