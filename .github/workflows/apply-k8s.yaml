@@ -8,6 +8,11 @@ name: "Apply K8s Manifests"
 on:
   push:
     branches: [main]
+permissions:
+  # needed for actions/checkout to clone repo
+  contents: read
+  # allow odic token to be issued for auth via GCP's workload identity pool
+  id-token: write
 jobs:
   apply-k8s:
     name: "Apply K8s Manifests"
