@@ -15,6 +15,6 @@ resources:
   # CSI Rclone: S3-like cloud storage backed Persistent Volumes
   - ./csi-rclone
   # Monitoring: Prometheus, Grafana
-  - ./monitor
+  - ./monitoring
   # EBook Library: Calibre Web
   - ./library

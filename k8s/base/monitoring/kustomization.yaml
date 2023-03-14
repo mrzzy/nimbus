@@ -31,6 +31,6 @@ helmCharts:
 # needed as Loki's helm chart does not respect the namespace set at helmCharts level
 namespace: monitoring
 commonLabels:
-    app.kubernetes.io/part-of: monitor
+    app.kubernetes.io/part-of: monitoring
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
