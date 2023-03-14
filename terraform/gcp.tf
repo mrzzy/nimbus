@@ -174,7 +174,7 @@ module "gke" {
     "default-${local.domain_slug}-tls" = {
       name      = "${local.domain_slug}-tls"
       type      = "kubernetes.io/tls"
-      namespace = "default",
+      namespace = "ingress-nginx",
       data = {
         "tls.crt" = module.tls_cert.full_chain_cert,
         "tls.key" = module.tls_cert.private_key,
