@@ -8,8 +8,8 @@ resources:
   # Nginx Ingress Controller
   # Ingress: Nginx
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
-  # K8s Metrics Server
-  - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
+  # Authentication: oauth2-proxy
+  - ./auth
   # Media Server: Jellyfin & Rtorrent
   - ./media
   # CSI Rclone: S3-like cloud storage backed Persistent Volumes
@@ -18,19 +18,3 @@ resources:
   - ./monitor
   # EBook Library: Calibre Web
   - ./library
-
-helmCharts:
-  # Authentication: OAuth2 Proxy
-  - name: oauth2-proxy
-    version: 6.9.1
-    repo: https://oauth2-proxy.github.io/manifests
-    releaseName: login
-    valuesInline:
-      # expose oauth2 proxy via ingress
-      ingress:
-        enabled: true
-        className: nginx
-        pathType: Prefix
-      # only allow users with specific emails to authenticate
-      authenticatedEmailsFile:
-        enabled: true
