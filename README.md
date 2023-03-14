@@ -7,7 +7,7 @@ Nimbus centralises Infrastructure (eg. Terraform deployments, Kubernetes Manifes
 ## Features
 - **Economies of Scale**  Cross-cutting concerns between Self-hosted services (eg. Logging, Monitoring, CDN Caching & DNS) can be fulfilled via a set of shared services that only need to be deployed once.
 - **Infrastructure as Code (IaC)** Expressing IaC makes infrastructure dynamic & malleable to changes. Dependencies between Multiple Cloud providers can be expressed explicitly in code. Checking IaC into Git provides checkpoints for rollbacks if something goes wrong.
-- **Multi-Cloud Management** Nimbus simplifies management of Infrastructure hosted on multiple Cloud Platforms (ie. Google Cloud Platform (GCP), Cloudflare, Cloudflare) by deploying them from one place.
+
 
 ## Architecture
 ```mermaid
