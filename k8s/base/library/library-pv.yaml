@@ -19,3 +19,7 @@ spec:
   csi:
     driver: csi-rclone
     volumeHandle: ecfd06f6-ea6b-46ea-ab50-493d033a2e17
+    volumeAttributes:
+      remotePath: mrzzy-co-library
+      # vfs performance: disable modefile
+      no-modtime: "true"

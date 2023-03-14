@@ -9,10 +9,6 @@ resources:
   - ../base
   - ./ingress
 
-patches:
-  - path: media/patch-pv.yaml
-  - path: library/patch-pv.yaml
-
 patchesJson6902:
   # patch Metrics Server to disable TLS when scraping Linode worker's kubelet as
   # Linode does not configure with the correct TLS certificate.
