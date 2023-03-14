@@ -13,6 +13,7 @@ resources:
 - settings-pvc.yaml
 - deployment.yaml
 - service.yaml
+- ingress.yaml
 commonLabels:
   app.kubernetes.io/part-of: library
   app.kubernetes.io/managed-by: kustomize

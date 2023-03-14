@@ -8,9 +8,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: media-jellyfin
-  namespace: media
-  labels:
-    app.kubernetes.io/part-of: media
 spec:
   ingressClassName: nginx
   rules:

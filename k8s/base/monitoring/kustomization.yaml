@@ -9,6 +9,7 @@ resources:
   - namespace.yaml
   # Monitoring: Prometheus, Grafana & Prometheus Operator
   - kube-promtheus-stack
+  - grafana-ingress.yaml
 helmCharts:
   # Logging: Loki
   - namespace: monitoring
