@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Linode Kubernetes Engine
+# Google Kubernetes Engine Terraform Module
 # Output Variables
 #
 

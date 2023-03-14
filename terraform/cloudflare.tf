@@ -19,11 +19,11 @@ module "dns" {
   account_id = local.cf_account_id
   domain     = local.domain
   routes = merge({
-    # dns routes for services served by k8s's ingress
-    "auth" : module.k8s.ingress_ip,    # oauth2-proxy oauth callbacks / login page
-    "media" : module.k8s.ingress_ip,   # jellyfin media server
-    "monitor" : module.k8s.ingress_ip, # Grafana monitoring
-    "library" : module.k8s.ingress_ip, # EBook Library
+    # dns routes for services served by gke's ingress
+    "auth" : module.gke.ingress_ip,    # oauth2-proxy oauth callbacks / login page
+    "media" : module.gke.ingress_ip,   # jellyfin media server
+    "monitor" : module.gke.ingress_ip, # Grafana monitoring
+    "library" : module.gke.ingress_ip, # EBook Library
     },
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { "warp" : local.warp_ip } : {},

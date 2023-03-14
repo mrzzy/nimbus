@@ -7,9 +7,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: media-flood
-  labels:
-    app.kubernetes.io/part-of: media
+  name: flood
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
     nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
@@ -22,7 +20,7 @@ spec:
       # expose flood service on media.mrzzy.co/files
       - backend:
           service:
-            name: media-flood
+            name: flood
             port:
               number: 80
         path: /files/

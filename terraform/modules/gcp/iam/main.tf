@@ -56,3 +56,10 @@ module "gh_oidc" {
     }
   }
 }
+
+# service account to authenticate workloads on GKE
+resource "google_service_account" "gke" {
+  project     = var.project
+  account_id  = "gke-workload"
+  description = "Service Account to authenticate K8s workloads on GKE."
+}

@@ -5,9 +5,9 @@ Self-hosted services in the Cloud.
 Nimbus centralises Infrastructure (eg. Terraform deployments, Kubernetes Manifests & Docker Containers) that deploys self-hosted services on multiple Cloud Platforms in one repository.
 
 ## Features
-- **Multi-Cloud Management** Nimbus simplifies management of Infrastructure hosted on multiple Cloud Platforms (ie. Google Cloud Platform (GCP), Linode, Cloudflare) by deploying them from one place.
 - **Economies of Scale**  Cross-cutting concerns between Self-hosted services (eg. Logging, Monitoring, CDN Caching & DNS) can be fulfilled via a set of shared services that only need to be deployed once.
 - **Infrastructure as Code (IaC)** Expressing IaC makes infrastructure dynamic & malleable to changes. Dependencies between Multiple Cloud providers can be expressed explicitly in code. Checking IaC into Git provides checkpoints for rollbacks if something goes wrong.
+- **Multi-Cloud Management** Nimbus simplifies management of Infrastructure hosted on multiple Cloud Platforms (ie. Google Cloud Platform (GCP), Cloudflare, Cloudflare) by deploying them from one place.
 
 ## Architecture
 ```mermaid
@@ -21,7 +21,7 @@ flowchart LR
         CDN
     end
 
-    cf[Cloudflare] <--> linode & gcp
+    cf[Cloudflare] <--> gcp
 
     subgraph gcp[Google Cloud Platform]
         direction LR
@@ -32,10 +32,10 @@ flowchart LR
             dev-env[WARP Dev Environment]
         end
         proxy <--> dev-env
-    end
-    subgraph linode[Linode]
-        subgraph lke[Kubernetes Engine]
+
+        subgraph k8s[Kubernetes Engine]
             direction LR
+
             ingress[ingress-nginx] <--> oauth[OAuth2 Proxy]
             ingress <--> media & monitoring & calibre-web[Calibre-Web]
             subgraph media[Media Namespace]
