@@ -26,6 +26,6 @@ runs:
       uses: 'google-github-actions/setup-gcloud@v1.1.0'
     - name: "Obtain kubectl credentials for the GKE cluster"
       shell: bash
-      run: >
-        gcloud container clusters get-credentials
+      run: |
+        gcloud container clusters get-credentials \
           --project=mrzzy-sandbox --zone "${{ inputs.zone }}" "${{ inputs.name }}"
