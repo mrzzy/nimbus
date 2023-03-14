@@ -56,4 +56,3 @@ patches:
       version: v1
       kind: Job
       labelSelector: "app.kubernetes.io/part-of=kube-prometheus-stack"
-

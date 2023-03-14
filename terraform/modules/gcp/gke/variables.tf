@@ -1,26 +1,38 @@
 #
 # Nimbus
-# Terraform Deployment: Linode Kubernetes Engine
+# Google Kubernetes Engine Terraform Module
 # Input Variables
 #
 
 variable "region" {
   type        = string
-  description = "Linode region to deploy the K8s cluster to "
+  description = "GCP region to deploy the K8s cluster to "
 }
 
 variable "k8s_version" {
   type        = string
-  description = "Version of the Kubernetes to deploy."
+  description = "Version of the Kubernetes to deploy in the format: <MAJOR>.<MINOR>.<PATCH>."
 }
 
 variable "machine_type" {
   type        = string
-  description = "Linode instance type to use when creating workers for K8s."
+  description = "GCE VM instance type to use when creating workers for K8s."
 }
+
 variable "n_workers" {
   type        = number
   description = "No. of worker nodes to create for K8s."
+}
+
+variable "service_account_email" {
+  type        = string
+  description = "Email of the GCP service account used to authenticate K8s workloads on GCP."
+}
+
+variable "namespaces" {
+  type        = set(string)
+  description = "List of Kubernetes namespaces to create on the GKE cluster."
+  default     = []
 }
 
 variable "secret_keys" {
@@ -28,6 +40,7 @@ variable "secret_keys" {
   description = <<-EOF
     Keys used to identify secrets specified in 'secrets' var.
     Each key should correspond to an entry in the 'secrets' var.
+    These keys are used to iterate over 'secrets' as secret values cannot be iterated over with terraform's for_each.
   EOF
   default     = []
 }

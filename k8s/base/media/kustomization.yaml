@@ -6,11 +6,13 @@
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
+  - namespace.yaml
+  - jellyfin-ingress.yaml
   # persistent volume for storing media files
   - pv.yaml
   - pvc.yaml
   # rtorrent with Flood UI
-  - rtorrent-flood
+  - ./rtorrent-flood
 helmCharts:
   # Jellyfin: media server
   - name: jellyfin
@@ -27,9 +29,9 @@ helmCharts:
           enabled: true
           type: emptyDir
           size: 10Gi
+namespace: media
 commonLabels:
     app.kubernetes.io/part-of: media
-    app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
 # patch jellyfin deployment to mount media downloaded by rtorrent
 patches:

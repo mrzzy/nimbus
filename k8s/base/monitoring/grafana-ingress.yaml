@@ -1,15 +1,13 @@
 #
 # Nimbus
-# Library Service
-# Calibre Web Ingress
+# K8s Deployment
+# Monitoring: Grafana Ingress
 #
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: library-calibre-web
-  labels:
-    app.kubernetes.io/part-of: library
+  name: grafana
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
     nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
@@ -17,17 +15,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: library.mrzzy.co
+  - host: monitor.mrzzy.co
     http:
       paths:
       - backend:
           service:
-            name: library-calibre-web
+            name: monitor-grafana
             port:
               number: 80
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - library.mrzzy.co
+    - monitor.mrzzy.co
     secretName: mrzzy-co-tls

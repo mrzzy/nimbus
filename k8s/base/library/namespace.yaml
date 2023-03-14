@@ -1,0 +1,10 @@
+#
+# Nimbus
+# K8s Deployment
+# Library
+#
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: library

@@ -16,5 +16,4 @@ resources:
   - https://raw.githubusercontent.com/wunderio/csi-rclone/cc6702ba73226d39942226dcc2314178e29ce90f/deploy/kubernetes/1.19/csi-rclone-storageclass.yaml
 commonLabels:
     app.kubernetes.io/part-of: csi-rclone
-    app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
