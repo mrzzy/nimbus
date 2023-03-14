@@ -17,26 +17,22 @@ jobs:
         working-directory: k8s
     steps:
       - uses: actions/checkout@v3
-      - name: "Setup kubectl access to LKE"
-        uses: ./.github/actions/setup-lke
-        with:
-          linode-token: "${{ secrets.LINODE_LKE_TOKEN }}"
-          cluster-label: "main"
-
+      - name: "Setup kubectl access to GKE"
+        uses: ./.github/actions/setup-gke
       - name: "Perform server-side Dry Run of K8s manifests"
         env:
-          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
-          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
-          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
+          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
+          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
+          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
         run: >
-          kubectl kustomize --enable-helm ./lke |
+          kubectl kustomize --enable-helm ./base |
           kubectl apply ${KUBECTL_FLAGS} --dry-run=server -f -
 
       - name: "Diff K8s manifests with current K8s Cluster's configuration"
         env:
-          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_ID }}"
-          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_CLIENT_SECRET }}"
-          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.LKE_OAUTH2_PROXY_COOKIE_SECRET }}"
+          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
+          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
+          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
         run: |
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
