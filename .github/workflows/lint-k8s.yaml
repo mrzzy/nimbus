@@ -40,6 +40,6 @@ jobs:
         run: |
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
-          kubectl kustomize --enable-helm ./lke | \
+          kubectl kustomize --enable-helm ./base | \
             kubectl diff ${KUBECTL_FLAGS} -f - || EXIT_CODE=$?
           test ${EXIT_CODE:-1} -eq 1
