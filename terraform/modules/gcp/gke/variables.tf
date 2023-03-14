@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Google Kubernetes Engine
+# Google Kubernetes Engine Terraform Module
 # Input Variables
 #
 

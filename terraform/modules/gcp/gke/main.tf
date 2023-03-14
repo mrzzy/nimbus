@@ -1,6 +1,6 @@
 #
 # Nimbus
-# Terraform Deployment: Google Kubernetes Engine
+# Google Kubernetes Engine Terraform Module
 #
 
 terraform {
@@ -91,4 +91,13 @@ resource "kubernetes_secret" "opaque" {
     labels    = local.k8s_labels
   }
   data = var.secrets[each.value].data
+}
+
+
+# obtain K8s ingress service's info
+data "kubernetes_service" "ingress" {
+  metadata {
+    name      = "ingress-nginx-controller"
+    namespace = "ingress-nginx"
+  }
 }
