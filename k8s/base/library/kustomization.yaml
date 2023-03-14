@@ -16,7 +16,6 @@ resources:
 - ingress.yaml
 commonLabels:
   app.kubernetes.io/part-of: library
-  app.kubernetes.io/managed-by: kustomize
   app.kubernetes.io/created-by: kustomize
 # match calibre library PV's declared capacity to the size requested by the PVC
 replacements:

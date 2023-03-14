@@ -32,7 +32,6 @@ helmCharts:
 namespace: media
 commonLabels:
     app.kubernetes.io/part-of: media
-    app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
 # patch jellyfin deployment to mount media downloaded by rtorrent
 patches:

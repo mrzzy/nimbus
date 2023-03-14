@@ -62,7 +62,6 @@ locals {
   master_auth = google_container_cluster.main.master_auth.0
   k8s_labels = {
     "app.kubernetes.io/created-by" = "terraform"
-    "app.kubernetes.io/managed-by" = "terraform"
   }
 }
 # use google provider's access token to authenticate k8s provider

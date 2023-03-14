@@ -23,5 +23,4 @@ secretGenerator:
 namespace: auth
 commonLabels:
     app.kubernetes.io/part-of: auth
-    app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: kustomize
