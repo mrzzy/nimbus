@@ -146,6 +146,17 @@ module "proxy_service" {
 }
 
 # Google Kubernetes Engine Cluster
+locals {
+  tls_secret = {
+    name = "${local.domain_slug}-tls",
+    type = "kubernetes.io/tls",
+    data = {
+      "tls.crt" = module.tls_cert.full_chain_cert,
+      "tls.key" = module.tls_cert.private_key,
+    },
+  }
+}
+
 module "gke" {
   source = "./modules/gcp/gke"
 
@@ -160,35 +171,27 @@ module "gke" {
   namespaces = [
     "csi-rclone",
     "monitoring",
+    # uncomment on fresh install
+    # "media",
+    # "library",
   ]
 
   # K8s Secrets to deploy
+  # NOTE: remember to add a key here for every entry added to secrets below
   secret_keys = [
     "default-${local.domain_slug}-tls",
     "monitoring-${local.domain_slug}-tls",
+    "media-${local.domain_slug}-tls",
+    "library-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
   secrets = {
     # TLS credentials to add to the cluster as K8s secrets.
-    "default-${local.domain_slug}-tls" = {
-      name      = "${local.domain_slug}-tls"
-      type      = "kubernetes.io/tls"
-      namespace = "ingress-nginx",
-      data = {
-        "tls.crt" = module.tls_cert.full_chain_cert,
-        "tls.key" = module.tls_cert.private_key,
-      }
-    },
-    "monitoring-${local.domain_slug}-tls" = {
-      name      = "${local.domain_slug}-tls"
-      type      = "kubernetes.io/tls"
-      namespace = "monitoring",
-      data = {
-        "tls.crt" = module.tls_cert.full_chain_cert,
-        "tls.key" = module.tls_cert.private_key,
-      }
-    },
+    "default-${local.domain_slug}-tls"    = local.tls_secret,
+    "monitoring-${local.domain_slug}-tls" = merge(local.tls_secret, { namespace = "monitoring" }),
+    "media-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "media" }),
+    "library-${local.domain_slug}-tls"    = merge(local.tls_secret, { namespace = "library" }),
     # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
     "rclone" = {
       name      = "rclone-secret"
