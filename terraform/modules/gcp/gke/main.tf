@@ -80,6 +80,11 @@ resource "kubernetes_namespace" "name" {
     name   = each.value
     labels = local.k8s_labels
   }
+  lifecycle {
+    ignore_changes = [
+      metadata
+    ]
+  }
 }
 # K8s Opaque secrets
 resource "kubernetes_secret" "opaque" {
