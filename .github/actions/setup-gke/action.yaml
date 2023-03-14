@@ -7,6 +7,16 @@
 name: "Setup GKE"
 description: "Configures kubectl access to a zonal GKE cluster"
 inputs:
+  github_odic_request_token:
+    description: |
+      Token used to request a ODIC token to authenticate the workload with GCP.
+      Pass the value of the $ACTIONS_ID_TOKEN_REQUEST_TOKEN environment variable.
+    required: true
+  github_odic_request_url:
+    description:
+      URL used to request a ODIC token to authenticate the workload with GCP.
+      Pass the value of the $ACTIONS_ID_TOKEN_REQUEST_URL environment variable.
+    required: true
   zone:
     description: "GCP Zone ID of the GKE cluster to access with kubectl."
     default: asia-southeast1-c
@@ -26,6 +36,9 @@ runs:
       uses: 'google-github-actions/setup-gcloud@v1.1.0'
     - name: "Obtain kubectl credentials for the GKE cluster"
       shell: bash
+      env:
+        ACTIONS_ID_TOKEN_REQUEST_TOKEN: "${{ inputs.github_odic_request_token }}"
+        ACTIONS_ID_TOKEN_REQUEST_URL: "${{ inputs.github_odic_request_url }}"
       run: >
         gcloud container clusters get-credentials
           --project=mrzzy-sandbox --zone "${{ inputs.zone }}" "${{ inputs.name }}"
