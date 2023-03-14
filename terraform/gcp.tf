@@ -180,6 +180,7 @@ module "gke" {
   # NOTE: remember to add a key here for every entry added to secrets below
   secret_keys = [
     "default-${local.domain_slug}-tls",
+    "auth-${local.domain_slug}-tls",
     "monitoring-${local.domain_slug}-tls",
     "media-${local.domain_slug}-tls",
     "library-${local.domain_slug}-tls",
@@ -189,6 +190,7 @@ module "gke" {
   secrets = {
     # TLS credentials to add to the cluster as K8s secrets.
     "default-${local.domain_slug}-tls"    = local.tls_secret,
+    "auth-${local.domain_slug}-tls"       = merge(local.tls_secret, { namespace = "auth" }),
     "monitoring-${local.domain_slug}-tls" = merge(local.tls_secret, { namespace = "monitoring" }),
     "media-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "media" }),
     "library-${local.domain_slug}-tls"    = merge(local.tls_secret, { namespace = "library" }),
