@@ -1,0 +1,28 @@
+#
+# Nimbus
+# oauth2-proxy
+# Kustomization
+#
+
+helmCharts:
+  # Authentication: OAuth2 Proxy
+  - name: oauth2-proxy
+    version: 6.9.1
+    repo: https://oauth2-proxy.github.io/manifests
+    releaseName: login
+    valuesInline:
+      # expose oauth2 proxy via ingress
+      ingress:
+        enabled: true
+        className: nginx
+        pathType: Prefix
+      # only allow users with specific emails to authenticate
+      authenticatedEmailsFile:
+        enabled: true
+configMapGenerator:
+  - name: login-oauth2-proxy-accesslist
+    files:
+      - restricted_user_access=authenticated_emails_file
+patches:
+  - path: patch-deployment.yaml
+  - path: patch-ingress.yaml

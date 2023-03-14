@@ -6,31 +6,13 @@
 
 resources:
   - namespace.yaml
-helmCharts:
-  # Authentication: OAuth2 Proxy
-  - name: oauth2-proxy
-    version: 6.9.1
-    repo: https://oauth2-proxy.github.io/manifests
-    releaseName: login
-    valuesInline:
-      # expose oauth2 proxy via ingress
-      ingress:
-        enabled: true
-        className: nginx
-        pathType: Prefix
-      # only allow users with specific emails to authenticate
-      authenticatedEmailsFile:
-        enabled: true
-
+  - ./oauth2-proxy
+# merge & replace oauth2-proxy resources must done outside oauth2-proxy kustomize
 configMapGenerator:
   - name: login-oauth2-proxy
     behavior: merge
     files:
       - oauth2-proxy/oauth2_proxy.cfg
-  - name: login-oauth2-proxy-accesslist
-    files:
-      - restricted_user_access=oauth2-proxy/authenticated_emails_file
-
 secretGenerator:
   # patch oauth2 proxy secret with actual secret values
   - name: login-oauth2-proxy
@@ -38,10 +20,6 @@ secretGenerator:
     # unset env vars in env file will be read from the execution environment
     # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#configmapgenerator
     env: oauth2-proxy/secret.env
-patches:
-  - path: oauth2-proxy/patch-deployment.yaml
-  - path: oauth2-proxy/patch-ingress.yaml
-
 namespace: auth
 commonLabels:
     app.kubernetes.io/part-of: auth
