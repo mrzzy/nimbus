@@ -1,0 +1,31 @@
+#
+# Nimbus
+# CI
+# Setup GKE Action
+#
+
+name: "Setup GKE"
+description: "Configures kubectl access to a zonal GKE cluster"
+inputs:
+  zone:
+    description: "GCP Zone ID of the GKE cluster to access with kubectl."
+    default: asia-southeast1-c
+  name:
+    description: "Name of GKE cluster to access with kubectl."
+    default: main
+runs:
+  using: composite
+  steps:
+    - id: 'auth'
+      name: "Authenticate to GCP with Workload Identity Federation"
+      uses: google-github-actions/auth@v1.0.0
+      with:
+        workload_identity_provider: "projects/652407106283/locations/global/workloadIdentityPools/gh-actions-mrzzy-nimbus/providers/gh-oidc-provider-mrzzy-nimbus"
+        service_account: "gh-actions-mrzzy-nimbus@mrzzy-sandbox.iam.gserviceaccount.com"
+    - name: "Setup gcloud"
+      uses: 'google-github-actions/setup-gcloud@v1.1.0'
+    - name: "Obtain kubectl credentials for the GKE cluster"
+      shell: bash
+      run: >
+        gcloud container clusters get-credentials
+          --project=mrzzy-sandbox --zone "${{ inputs.zone }}" "${{ inputs.name }}"
