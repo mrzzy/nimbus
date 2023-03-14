@@ -16,10 +16,6 @@ terraform {
       source  = "hashicorp/google"
       version = "< 4.56.1"
     }
-    linode = {
-      source  = "linode/linode"
-      version = "< 1.30.1"
-    }
     acme = {
       source  = "vancluever/acme"
       version = "< 2.13.2"
