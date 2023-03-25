@@ -28,6 +28,7 @@ jobs:
           github_odic_request_token: "${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}"
           github_odic_request_url: "${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}"
       - name: "Template K8s secret .env files"
+        working-directory: . # project root
         env:
           OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
           OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"

@@ -15,7 +15,6 @@ jobs:
   dry-run-k8s:
     env:
       KUBECTL_FLAGS: "--server-side --force-conflicts"
-    name: "Dry Run K8s Manifests"
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -25,6 +24,7 @@ jobs:
       - name: "Setup kubectl access to GKE"
         uses: ./.github/actions/setup-gke
       - name: "Template K8s secret .env files"
+        working-directory: . # project root
         env:
           OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
           OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
