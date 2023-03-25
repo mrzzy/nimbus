@@ -17,8 +17,6 @@ secretGenerator:
   # patch oauth2 proxy secret with actual secret values
   - name: login-oauth2-proxy
     behavior: replace
-    # unset env vars in env file will be read from the execution environment
-    # https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#configmapgenerator
     env: oauth2-proxy/secret.env
 namespace: auth
 commonLabels:
