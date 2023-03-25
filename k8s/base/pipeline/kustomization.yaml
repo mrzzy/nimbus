@@ -20,6 +20,8 @@ helmCharts:
       webserver:
         defaultUser:
           enabled: false
+      # use k8s secret to supply airflow webserver with encryption key
+      webserverSecretKeySecretName: airflow-webserver-key
       # override default airflow executor
       executor: KubernetesExecutor
       # override default db credentials with custom secret
@@ -51,4 +53,7 @@ secretGenerator:
   - name: pipeline-postgresql
     envs:
       - pipeline-postgresql.env
+  - name: airflow-webserver-key
+    envs:
+      - airflow-webserver-key.env
 namespace: pipeline
