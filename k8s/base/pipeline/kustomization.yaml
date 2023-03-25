@@ -21,6 +21,9 @@ helmCharts:
       postgresql:
         auth:
           existingSecret: pipeline-postgresql
+          # disable creation of custom user
+          username: ""
+          password: ""
       # deploy sync dags from git repository perodically
       dags:
         gitSync:
