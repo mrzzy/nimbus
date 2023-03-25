@@ -57,3 +57,14 @@ secretGenerator:
     envs:
       - airflow-webserver-key.env
 namespace: pipeline
+patches:
+  # patch airflow's jobs with ttl 0 to auto cleaned up upon completion
+  - patch: |
+      - op: add
+        path: /spec/ttlSecondsAfterFinished
+        value: 0
+    target:
+      group: batch
+      version: v1
+      kind: Job
+      labelSelector: "tier=airflow,release=pipeline"
