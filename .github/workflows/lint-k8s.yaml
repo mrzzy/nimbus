@@ -15,6 +15,11 @@ jobs:
   dry-run-k8s:
     env:
       KUBECTL_FLAGS: "--server-side --force-conflicts"
+      # pass secrets as env vars
+      OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
+      OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
+      OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
+
     name: "Dry Run K8s Manifests"
     runs-on: ubuntu-20.04
     defaults:
@@ -25,18 +30,10 @@ jobs:
       - name: "Setup kubectl access to GKE"
         uses: ./.github/actions/setup-gke
       - name: "Perform server-side Dry Run of K8s manifests"
-        env:
-          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
-          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
-          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
         run: >
           kubectl kustomize --enable-helm ./base |
           kubectl apply ${KUBECTL_FLAGS} --dry-run=server -f -
       - name: "Diff K8s manifests with current K8s Cluster's configuration"
-        env:
-          OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
-          OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
-          OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
         run: |
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
