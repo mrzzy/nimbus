@@ -1,0 +1,48 @@
+#
+# Nimbus
+# K8s Deployment
+# Data Pipeline
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - namespace.yaml
+helmCharts:
+  # Airflow: Data Pipeline orchestrator
+  - name: airflow
+    repo: https://airflow.apache.org
+    releaseName: pipeline
+    version: 1.8.0
+    namespace: pipeline
+    valuesInline:
+      # override default db credentials with custom secret
+      data:
+        metadataSecretName: pipeline-postgresql
+      postgresql:
+        auth:
+          existingSecret: pipeline-postgresql
+      # deploy sync dags from git repository perodically
+      dags:
+        gitSync:
+          enabled: true
+      # ingress for webserver
+      ingress:
+        web:
+          enabled: true
+          annotations:
+            # allow access only for authenticated users
+            nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
+            nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+          ingressClassName: nginx
+          hosts:
+            - name: airflow.mrzzy.co
+              tls:
+                # Enable TLS termination for the web Ingress
+                enabled: true
+                # the name of a pre-created Secret containing a TLS private key and certificate
+                secretName:  mrzzy-co-tls
+secretGenerator:
+  - name: pipeline-postgresql
+    envs:
+      - pipeline-postgresql.env
+namespace: pipeline
