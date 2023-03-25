@@ -64,3 +64,4 @@ vendor/
 
 # secret env files
 .*.env
+/k8s/**/*.env
