@@ -18,3 +18,5 @@ resources:
   - ./monitoring
   # EBook Library: Calibre Web
   - ./library
+  # Data Pipelines: Airflow
+  - ./pipeline

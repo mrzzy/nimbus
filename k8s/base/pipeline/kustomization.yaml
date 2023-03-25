@@ -1,0 +1,70 @@
+#
+# Nimbus
+# K8s Deployment
+# Data Pipeline
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - namespace.yaml
+helmCharts:
+  # Airflow: Data Pipeline orchestrator
+  - name: airflow
+    repo: https://airflow.apache.org
+    releaseName: pipeline
+    version: 1.8.0
+    namespace: pipeline
+    valuesInline:
+      # disable creation of default admin user for security
+      # manually create users with Airflow CLI: `airflow users create`
+      webserver:
+        defaultUser:
+          enabled: false
+      # use k8s secret to supply airflow webserver with encryption key
+      webserverSecretKeySecretName: airflow-webserver-key
+      # override default airflow executor
+      executor: KubernetesExecutor
+      # override default db credentials with custom secret
+      data:
+        metadataSecretName: pipeline-postgresql
+      postgresql:
+        auth:
+          existingSecret: pipeline-postgresql
+          # disable creation of custom user
+          username: ""
+          password: ""
+      # deploy sync dags from git repository perodically
+      dags:
+        gitSync:
+          enabled: true
+      # ingress for webserver
+      ingress:
+        web:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - name: airflow.mrzzy.co
+              tls:
+                # Enable TLS termination for the web Ingress
+                enabled: true
+                # the name of a pre-created Secret containing a TLS private key and certificate
+                secretName:  mrzzy-co-tls
+secretGenerator:
+  - name: pipeline-postgresql
+    envs:
+      - pipeline-postgresql.env
+  - name: airflow-webserver-key
+    envs:
+      - airflow-webserver-key.env
+namespace: pipeline
+patches:
+  # patch airflow's jobs with ttl 0 to auto cleaned up upon completion
+  - patch: |
+      - op: add
+        path: /spec/ttlSecondsAfterFinished
+        value: 0
+    target:
+      group: batch
+      version: v1
+      kind: Job
+      labelSelector: "tier=airflow,release=pipeline"

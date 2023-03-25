@@ -27,11 +27,16 @@ jobs:
         with:
           github_odic_request_token: "${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}"
           github_odic_request_url: "${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}"
-      - name: "Apply current K8s manifests to GKE"
+      - name: "Template K8s secret .env files"
+        working-directory: . # project root
         env:
           OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
           OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
           OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
+          K8S_AIRFLOW_POSTGRESQL_PASSWORD: "${{ secrets.K8S_AIRFLOW_POSTGRESQL_PASSWORD }}"
+          K8S_AIRFLOW_WEBSERVER_KEY: "${{ secrets.K8S_AIRFLOW_WEBSERVER_KEY }}"
+        run: make k8s-secrets
+      - name: "Apply current K8s manifests to GKE"
         run: >
           kubectl kustomize --enable-helm ./base |
           kubectl apply --server-side --force-conflicts -f -
