@@ -18,6 +18,30 @@ resource "aws_s3_bucket_ownership_controls" "lake" {
     object_ownership = "BucketOwnerEnforced"
   }
 }
+# enforce strict HTTPS transport on S3 data lake
+resource "aws_s3_bucket_policy" "lake_http_only" {
+  bucket = aws_s3_bucket.lake.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "HTTPSOnly"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.lake.arn,
+          "${aws_s3_bucket.lake.arn}/*",
+        ]
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
+        }
+      },
+    ]
+  })
+}
 
 # Redshift Serverless Data Warehouse
 # iam policy to that allows read access to data lake
