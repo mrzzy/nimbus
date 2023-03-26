@@ -66,9 +66,11 @@ resource "aws_iam_role" "warehouse" {
 }
 # namespace to segeregate our db objects within the redshift serverless
 resource "aws_redshiftserverless_namespace" "warehouse" {
-  namespace_name       = "main"
-  db_name              = "mrzzy"
+  namespace_name = "main"
+  db_name        = "mrzzy"
+  # default iam role must also be listed in iam roles
   default_iam_role_arn = aws_iam_role.warehouse.arn
+  iam_roles            = [aws_iam_role.warehouse.arn]
 }
 # workgroup of redshift serverless compute resources
 resource "aws_redshiftserverless_workgroup" "warehouse" {
