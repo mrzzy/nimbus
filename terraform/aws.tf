@@ -42,6 +42,14 @@ resource "aws_s3_bucket_policy" "lake_http_only" {
     ]
   })
 }
+# block public access on bucket
+resource "aws_s3_bucket_public_access_block" "lake" {
+  bucket                  = aws_s3_bucket.lake.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
 
 # Redshift Serverless Data Warehouse
 # iam policy to that allows read access to data lake
