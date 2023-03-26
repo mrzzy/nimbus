@@ -18,12 +18,6 @@ resource "aws_s3_bucket_ownership_controls" "lake" {
     object_ownership = "BucketOwnerEnforced"
   }
 }
-# block public access on bucket
-resource "aws_s3_bucket_public_access_block" "lake" {
-  bucket              = aws_s3_bucket.lake.id
-  block_public_acls   = true
-  block_public_policy = true
-}
 
 # Redshift Serverless Data Warehouse
 # iam policy to that allows read access to data lake
