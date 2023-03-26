@@ -28,6 +28,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.2.0"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.60.0"
+    }
   }
 
   # terraform cloud workspace to store terraform state
