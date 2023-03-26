@@ -42,10 +42,27 @@ data "aws_iam_policy_document" "allow_lake" {
     ]
   }
 }
+# iam policy to allow redshift to assume warehouse iam role
+data "aws_iam_policy_document" "redshift_assume_role" {
+  statement {
+    sid     = "AllowRedshiftToAssumeRole"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["redshift.amazonaws.com"]
+    }
+  }
+}
 # role to identify redshift when accessing other AWS services (eg. S3)
 resource "aws_iam_role" "warehouse" {
-  name               = "warehouse"
-  assume_role_policy = data.aws_iam_policy_document.allow_lake.json
+  name = "warehouse"
+  # iam policy determining which principals can hold the role
+  assume_role_policy = data.aws_iam_policy_document.redshift_assume_role.json
+  # attach iam policy to applying to principals that hold the role
+  inline_policy {
+    name   = "allow-lake-access"
+    policy = data.aws_iam_policy_document.allow_lake.json
+  }
 }
 # namespace to segeregate our db objects within the redshift serverless
 resource "aws_redshiftserverless_namespace" "warehouse" {
