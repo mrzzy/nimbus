@@ -2,12 +2,12 @@
 Self-hosted services in the Cloud.
 
 ## Introduction
-Nimbus centralises Infrastructure (eg. Terraform deployments, Kubernetes Manifests & Docker Containers) that deploys self-hosted services on multiple Cloud Platforms in one repository.
+Nimbus centralises Infrastructure (eg. Terraform deployments, Kubernetes Manifests & Docker Containers) that deploys self-hosted services on Cloud Platforms in one repository.
 
 ## Features
 - **Economies of Scale**  Cross-cutting concerns between Self-hosted services (eg. Logging, Monitoring, CDN Caching & DNS) can be fulfilled via a set of shared services that only need to be deployed once.
 - **Infrastructure as Code (IaC)** Expressing IaC makes infrastructure dynamic & malleable to changes. Dependencies between Multiple Cloud providers can be expressed explicitly in code. Checking IaC into Git provides checkpoints for rollbacks if something goes wrong.
-
+- **Multi Cloud** Consolidates deployments on multiple Cloud Platforms (AWS, GCP, Cloudflare &amp; Blackblaze) in one place.
 
 ## Architecture
 ```mermaid
@@ -50,6 +50,11 @@ flowchart LR
                 airflow[Airflow]
             end
         end
+    end
+
+    subgraph aws[Amazon Web Services]
+        direction LR
+        s3[(S3 Data Lake)] --> redshift[(Redshift Serverless)]
     end
 ```
 

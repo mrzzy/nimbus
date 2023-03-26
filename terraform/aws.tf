@@ -25,7 +25,7 @@ resource "aws_s3_bucket_public_access_block" "lake" {
   block_public_policy = true
 }
 
-# Redshift Serverless Data warehouse
+# Redshift Serverless Data Warehouse
 # iam policy to that allows read access to data lake
 data "aws_iam_policy_document" "allow_lake" {
   statement {
