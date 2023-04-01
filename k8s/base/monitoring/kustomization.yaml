@@ -15,7 +15,7 @@ helmCharts:
   - namespace: monitoring
     releaseName: log
     name: loki
-    version: 4.9.0
+    version: 4.10.0
     repo: https://grafana.github.io/helm-charts
     valuesFile: ./loki-values.yaml
   # Log Forwarder: promtail
