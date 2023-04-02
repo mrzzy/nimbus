@@ -8,19 +8,35 @@ provider "aws" {
   region = "ap-southeast-1" # Singapore
 }
 
-# S3 bucket for development
-module "s3_dev" {
-  source = "./modules/aws/s3"
-  bucket = "mrzzy-co-dev"
+# IAM
+# iam user to authenticate Providence Github Actions CI
+resource "aws_iam_user" "providence_ci" {
+  name = "mrzzy-providence-ci"
 }
-
-# S3 bucket as a Data Lake
-module "s3_lake" {
-  source = "./modules/aws/s3"
-  bucket = "mrzzy-co-data-lake"
+# iam policy to allows holder to read/write from mrzzy-co-dev bucket
+data "aws_iam_policy_document" "allow_dev" {
+  statement {
+    sid = "AllowS3ListOnDev"
+    resources = [
+      module.s3_dev.arn
+    ]
+    actions = ["s3:ListBucket"]
+  }
+  statement {
+    sid       = "GetPutDelete"
+    resources = [module.s3_dev.arn]
+    actions   = ["s3:*Object"]
+  }
 }
-
-# Redshift Serverless Data Warehouse
+resource "aws_iam_policy" "allow_dev" {
+  name   = "AllowS3ObjectsCRUDOnDev"
+  policy = data.aws_iam_policy_document.allow_dev.json
+}
+# attach s3 iam policy
+resource "aws_iam_user_policy_attachment" "providence_ci_allow_dev" {
+  user       = aws_iam_user.providence_ci.name
+  policy_arn = aws_iam_policy.allow_dev.arn
+}
 # iam policy to that allows read access to data lake
 data "aws_iam_policy_document" "allow_lake" {
   statement {
@@ -59,6 +75,22 @@ resource "aws_iam_role" "warehouse" {
     policy = data.aws_iam_policy_document.allow_lake.json
   }
 }
+
+
+# S3
+# S3 bucket for development
+module "s3_dev" {
+  source = "./modules/aws/s3"
+  bucket = "mrzzy-co-dev"
+}
+
+# S3 bucket as a Data Lake
+module "s3_lake" {
+  source = "./modules/aws/s3"
+  bucket = "mrzzy-co-data-lake"
+}
+
+# Redshift Serverless Data Warehouse
 # namespace to segeregate our db objects within the redshift serverless
 resource "aws_redshiftserverless_namespace" "warehouse" {
   namespace_name = "main"
