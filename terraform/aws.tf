@@ -37,6 +37,16 @@ resource "aws_iam_user_policy_attachment" "providence_ci_s3" {
   policy_arn = aws_iam_policy.s3_crud.arn
 }
 
+# iam user to authenticate Providence data pipelines
+resource "aws_iam_user" "providence_pipeline" {
+  name = "mrzzy-providence-pipeline"
+}
+# allow CRUD on S3 objects
+resource "aws_iam_user_policy_attachment" "providence_pipeline_s3" {
+  user       = aws_iam_user.providence_pipeline.name
+  policy_arn = aws_iam_policy.s3_crud.arn
+}
+
 # iam policy to allow redshift to assume warehouse iam role
 data "aws_iam_policy_document" "redshift_assume_role" {
   statement {
