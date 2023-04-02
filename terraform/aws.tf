@@ -8,6 +8,12 @@ provider "aws" {
   region = "ap-southeast-1" # Singapore
 }
 
+# S3 bucket for development
+module "s3_dev" {
+  source = "./modules/aws/s3"
+  bucket = "mrzzy-co-dev"
+}
+
 # S3 bucket as a Data Lake
 module "s3_lake" {
   source = "./modules/aws/s3"
