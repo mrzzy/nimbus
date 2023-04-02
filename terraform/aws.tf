@@ -9,48 +9,34 @@ provider "aws" {
 }
 
 # IAM
+# iam policy to allows holder to list, CRUD objects in S3 buckets
+data "aws_iam_policy_document" "s3_crud" {
+  statement {
+    sid       = "ListS3Buckets"
+    resources = ["*"]
+    actions   = ["s3:ListBucket"]
+  }
+  statement {
+    sid       = "CRUDS3Objects"
+    resources = ["*"]
+    actions   = ["s3:*Object"]
+  }
+}
+resource "aws_iam_policy" "s3_crud" {
+  name   = "AllowCRUDS3Objects"
+  policy = data.aws_iam_policy_document.s3_crud.json
+}
+
 # iam user to authenticate Providence Github Actions CI
 resource "aws_iam_user" "providence_ci" {
   name = "mrzzy-providence-ci"
 }
-# iam policy to allows holder to read/write from mrzzy-co-dev bucket
-data "aws_iam_policy_document" "allow_dev" {
-  statement {
-    sid       = "AllowS3ListOnDev"
-    resources = [module.s3_dev.arn]
-    actions   = ["s3:ListBucket"]
-  }
-  statement {
-    sid       = "GetPutDelete"
-    resources = ["${module.s3_dev.arn}/*"]
-    actions   = ["s3:*Object"]
-  }
-}
-resource "aws_iam_policy" "allow_dev" {
-  name   = "AllowS3ObjectsCRUDOnDev"
-  policy = data.aws_iam_policy_document.allow_dev.json
-}
-# attach s3 iam policy
-resource "aws_iam_user_policy_attachment" "providence_ci_allow_dev" {
+# allow CRUD on S3 objects
+resource "aws_iam_user_policy_attachment" "providence_ci_s3" {
   user       = aws_iam_user.providence_ci.name
-  policy_arn = aws_iam_policy.allow_dev.arn
+  policy_arn = aws_iam_policy.s3_crud.arn
 }
-# iam policy to that allows read access to data lake
-data "aws_iam_policy_document" "allow_lake" {
-  statement {
-    sid = "AllowS3ReadOnlyOnLake"
-    resources = [
-      module.s3_lake.arn
-    ]
-    # derived from predefined policy "AmazonS3ReadOnlyAccess"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-      "s3-object-lambda:Get*",
-      "s3-object-lambda:List*",
-    ]
-  }
-}
+
 # iam policy to allow redshift to assume warehouse iam role
 data "aws_iam_policy_document" "redshift_assume_role" {
   statement {
@@ -67,11 +53,11 @@ resource "aws_iam_role" "warehouse" {
   name = "warehouse"
   # iam policy determining which principals can hold the role
   assume_role_policy = data.aws_iam_policy_document.redshift_assume_role.json
-  # attach iam policy to applying to principals that hold the role
-  inline_policy {
-    name   = "allow-lake-access"
-    policy = data.aws_iam_policy_document.allow_lake.json
-  }
+}
+# allow CRUD on S3 objects
+resource "aws_iam_role_policy_attachment" "warehouse_s3" {
+  role       = aws_iam_role.warehouse.name
+  policy_arn = aws_iam_policy.s3_crud.arn
 }
 
 # S3
