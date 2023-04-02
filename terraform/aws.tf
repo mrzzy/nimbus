@@ -66,6 +66,11 @@ resource "aws_redshiftserverless_namespace" "warehouse" {
   # default iam role must also be listed in iam roles
   default_iam_role_arn = aws_iam_role.warehouse.arn
   iam_roles            = [aws_iam_role.warehouse.arn]
+  lifecycle {
+    ignore_changes = [
+      iam_roles
+    ]
+  }
 }
 # workgroup of redshift serverless compute resources
 resource "aws_redshiftserverless_workgroup" "warehouse" {
