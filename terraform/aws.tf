@@ -1,6 +1,7 @@
 #
 # Nimbus
-# AWS Cloud Deployment
+# Terraform Deployment
+# AWS Cloud
 #
 
 provider "aws" {
@@ -8,47 +9,9 @@ provider "aws" {
 }
 
 # S3 bucket as a Data Lake
-resource "aws_s3_bucket" "lake" {
+module "s3_lake" {
+  source = "./modules/aws/s3"
   bucket = "mrzzy-co-data-lake"
-}
-# disable S3 ACLs & grant bucket owner ownership of objects as well
-resource "aws_s3_bucket_ownership_controls" "lake" {
-  bucket = aws_s3_bucket.lake.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-# enforce strict HTTPS transport on S3 data lake
-resource "aws_s3_bucket_policy" "lake_http_only" {
-  bucket = aws_s3_bucket.lake.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "HTTPSOnly"
-        Effect    = "Deny"
-        Principal = "*"
-        Action    = "s3:*"
-        Resource = [
-          aws_s3_bucket.lake.arn,
-          "${aws_s3_bucket.lake.arn}/*",
-        ]
-        Condition = {
-          Bool = {
-            "aws:SecureTransport" = "false"
-          }
-        }
-      },
-    ]
-  })
-}
-# block public access on bucket
-resource "aws_s3_bucket_public_access_block" "lake" {
-  bucket                  = aws_s3_bucket.lake.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
 }
 
 # Redshift Serverless Data Warehouse
@@ -57,7 +20,7 @@ data "aws_iam_policy_document" "allow_lake" {
   statement {
     sid = "AllowS3ReadOnlyOnLake"
     resources = [
-      aws_s3_bucket.lake.arn
+      module.s3_lake.arn
     ]
     # derived from predefined policy "AmazonS3ReadOnlyAccess"
     actions = [

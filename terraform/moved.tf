@@ -40,3 +40,8 @@ moved {
   from = google_app_engine_flexible_app_version.warp_proxy_v1
   to   = module.proxy_service.google_app_engine_flexible_app_version.v1
 }
+
+moved {
+  from = aws_s3_bucket.lake
+  to   = module.s3_lake.aws_s3_bucket.bucket
+}
