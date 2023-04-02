@@ -16,15 +16,13 @@ resource "aws_iam_user" "providence_ci" {
 # iam policy to allows holder to read/write from mrzzy-co-dev bucket
 data "aws_iam_policy_document" "allow_dev" {
   statement {
-    sid = "AllowS3ListOnDev"
-    resources = [
-      module.s3_dev.arn
-    ]
-    actions = ["s3:ListBucket"]
+    sid       = "AllowS3ListOnDev"
+    resources = [module.s3_dev.arn]
+    actions   = ["s3:ListBucket"]
   }
   statement {
     sid       = "GetPutDelete"
-    resources = [module.s3_dev.arn]
+    resources = ["${module.s3_dev.arn}/*"]
     actions   = ["s3:*Object"]
   }
 }
@@ -76,14 +74,12 @@ resource "aws_iam_role" "warehouse" {
   }
 }
 
-
 # S3
 # S3 bucket for development
 module "s3_dev" {
   source = "./modules/aws/s3"
   bucket = "mrzzy-co-dev"
 }
-
 # S3 bucket as a Data Lake
 module "s3_lake" {
   source = "./modules/aws/s3"
