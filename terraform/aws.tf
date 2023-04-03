@@ -64,10 +64,14 @@ resource "aws_iam_role" "warehouse" {
   # iam policy determining which principals can hold the role
   assume_role_policy = data.aws_iam_policy_document.redshift_assume_role.json
 }
-# allow CRUD on S3 objects
+# allow Redshift CRUD on S3 and Athena access to query S3 objects
 resource "aws_iam_role_policy_attachment" "warehouse_s3" {
+  for_each = toset([
+    aws_iam_policy.s3_crud.arn,
+    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
+  ])
   role       = aws_iam_role.warehouse.name
-  policy_arn = aws_iam_policy.s3_crud.arn
+  policy_arn = each.key
 }
 
 # S3
