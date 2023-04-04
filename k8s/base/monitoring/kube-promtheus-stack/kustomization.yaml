@@ -38,6 +38,9 @@ helmCharts:
             header_property: username
             auto_sign_up: true
             headers: "Email:X-Auth-Request-Email"
+          users:
+            # user authenticated by auth proxy are assigned 'Editor' role
+            auto_assign_org_role: Editor
         additionalDataSources:
           # add loki as a grafana datasource for logs
           - version: 1
