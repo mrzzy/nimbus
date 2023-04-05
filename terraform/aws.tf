@@ -37,13 +37,13 @@ resource "aws_iam_user_policy_attachment" "providence_ci_s3" {
   policy_arn = aws_iam_policy.s3_crud.arn
 }
 
-# iam user to authenticate Providence data pipelines
-resource "aws_iam_user" "providence_pipeline" {
-  name = "mrzzy-providence-pipeline"
+# iam user to authenticate Airflow data pipelines
+resource "aws_iam_user" "airflow" {
+  name = "mrzzy-airflow-pipeline"
 }
 # allow CRUD on S3 objects
-resource "aws_iam_user_policy_attachment" "providence_pipeline_s3" {
-  user       = aws_iam_user.providence_pipeline.name
+resource "aws_iam_user_policy_attachment" "airflow_s3" {
+  user       = aws_iam_user.airflow.name
   policy_arn = aws_iam_policy.s3_crud.arn
 }
 

@@ -15,6 +15,7 @@ helmCharts:
     version: 1.8.0
     namespace: pipeline
     valuesInline:
+      defaultAirflowTag: 2.5.3rc2-python3.10
       # disable creation of default admin user for security
       # manually create users with Airflow CLI: `airflow users create`
       webserver:
@@ -37,6 +38,9 @@ helmCharts:
       dags:
         gitSync:
           enabled: true
+          repo: https://github.com/mrzzy/providence.git
+          branch: main
+          subPath: pipelines
       # ingress for webserver
       ingress:
         web:
@@ -49,13 +53,56 @@ helmCharts:
                 enabled: true
                 # the name of a pre-created Secret containing a TLS private key and certificate
                 secretName:  mrzzy-co-tls
+      env:
+        # configuration via env vars
+        # don't clutter the dag list with example dags
+        - name: AIRFLOW__CORE__LOAD_EXAMPLES
+          value: "False"
+        # email notifications with smtp
+        - name: AIRFLOW__SMTP__SMTP_HOST
+          value: "smtp.sendgrid.net"
+        - name: AIRFLOW__SMTP__SMTP_STARTTLS
+          value: "False"
+        - name: AIRFLOW__SMTP__SMTP_SSL
+          value: "True"
+        - name: AIRFLOW__SMTP__SMTP_USER
+          value: "apikey"
+        - name: AIRFLOW__SMTP__SMTP_PORT
+          value: "587"
+        - name: AIRFLOW__SMTP__SMTP_MAIL_FROM
+          value: "airflow@mrzzy.co"
+
+      extraEnvFrom: |
+        # obtain smtp credentials from secret
+        - secretRef:
+            name: airflow-smtp
+        # register airflow connections from secret
+        - secretRef:
+            name: airflow-connections
 secretGenerator:
+  # as airflow is not aware of suffix in generated resources when creating pods
+  # to run its tasks, disable name suffix hash on these secrets.
+  # deployments that dependent these secrets must be restarted manually on secret change
   - name: pipeline-postgresql
+    options:
+      disableNameSuffixHash: true
     envs:
       - pipeline-postgresql.env
   - name: airflow-webserver-key
+    options:
+      disableNameSuffixHash: true
     envs:
       - airflow-webserver-key.env
+  - name: airflow-connections
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - airflow-connections.env
+  - name: airflow-smtp
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - airflow-smtp.env
 namespace: pipeline
 patches:
   # patch airflow's jobs with ttl 0 to auto cleaned up upon completion

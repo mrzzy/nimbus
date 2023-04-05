@@ -31,6 +31,8 @@ jobs:
           OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
           K8S_AIRFLOW_POSTGRESQL_PASSWORD: "${{ secrets.K8S_AIRFLOW_POSTGRESQL_PASSWORD }}"
           K8S_AIRFLOW_WEBSERVER_KEY: "${{ secrets.K8S_AIRFLOW_WEBSERVER_KEY }}"
+          AIRFLOW_CONN_AWS_DEFAULT: "${{ secrets.AIRFLOW_CONN_AWS_DEFAULT }}"
+          AIRFLOW_CONN_PVD_SIMPLYGO_SRC: "${{ secrets.AIRFLOW_CONN_PVD_SIMPLYGO_SRC }}"
         run: make k8s-secrets
       - name: "Perform server-side Dry Run of K8s manifests"
         run: >
