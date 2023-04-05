@@ -15,6 +15,7 @@ helmCharts:
     version: 1.8.0
     namespace: pipeline
     valuesInline:
+      defaultAirflowTag: 2.5.3rc2-python3.10
       # disable creation of default admin user for security
       # manually create users with Airflow CLI: `airflow users create`
       webserver:
@@ -38,6 +39,7 @@ helmCharts:
         gitSync:
           enabled: true
           repo: https://github.com/mrzzy/providence.git
+          branch: main
           subPath: pipelines
       # ingress for webserver
       ingress:
