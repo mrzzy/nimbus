@@ -49,6 +49,11 @@ helmCharts:
                 enabled: true
                 # the name of a pre-created Secret containing a TLS private key and certificate
                 secretName:  mrzzy-co-tls
+      # configuration via env vars
+      env:
+        # don't clutter the dag list with example dags
+        - name: AIRFLOW__CORE__LOAD_EXAMPLES
+          value: "False"
 secretGenerator:
   - name: pipeline-postgresql
     envs:
