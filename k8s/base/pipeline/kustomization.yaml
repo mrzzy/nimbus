@@ -49,11 +49,15 @@ helmCharts:
                 enabled: true
                 # the name of a pre-created Secret containing a TLS private key and certificate
                 secretName:  mrzzy-co-tls
-      # configuration via env vars
       env:
+        # configuration via env vars
         # don't clutter the dag list with example dags
         - name: AIRFLOW__CORE__LOAD_EXAMPLES
           value: "False"
+      extraEnvFrom: |
+        # register airflow connections from secret
+        - secretRef:
+            name: airflow-connections
 secretGenerator:
   - name: pipeline-postgresql
     envs:
@@ -61,6 +65,9 @@ secretGenerator:
   - name: airflow-webserver-key
     envs:
       - airflow-webserver-key.env
+  - name: airflow-connections
+    envs:
+      - airflow-connections.env
 namespace: pipeline
 patches:
   # patch airflow's jobs with ttl 0 to auto cleaned up upon completion
