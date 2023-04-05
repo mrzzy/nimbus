@@ -37,6 +37,8 @@ helmCharts:
       dags:
         gitSync:
           enabled: true
+          repo: https://github.com/mrzzy/providence.git
+          subPath: pipelines
       # ingress for webserver
       ingress:
         web:
