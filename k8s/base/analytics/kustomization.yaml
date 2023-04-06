@@ -59,6 +59,22 @@ helmCharts:
         connections:
           redis_host: analytics-redis-headless
           db_host: analytics-postgresql
+      # expose superset with ingress
+      ingress:
+        enabled: true
+        annotations:
+          # authenticate with oauth2-proxy
+          nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
+          nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+          nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User"
+          # extend timeout to allow long running queries of up to 1 hour
+          nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        tls:
+          - hosts:
+            - analytics.mrzzy.co
+            secretName: mrzzy-co-tls
 secretGenerator:
   - name: analytics-postgresql
     envs:
@@ -66,6 +82,17 @@ secretGenerator:
   - name: analytics-superset
     envs:
       - analytics-superset.env
+patches:
+  # patch Superset's init db job to delete upon completion
+  - patch: |
+      - op: add
+        path: /spec/ttlSecondsAfterFinished
+        value: 0
+    target:
+      group: batch
+      version: v1
+      kind: Job
+      labelSelector: "app.kubernetes.io/part-of=analytics"
 namespace: analytics
 commonLabels:
   app.kubernetes.io/part-of: analytics
