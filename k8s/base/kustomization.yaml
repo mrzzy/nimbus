@@ -18,5 +18,7 @@ resources:
   - ./monitoring
   # EBook Library: Calibre Web
   - ./library
-  # Data Pipelines: Airflow
+  # Data Pipelines: Apache Airflow
   - ./pipeline
+  # Analytics & Visualisation: Apache Superset
+  - ./analytics
