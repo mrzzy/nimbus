@@ -53,6 +53,10 @@ helmCharts:
           # enable remote authentication (by oauth2-proxy)
           AUTH_TYPE = AUTH_REMOTE_USER
           AUTH_USER_REGISTRATION = True
+      # fix postgresql k8s service name
+      supersetNode:
+        connections:
+          db_host: analytics-postgresql
 secretGenerator:
   - name: analytics-postgresql
     envs:
