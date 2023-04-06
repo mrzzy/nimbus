@@ -99,7 +99,7 @@ patches:
       group: batch
       version: v1
       kind: Job
-      labelSelector: "app.kubernetes.io/part-of=analytics"
+      name: superset-init-db
 namespace: analytics
 commonLabels:
   app.kubernetes.io/part-of: analytics
