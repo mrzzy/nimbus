@@ -54,9 +54,10 @@ helmCharts:
           from flask_appbuilder.security.manager import AUTH_REMOTE_USER
           AUTH_TYPE = AUTH_REMOTE_USER
           AUTH_USER_REGISTRATION = True
-      # fix postgresql k8s service name that superset tries to connect to
+      # fix postgresql & redis k8s service name that superset tries to connect to
       supersetNode:
         connections:
+          redis_host: analytics-redis-headless
           db_host: analytics-postgresql
 secretGenerator:
   - name: analytics-postgresql
