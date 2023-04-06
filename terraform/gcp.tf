@@ -196,6 +196,7 @@ module "gke" {
     "media-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "media" }),
     "library-${local.domain_slug}-tls"    = merge(local.tls_secret, { namespace = "library" }),
     "pipeline-${local.domain_slug}-tls"   = merge(local.tls_secret, { namespace = "pipeline" }),
+    "analytics-${local.domain_slug}-tls"  = merge(local.tls_secret, { namespace = "analytics" }),
     # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
     "rclone" = {
       name      = "rclone-secret"
