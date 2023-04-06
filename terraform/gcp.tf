@@ -185,6 +185,7 @@ module "gke" {
     "media-${local.domain_slug}-tls",
     "library-${local.domain_slug}-tls",
     "pipeline-${local.domain_slug}-tls",
+    "analytics-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
