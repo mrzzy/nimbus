@@ -51,9 +51,10 @@ helmCharts:
                   return self.app(environ, start_response)
           ADDITIONAL_MIDDLEWARE = [RemoteUserMiddleware]
           # enable remote authentication (by oauth2-proxy)
+          from flask_appbuilder.security.manager import AUTH_REMOTE_USER
           AUTH_TYPE = AUTH_REMOTE_USER
           AUTH_USER_REGISTRATION = True
-      # fix postgresql k8s service name
+      # fix postgresql k8s service name that superset tries to connect to
       supersetNode:
         connections:
           db_host: analytics-postgresql
