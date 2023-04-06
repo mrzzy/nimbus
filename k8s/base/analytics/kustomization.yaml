@@ -33,7 +33,8 @@ helmCharts:
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: analytics-postgresql
+              name: analytics-superset
+              key: SECRET_KEY
       configOverrides:
         # enable proxy fix to ensure the redirect_uri is properly computed, even with SSL offloading
         proxy_fix: |
