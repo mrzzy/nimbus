@@ -47,7 +47,7 @@ helmCharts:
           enabled: true
           ingressClassName: nginx
           hosts:
-            - name: airflow.mrzzy.co
+            - name: pipelines.mrzzy.co
               tls:
                 # Enable TLS termination for the web Ingress
                 enabled: true
@@ -70,7 +70,7 @@ helmCharts:
         - name: AIRFLOW__SMTP__SMTP_PORT
           value: "587"
         - name: AIRFLOW__SMTP__SMTP_MAIL_FROM
-          value: "airflow@mrzzy.co"
+          value: "pipelines@mrzzy.co"
 
       extraEnvFrom: |
         # obtain smtp credentials from secret
