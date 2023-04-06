@@ -1,0 +1,106 @@
+#
+# Nimbus
+# K8s Deployment
+# Analytics
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - namespace.yaml
+helmCharts:
+  # Apache Superset: Data Visualisation & Analytics
+  - name: superset
+    repo: https://apache.github.io/superset
+    releaseName: analytics
+    valuesInline:
+      # install database drivers to allow super query data for analytics
+      bootstrapScript: |
+        #!/bin/bash
+        # TODO(mrzzy): upgrade with renovate
+        pip install sqlalchemy-redshift==0.8.13
+        if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
+      # override default db credentials with custom secret
+      postgresql:
+        auth:
+          existingSecret: analytics-postgresql
+      extraEnvRaw:
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: analytics-postgresql
+              key: password
+        # override superset's flask secret key from insecure default
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: analytics-superset
+              key: SECRET_KEY
+      configOverrides:
+        # enable proxy fix to ensure the redirect_uri is properly computed, even with SSL offloading
+        proxy_fix: |
+          ENABLE_PROXY_FIX = True
+        # use oauth2-proxy authentication
+        oauth2_proxy_auth: |
+          # attach middleware to decode authenticated user from X-Auth-Request-User header
+          class RemoteUserMiddleware(object):
+              def __init__(self, app):
+                  self.app = app
+              def __call__(self, environ, start_response):
+                  user = environ.pop('HTTP_X_AUTH_REQUEST_USER', None)
+                  environ['REMOTE_USER'] = user
+                  print(user)
+                  return self.app(environ, start_response)
+          ADDITIONAL_MIDDLEWARE = [RemoteUserMiddleware]
+          # enable remote authentication (by oauth2-proxy)
+          from flask_appbuilder.security.manager import AUTH_REMOTE_USER
+          AUTH_TYPE = AUTH_REMOTE_USER
+          # auto never seen authenticated with 'Admin' role
+          # https://superset.apache.org/docs/security/#roles
+          AUTH_USER_REGISTRATION = True
+          AUTH_USER_REGISTRATION_ROLE = "Admin"
+      # fix postgresql & redis k8s service name that superset tries to connect to
+      supersetNode:
+        connections:
+          redis_host: analytics-redis-headless
+          db_host: analytics-postgresql
+      # expose superset with ingress
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          # authenticate with oauth2-proxy
+          nginx.ingress.kubernetes.io/auth-url: "https://auth.mrzzy.co/oauth2/auth"
+          nginx.ingress.kubernetes.io/auth-signin: "https://auth.mrzzy.co/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+          nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User"
+          # extend timeout to allow long running queries of up to 1 hour
+          nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        hosts:
+        - analytics.mrzzy.co
+        tls:
+          - hosts:
+            - analytics.mrzzy.co
+            secretName: mrzzy-co-tls
+secretGenerator:
+  - name: analytics-postgresql
+    envs:
+      - analytics-postgresql.env
+  - name: analytics-superset
+    envs:
+      - analytics-superset.env
+patches:
+  # patch Superset's init db job to delete upon completion
+  - patch: |
+      - op: add
+        path: /spec/ttlSecondsAfterFinished
+        value: 0
+    target:
+      group: batch
+      version: v1
+      kind: Job
+      name: superset-init-db
+namespace: analytics
+commonLabels:
+  app.kubernetes.io/part-of: analytics
+  app.kubernetes.io/created-by: kustomize

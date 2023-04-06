@@ -103,7 +103,6 @@ secretGenerator:
       disableNameSuffixHash: true
     envs:
       - airflow-smtp.env
-namespace: pipeline
 patches:
   # patch airflow's jobs with ttl 0 to auto cleaned up upon completion
   - patch: |
@@ -115,3 +114,4 @@ patches:
       version: v1
       kind: Job
       labelSelector: "tier=airflow,release=pipeline"
+namespace: pipeline

@@ -37,6 +37,8 @@ jobs:
           K8S_AIRFLOW_WEBSERVER_KEY: "${{ secrets.K8S_AIRFLOW_WEBSERVER_KEY }}"
           AIRFLOW_CONN_AWS_DEFAULT: "${{ secrets.AIRFLOW_CONN_AWS_DEFAULT }}"
           AIRFLOW_CONN_PVD_SIMPLYGO_SRC: "${{ secrets.AIRFLOW_CONN_PVD_SIMPLYGO_SRC }}"
+          K8S_SUPERSET_POSTGRESQL_PASSWORD: "${{ secrets.K8S_SUPERSET_POSTGRESQL_PASSWORD }}"
+          K8S_SUPERSET_SECRET_KEY: "${{ secrets.K8S_SUPERSET_SECRET_KEY }}"
         run: make k8s-secrets
       - name: "Apply current K8s manifests to GKE"
         run: >
