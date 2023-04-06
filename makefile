@@ -24,4 +24,4 @@ clean-k8s-secrets: $(K8S_SECRETS)
 # Remove helm charts pulled by kustomize.
 # forces kustomize to pull updated helm charts which kustomize does not do by default.
 clean-helm:
-	find k8s -name 'charts' -type -d -print0 | xargs -0 rm -rf
+	find k8s -name 'charts' -type d -print0 | xargs -0 rm -rf

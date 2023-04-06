@@ -65,8 +65,6 @@ helmCharts:
           value: "False"
         - name: AIRFLOW__SMTP__SMTP_SSL
           value: "True"
-        - name: AIRFLOW__SMTP__SMTP_USER
-          value: "apikey"
         - name: AIRFLOW__SMTP__SMTP_PORT
           value: "587"
         - name: AIRFLOW__SMTP__SMTP_MAIL_FROM
