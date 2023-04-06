@@ -20,11 +20,11 @@ module "dns" {
   domain     = local.domain
   routes = merge({
     # dns routes for services served by gke's ingress
-    "auth" : module.gke.ingress_ip,    # oauth2-proxy oauth callbacks / login page
-    "media" : module.gke.ingress_ip,   # jellyfin media server
-    "monitor" : module.gke.ingress_ip, # Grafana monitoring
-    "library" : module.gke.ingress_ip, # EBook Library
-    "airflow" : module.gke.ingress_ip, # Apache Airflow pipeline ochestrator
+    "auth" : module.gke.ingress_ip,      # oauth2-proxy oauth callbacks / login page
+    "media" : module.gke.ingress_ip,     # jellyfin media server
+    "monitor" : module.gke.ingress_ip,   # Grafana monitoring
+    "library" : module.gke.ingress_ip,   # EBook Library
+    "pipelines" : module.gke.ingress_ip, # Apache Airflow pipeline ochestrator
     },
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { "warp" : local.warp_ip } : {},
