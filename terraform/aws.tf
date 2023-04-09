@@ -79,6 +79,29 @@ resource "aws_iam_role_policy_attachment" "warehouse_s3" {
   policy_arn = each.key
 }
 
+# VPC
+# security group to redshift serverless workgroup
+resource "aws_security_group" "warehouse" {
+  name        = "warehouse"
+  description = "Security group attached to Redshift Serverless Workgroup warehouse."
+}
+# allow all egress traffic
+resource "aws_vpc_security_group_egress_rule" "warehouse" {
+  security_group_id = aws_security_group.warehouse.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = -1 # any
+}
+# allow redshift traffic over port 5439
+resource "aws_vpc_security_group_ingress_rule" "warehouse" {
+  security_group_id = aws_security_group.warehouse.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "tcp"
+  from_port   = 5439
+  to_port     = 5439
+}
+
 # S3
 # S3 bucket for development
 module "s3_dev" {
@@ -107,8 +130,9 @@ resource "aws_redshiftserverless_namespace" "warehouse" {
 }
 # workgroup of redshift serverless compute resources
 resource "aws_redshiftserverless_workgroup" "warehouse" {
-  namespace_name = aws_redshiftserverless_namespace.warehouse.id
-  workgroup_name = "main"
+  namespace_name     = aws_redshiftserverless_namespace.warehouse.id
+  workgroup_name     = "main"
+  security_group_ids = [aws_security_group.warehouse.id]
   # by default, redshift serverless runs with 128 RPUs, which is overkill.
   # with our small use case the minimum of 8 RPUs should do.
   base_capacity = 8
