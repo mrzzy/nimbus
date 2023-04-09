@@ -46,6 +46,11 @@ resource "aws_iam_user_policy_attachment" "airflow_s3" {
   user       = aws_iam_user.airflow.name
   policy_arn = aws_iam_policy.s3_crud.arn
 }
+# allow access to Redshift data warehouse
+resource "aws_iam_user_policy_attachment" "airflow_redshift" {
+  user       = aws_iam_user.airflow.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
+}
 
 # iam policy to allow redshift to assume warehouse iam role
 data "aws_iam_policy_document" "redshift_assume_role" {
