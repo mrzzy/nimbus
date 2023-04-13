@@ -49,11 +49,15 @@ flowchart LR
             subgraph pipeline[Data Pipelines]
                 airflow[Airflow]
             end
+            subgraph analytics[Analytics]
+                superset[Superset]
+            end
         end
     end
 
     subgraph aws[Amazon Web Services]
         direction LR
+        s3 -.-> glue[AWS Glue Crawler] -.-> redshift
         s3[(S3 Data Lake)] --> redshift[(Redshift Serverless)]
     end
 ```
