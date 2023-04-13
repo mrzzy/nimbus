@@ -135,14 +135,17 @@ module "s3_lake" {
 }
 
 # Glue
+locals {
+  s3_bucket_suffixes = toset(["dev", "data-lake"])
+}
 # Glue Data Catalogs for S3 buckets
 resource "aws_glue_catalog_database" "catalog" {
-  for_each = toset(["dev", "data-lake"])
+  for_each = local.s3_bucket_suffixes
   name     = each.key
 }
 # Glue Crawlers for S3 buckets
 resource "aws_glue_crawler" "crawler" {
-  for_each      = toset(["dev", "data-lake"])
+  for_each      = local.s3_bucket_suffixes
   name          = "${each.key}-crawler"
   database_name = aws_glue_catalog_database.catalog[each.key].name
   role          = aws_iam_role.lake_crawler.arn
@@ -177,4 +180,21 @@ resource "aws_redshiftserverless_workgroup" "warehouse" {
   base_capacity = 8
   # public access needed for querying from GCP over the internet
   publicly_accessible = true
+}
+# expose tables in Glue Data Catalog crawled by Glue Crawlers in redshift as external tables
+resource "aws_redshiftdata_statement" "example" {
+  # mapping of redshift db to glue data catalog
+  for_each = {
+    # dev database is auto created for each redshift serverless namespace
+    "dev"                                                   = aws_glue_catalog_database.catalog["dev"].name
+    "${aws_redshiftserverless_namespace.warehouse.db_name}" = aws_glue_catalog_database.catalog["data-lake"].name
+  }
+  workgroup_name = aws_redshiftserverless_workgroup.warehouse.workgroup_name
+  database       = each.key
+  sql            = <<-EOF
+    CREATE EXTERNAL SCHEMA IF NOT EXISTS lake
+    FROM DATA CATALOG
+    DATABASE '${each.value}'
+    IAM_ROLE 'arn:aws:iam::132307318913:role/warehouse';
+  EOF
 }
