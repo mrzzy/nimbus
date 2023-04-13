@@ -37,7 +37,7 @@ flowchart LR
             direction LR
 
             ingress[ingress-nginx] <--> oauth[OAuth2 Proxy]
-            ingress <--> media & monitoring & pipeline & calibre-web[Calibre-Web]
+            ingress <--> media & monitoring & pipeline & superset & calibre-web[Calibre-Web]
             subgraph media[Media Namespace]
                 torrent[Rtorrent & Flood UI] -->  media-svr[Jellyfin Server]
             end
