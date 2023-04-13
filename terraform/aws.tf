@@ -52,22 +52,25 @@ resource "aws_iam_user_policy_attachment" "airflow_redshift" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
 }
 
-# iam policy to allow redshift to assume warehouse iam role
-data "aws_iam_policy_document" "redshift_assume_role" {
+# iam policy to allow AWS services to assume iam role
+data "aws_iam_policy_document" "assume_role" {
+  for_each = toset([
+    "redshift.amazonaws.com",
+    "glue.amazonaws.com",
+  ])
   statement {
-    sid     = "AllowRedshiftToAssumeRole"
+    sid     = format("Allow%sToAssumeRole", title(split(".", each.key)[0]))
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = ["redshift.amazonaws.com"]
+      identifiers = [each.key]
     }
   }
 }
-# role to identify redshift when accessing other AWS services (eg. S3)
+# iam role to identify redshift when accessing other AWS services (eg. S3)
 resource "aws_iam_role" "warehouse" {
-  name = "warehouse"
-  # iam policy determining which principals can hold the role
-  assume_role_policy = data.aws_iam_policy_document.redshift_assume_role.json
+  name               = "warehouse"
+  assume_role_policy = data.aws_iam_policy_document.assume_role["redshift.amazonaws.com"].json
 }
 # allow Redshift CRUD on S3 and Athena access to query S3 objects
 resource "aws_iam_role_policy_attachment" "warehouse_s3" {
@@ -78,6 +81,19 @@ resource "aws_iam_role_policy_attachment" "warehouse_s3" {
   role       = aws_iam_role.warehouse.name
   policy_arn = each.key
 }
+
+# iam role to identify Glue Crawlers when accessing other AWS services
+resource "aws_iam_role" "lake_crawler" {
+  # by default, Glue only allows iam roles with 'AWSGlueServiceRole' prefix to attached
+  name               = "AWSGlueServiceRoleCrawler"
+  assume_role_policy = data.aws_iam_policy_document.assume_role["glue.amazonaws.com"].json
+}
+# attach managed iam policy for Glue Crawlers
+resource "aws_iam_role_policy_attachment" "lake_crawler_s3" {
+  role       = aws_iam_role.lake_crawler.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+}
+
 
 # VPC
 # security group to redshift serverless workgroup
