@@ -134,6 +134,25 @@ module "s3_lake" {
   bucket = "mrzzy-co-data-lake"
 }
 
+# Glue
+# Glue Data Catalogs for S3 buckets
+resource "aws_glue_catalog_database" "catalog" {
+  for_each = toset(["dev", "data-lake"])
+  name     = each.key
+}
+# Glue Crawlers for S3 buckets
+resource "aws_glue_crawler" "crawler" {
+  for_each      = toset(["dev", "data-lake"])
+  name          = "${each.key}-crawler"
+  database_name = aws_glue_catalog_database.catalog[each.key].name
+  role          = aws_iam_role.lake_crawler.arn
+
+  # crawl raw data ingested for mrzzy/providence project
+  s3_target {
+    path = "s3://mrzzy-co-${each.key}/providence/grade=raw/"
+  }
+}
+
 # Redshift Serverless Data Warehouse
 # namespace to segeregate our db objects within the redshift serverless
 resource "aws_redshiftserverless_namespace" "warehouse" {
