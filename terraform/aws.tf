@@ -89,11 +89,15 @@ resource "aws_iam_role" "lake_crawler" {
   assume_role_policy = data.aws_iam_policy_document.assume_role["glue.amazonaws.com"].json
 }
 # attach managed iam policy for Glue Crawlers
-resource "aws_iam_role_policy_attachment" "lake_crawler_s3" {
+resource "aws_iam_role_policy_attachment" "lake_crawler_role" {
   role       = aws_iam_role.lake_crawler.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
-
+# allow CRUD on S3 objects
+resource "aws_iam_role_policy_attachment" "lake_crawler_s3" {
+  role       = aws_iam_role.lake_crawler.name
+  policy_arn = aws_iam_policy.s3_crud.arn
+}
 
 # VPC
 # security group to redshift serverless workgroup
