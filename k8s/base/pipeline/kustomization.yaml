@@ -12,7 +12,7 @@ helmCharts:
   - name: airflow
     repo: https://airflow.apache.org
     releaseName: pipeline
-    version: 1.8.0
+    version: 1.9.0
     namespace: pipeline
     valuesInline:
       defaultAirflowTag: 2.5.3rc2-python3.10
