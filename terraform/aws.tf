@@ -31,10 +31,10 @@ resource "aws_iam_policy" "s3_crud" {
 resource "aws_iam_user" "providence_ci" {
   name = "mrzzy-providence-ci"
 }
-# allow CRUD on S3 objects
+# allow full access on S3 buckets &objects
 resource "aws_iam_user_policy_attachment" "providence_ci_s3" {
   user       = aws_iam_user.providence_ci.name
-  policy_arn = aws_iam_policy.s3_crud.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 # iam user to authenticate Airflow data pipelines
