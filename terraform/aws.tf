@@ -60,6 +60,11 @@ resource "aws_iam_user_policy_attachment" "airflow_redshift" {
   user       = aws_iam_user.airflow.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
 }
+resource "aws_iam_user_policy_attachment" "airflow_redshiftdata" {
+  user       = aws_iam_user.airflow.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftDataFullAccess"
+}
+
 
 # iam policy to allow AWS services to assume iam role
 data "aws_iam_policy_document" "assume_role" {
