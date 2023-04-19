@@ -41,7 +41,10 @@ resource "aws_iam_user_policy_attachment" "providence_ci_redshift" {
   user       = aws_iam_user.providence_ci.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
 }
-
+resource "aws_iam_user_policy_attachment" "providence_ci_redshiftdata" {
+  user       = aws_iam_user.providence_ci.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftDataFullAccess"
+}
 
 # iam user to authenticate Airflow data pipelines
 resource "aws_iam_user" "airflow" {
