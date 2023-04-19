@@ -197,4 +197,9 @@ resource "aws_redshiftdata_statement" "example" {
     DATABASE '${each.value}'
     IAM_ROLE 'arn:aws:iam::132307318913:role/warehouse';
   EOF
+  lifecycle {
+    ignore_changes = [
+      sql,
+    ]
+  }
 }
