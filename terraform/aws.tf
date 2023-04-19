@@ -31,11 +31,17 @@ resource "aws_iam_policy" "s3_crud" {
 resource "aws_iam_user" "providence_ci" {
   name = "mrzzy-providence-ci"
 }
-# allow full access on S3 buckets &objects
+# allow full access on S3 buckets & objects
 resource "aws_iam_user_policy_attachment" "providence_ci_s3" {
   user       = aws_iam_user.providence_ci.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+# allow providence CI's E2E test to create redshift schemas
+resource "aws_iam_user_policy_attachment" "providence_ci_redshift" {
+  user       = aws_iam_user.providence_ci.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
+}
+
 
 # iam user to authenticate Airflow data pipelines
 resource "aws_iam_user" "airflow" {
