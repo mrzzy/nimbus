@@ -196,7 +196,7 @@ resource "aws_redshiftserverless_workgroup" "warehouse" {
   publicly_accessible = true
 }
 # expose tables in Glue Data Catalog crawled by Glue Crawlers in redshift as external tables
-resource "aws_redshiftdata_statement" "example" {
+resource "aws_redshiftdata_statement" "external" {
   # mapping of redshift db to glue data catalog
   for_each = {
     # dev database is auto created for each redshift serverless namespace
@@ -216,4 +216,18 @@ resource "aws_redshiftdata_statement" "example" {
       sql,
     ]
   }
+}
+# grant database privileges to iam users
+resource "aws_redshiftdata_statement" "privillege" {
+  # mapping redshift db -> iam user to grant privileges on
+  for_each = {
+    dev   = aws_iam_user.providence_ci.name,
+    mrzzy = aws_iam_user.airflow.name,
+  }
+  workgroup_name = aws_redshiftserverless_workgroup.warehouse.workgroup_name
+  database       = each.key
+  # iam users have 'IAM:' prefixed to the db username
+  sql = <<-EOF
+    GRANT ALL PRIVILEGES ON DATABASE ${each.key} TO "IAM:${each.value}";
+  EOF
 }
