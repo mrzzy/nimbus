@@ -32,7 +32,7 @@ resource "google_container_cluster" "main" {
 # Primary GKE Worker node pool in terraform
 data "google_container_engine_versions" "k8s" {
   # suffix '-' to prevent unintend versions starting with same prefix from matching
-  version_prefix = "${var.k8s_version}-"
+  version_prefix = "${var.k8s_version}."
 }
 resource "google_container_node_pool" "primary" {
   cluster  = google_container_cluster.main.name

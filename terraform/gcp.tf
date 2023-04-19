@@ -161,7 +161,7 @@ module "gke" {
   source = "./modules/gcp/gke"
 
   region      = local.gcp_region
-  k8s_version = "1.24.9"
+  k8s_version = "1.24"
 
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
   n_workers             = 1

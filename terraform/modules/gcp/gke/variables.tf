@@ -11,7 +11,7 @@ variable "region" {
 
 variable "k8s_version" {
   type        = string
-  description = "Version of the Kubernetes to deploy in the format: <MAJOR>.<MINOR>.<PATCH>."
+  description = "Version of the Kubernetes to deploy in the format: <MAJOR>.<MINOR>"
 }
 
 variable "machine_type" {
