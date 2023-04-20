@@ -25,7 +25,7 @@ variable "warp_machine_type" {
 variable "warp_disk_size_gb" {
   type        = number
   description = "Size of the disk used mounted on the WARP development VM for persistent storage"
-  default     = 20
+  default     = 30
 }
 
 variable "warp_http_terminal" {
