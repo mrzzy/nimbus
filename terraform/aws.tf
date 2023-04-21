@@ -221,8 +221,7 @@ resource "aws_redshiftdata_statement" "external" {
 resource "aws_redshiftdata_statement" "privillege" {
   # mapping redshift db -> iam user to grant privileges on
   for_each = {
-    dev   = aws_iam_user.providence_ci.name,
-    mrzzy = aws_iam_user.airflow.name,
+    dev = aws_iam_user.providence_ci.name,
   }
   workgroup_name = aws_redshiftserverless_workgroup.warehouse.workgroup_name
   database       = each.key
