@@ -32,7 +32,7 @@ jobs:
           K8S_AIRFLOW_POSTGRESQL_PASSWORD: "${{ secrets.K8S_AIRFLOW_POSTGRESQL_PASSWORD }}"
           K8S_AIRFLOW_WEBSERVER_KEY: "${{ secrets.K8S_AIRFLOW_WEBSERVER_KEY }}"
           K8S_AIRFLOW_CONN_AWS_DEFAULT: "${{ secrets.K8S_AIRFLOW_CONN_AWS_DEFAULT }}"
-          K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT: "${{ secrets.AIRFLOW_CONN_REDSHIFT_DEFAULT }}"
+          K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT: "${{ secrets.K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT }}"
           K8S_AIRFLOW_CONN_PVD_SIMPLYGO_SRC: "${{ secrets.K8S_AIRFLOW_CONN_PVD_SIMPLYGO_SRC }}"
           K8S_AIRFLOW_CONN_PVD_YNAB_SRC: "${{ secrets.K8S_AIRFLOW_CONN_PVD_YNAB_SRC }}"
           K8S_AIRFLOW__SMTP__SMTP_USER: "${{ secrets.K8S_AIRFLOW__SMTP__SMTP_USER }}"
@@ -49,5 +49,5 @@ jobs:
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
           kubectl kustomize --enable-helm ./base | \
-            kubectl diff ${KUBECTL_FLAGS} -f - || EXIT_CODE=$?
+            kubectl diff ${KUBECTL_LAGS} -f - || EXIT_CODE=$?
           test ${EXIT_CODE:-1} -eq 1
