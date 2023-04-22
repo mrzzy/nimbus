@@ -195,28 +195,6 @@ resource "aws_redshiftserverless_workgroup" "warehouse" {
   # public access needed for querying from GCP over the internet
   publicly_accessible = true
 }
-# expose tables in Glue Data Catalog crawled by Glue Crawlers in redshift as external tables
-resource "aws_redshiftdata_statement" "external" {
-  # mapping of redshift db to glue data catalog
-  for_each = {
-    # dev database is auto created for each redshift serverless namespace
-    "dev"                                                   = aws_glue_catalog_database.catalog["dev"].name
-    "${aws_redshiftserverless_namespace.warehouse.db_name}" = aws_glue_catalog_database.catalog["data-lake"].name
-  }
-  workgroup_name = aws_redshiftserverless_workgroup.warehouse.workgroup_name
-  database       = each.key
-  sql            = <<-EOF
-    CREATE EXTERNAL SCHEMA IF NOT EXISTS lake
-    FROM DATA CATALOG
-    DATABASE '${each.value}'
-    IAM_ROLE 'arn:aws:iam::132307318913:role/warehouse';
-  EOF
-  lifecycle {
-    ignore_changes = [
-      sql,
-    ]
-  }
-}
 # grant database privileges to iam users
 resource "aws_redshiftdata_statement" "privillege" {
   # mapping redshift db -> iam user to grant privileges on
