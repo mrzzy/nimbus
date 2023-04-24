@@ -66,9 +66,9 @@ helmCharts:
         - name: AIRFLOW__SMTP__SMTP_SSL
           value: "True"
         - name: AIRFLOW__SMTP__SMTP_PORT
-          value: "587"
+          value: "465"
         - name: AIRFLOW__SMTP__SMTP_MAIL_FROM
-          value: "pipelines@mrzzy.co"
+          value: "Airflow <airflow@pipelines.mrzzy.co>"
 
       extraEnvFrom: |
         # obtain smtp credentials from secret
