@@ -195,16 +195,3 @@ resource "aws_redshiftserverless_workgroup" "warehouse" {
   # public access needed for querying from GCP over the internet
   publicly_accessible = true
 }
-# grant database privileges to iam users
-resource "aws_redshiftdata_statement" "privillege" {
-  # mapping redshift db -> iam user to grant privileges on
-  for_each = {
-    dev = aws_iam_user.providence_ci.name,
-  }
-  workgroup_name = aws_redshiftserverless_workgroup.warehouse.workgroup_name
-  database       = each.key
-  # iam users have 'IAM:' prefixed to the db username
-  sql = <<-EOF
-    GRANT ALL PRIVILEGES ON DATABASE ${each.key} TO "IAM:${each.value}";
-  EOF
-}
