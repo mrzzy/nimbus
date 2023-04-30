@@ -24,6 +24,12 @@ variable "n_workers" {
   description = "No. of worker nodes to create for K8s."
 }
 
+variable "n_spot_workers" {
+  type        = number
+  description = "No. of spot worker nodes to create for to support load surges."
+  default     = 0
+}
+
 variable "service_account_email" {
   type        = string
   description = "Email of the GCP service account used to authenticate K8s workloads on GCP."
