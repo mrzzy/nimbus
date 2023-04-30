@@ -67,10 +67,7 @@ resource "google_container_node_pool" "surge" {
     data.google_container_engine_versions.k8s.release_channel_latest_version["STABLE"]
   )
 
-  autoscaling {
-    total_min_node_count = 0
-    total_max_node_count = 3
-  }
+  node_count = var.n_spot_workers
 
   node_config {
     machine_type    = var.machine_type

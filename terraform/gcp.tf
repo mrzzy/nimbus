@@ -165,6 +165,7 @@ module "gke" {
 
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
   n_workers             = 1
+  n_spot_workers        = 0
   service_account_email = module.iam.gke_service_account_email
 
   # K8s Namespaces to deploy
