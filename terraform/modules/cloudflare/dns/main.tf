@@ -23,8 +23,9 @@ resource "cloudflare_record" "route" {
   for_each = var.routes
   zone_id  = cloudflare_zone.domain.id
 
-  type  = "A"
-  ttl   = 60 # 1 min
-  name  = each.key
-  value = each.value
+  type    = each.value.type
+  ttl     = 60 # 1 min
+  name    = each.key
+  value   = each.value.value
+  proxied = each.value.proxied
 }
