@@ -13,12 +13,14 @@ variable "domain" {
   type        = string
   description = "Domain managed by Cloudflare"
 }
+
 variable "routes" {
   type = map(object({
     type      = optional(string, "A"),
     subdomain = string,
     value     = string,
     proxied   = optional(bool, false),
+    priority  = optional(number, 0),
   }))
   description = "List of DNS routes to create with subdomain prefix as key & given value."
 }
