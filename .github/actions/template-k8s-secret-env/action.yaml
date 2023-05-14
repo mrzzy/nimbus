@@ -1,0 +1,69 @@
+#
+# Nimbus
+# CI
+# Template K8s Secret action
+#
+
+name: Template K8s Secret
+description: Templates .env files used by kustomize to build K8s Secrets.
+inputs:
+  K8S_OAUTH2_PROXY_CLIENT_ID:
+    description: >-
+      GitHub OAuth2 Client ID used by OAuth2 proxy to use Github a an identity provider.
+  K8S_OAUTH2_PROXY_CLIENT_SECRET:
+    description: >-
+      GitHub OAuth2 Client secret used by OAuth2 proxy to use Github a an identity provider.
+  K8S_OAUTH2_PROXY_COOKIE_SECRET:
+    description: >-
+      Secret used by OAuth2 Proxy to encrypt its session cookies.
+  K8S_AIRFLOW_POSTGRESQL_PASSWORD:
+    description: >-
+      Password used by Airflow deployment to authenticate with its PostgreSQL DB.
+  K8S_AIRFLOW_WEBSERVER_KEY:
+    description: >-
+      Key used by Airflow Webserver encrypt its session cookies.
+  K8S_AIRFLOW_CONN_AWS_DEFAULT:
+    description: >-
+      AWS Airflow Connection used by Airflow DAGs to access AWS Cloud.
+  K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT:
+    description: >-
+      Redshift Airflow Connection used by Airflow DAGs to access AWS Redshift
+  K8S_AIRFLOW_CONN_PVD_SIMPLYGO_SRC:
+    description: >-
+      SimplyGo Connection used by Airflow DAGs to access SimplyGo Portal.
+  K8S_AIRFLOW_CONN_YNAB_API:
+    description: >-
+      YNAB Connection used by Airflow DAGs to access YNAB.
+  K8S_AIRFLOW__SMTP__SMTP_USER:
+    description: >-
+      SMTP username by Airflow to send email notifications.
+  K8S_AIRFLOW__SMTP__SMTP_PASSWORD:
+    description: >-
+      SMTP password by Airflow to send email notifications.
+  K8S_SUPERSET_POSTGRESQL_PASSWORD:
+    description: >-
+      Password used by Superset deployment to authenticate with its PostgreSQL DB.
+  K8S_SUPERSET_SECRET_KEY:
+    description: >-
+      Secret used by Superset to encrypt its session cookies.
+runs:
+  using: composite
+  steps:
+    - name: "Template K8s secret .env files"
+      shell: bash
+      working-directory: . # project root
+      env:
+        K8S_OAUTH2_PROXY_CLIENT_ID: "${{ inputs.K8S_OAUTH2_PROXY_CLIENT_ID }}"
+        K8S_OAUTH2_PROXY_CLIENT_SECRET: "${{ inputs.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
+        K8S_OAUTH2_PROXY_COOKIE_SECRET: "${{ inputs.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
+        K8S_AIRFLOW_POSTGRESQL_PASSWORD: "${{ inputs.K8S_AIRFLOW_POSTGRESQL_PASSWORD }}"
+        K8S_AIRFLOW_WEBSERVER_KEY: "${{ inputs.K8S_AIRFLOW_WEBSERVER_KEY }}"
+        K8S_AIRFLOW_CONN_AWS_DEFAULT: "${{ inputs.K8S_AIRFLOW_CONN_AWS_DEFAULT }}"
+        K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT: "${{ inputs.K8S_AIRFLOW_CONN_REDSHIFT_DEFAULT }}"
+        K8S_AIRFLOW_CONN_PVD_SIMPLYGO_SRC: "${{ inputs.K8S_AIRFLOW_CONN_PVD_SIMPLYGO_SRC }}"
+        K8S_AIRFLOW_CONN_YNAB_API: "${{ inputs.K8S_AIRFLOW_CONN_YNAB_API }}"
+        K8S_AIRFLOW__SMTP__SMTP_USER: "${{ inputs.K8S_AIRFLOW__SMTP__SMTP_USER }}"
+        K8S_AIRFLOW__SMTP__SMTP_PASSWORD: "${{ inputs.K8S_AIRFLOW__SMTP__SMTP_PASSWORD }}"
+        K8S_SUPERSET_POSTGRESQL_PASSWORD: "${{ inputs.K8S_SUPERSET_POSTGRESQL_PASSWORD }}"
+        K8S_SUPERSET_SECRET_KEY: "${{ inputs.K8S_SUPERSET_SECRET_KEY }}"
+      run: make k8s-secrets
