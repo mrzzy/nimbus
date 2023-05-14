@@ -28,6 +28,15 @@
       "extractVersionTemplate": "^$(?<version>v.*)$"
     },
     {
+      "fileMatch": "^k8s/.*/kustomization.yaml$",
+      "matchStrings": [
+        "(?<depName>prometheus-operator\\/prometheus-operator)\\/releases\\/download\\/(?<currentValue>.*)\\/"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose",
+      "extractVersionTemplate": "^$(?<version>v.*)$"
+    },
+    {
       "fileMatch": "^\\.github/workflows/.*\\.yaml",
       "matchStrings": [
         "terraform_version: (?<currentValue>.*)"
