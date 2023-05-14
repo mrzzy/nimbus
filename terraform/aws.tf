@@ -27,6 +27,21 @@ resource "aws_iam_policy" "s3_crud" {
   policy = data.aws_iam_policy_document.s3_crud.json
 }
 
+# iam user for Nimbus CI Terraform to alter AWS infrastructure
+resource "aws_iam_user" "nimbus_ci" {
+  name = "mrzzy-nimbus-ci-terraform"
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+resource "aws_iam_user_policy_attachment" "nimbus_ci_admin" {
+  user       = aws_iam_user.nimbus_ci.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 # iam user to authenticate Providence Github Actions CI
 resource "aws_iam_user" "providence_ci" {
   name = "mrzzy-providence-ci"
