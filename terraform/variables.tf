@@ -7,7 +7,7 @@
 variable "has_warp_vm" {
   type        = bool
   description = "Whether to deploy the WARP development VM instance."
-  default     = true
+  default     = false
 }
 
 variable "warp_image" {
@@ -49,7 +49,7 @@ variable "warp_allow_ports" {
 variable "has_gae_proxy" {
   type        = bool
   description = "Whether to deploy Google App Engine Proxy."
-  default     = true
+  default     = false
 }
 
 variable "gae_proxy_spec" {
