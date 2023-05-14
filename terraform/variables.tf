@@ -58,12 +58,6 @@ variable "gae_proxy_spec" {
   default     = ""
 }
 
-variable "gcp_service_account_key" {
-  type        = string
-  sensitive   = true
-  description = "GCP Service Account JSON Key used to authenticate with the GCP API."
-}
-
 variable "acme_server_url" {
   type        = string
   description = "URL of the ACME server to use to obtain TLS certificates from."
