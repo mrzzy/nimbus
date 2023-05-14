@@ -13,6 +13,7 @@ on:
       deploy_gae_proxy:
         type: boolean
         description: "GAE Proxy: Deploy?"
+        default: false
         required: true
       gae_proxy_spec:
         type: string
@@ -25,6 +26,7 @@ on:
       deploy_warp_vm:
         type: boolean
         description: "WARP VM: Deploy?"
+        default: false
         required: true
       # list of comma separate ports to open on warp vm for development purposes
       warp_vm_allow_ports:
