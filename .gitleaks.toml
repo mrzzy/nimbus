@@ -1,0 +1,16 @@
+#
+# Nimbus
+# Gitleaks config
+#
+
+# extend default config
+[extend]
+useDefault = true
+
+[allowlist]
+description = "global allow list"
+# false positives in the dotenv template
+regexes = [
+  '''CLOUDFLARE_API_TOKEN=''',
+  '''B2_APPLICATION_KEY_ID=''',
+]
