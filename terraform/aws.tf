@@ -4,8 +4,16 @@
 # AWS Cloud
 #
 
+
+locals {
+  aws_region           = "ap-southeast-1" # Singapore
+  s3_bucket_prefix     = "mrzzy-co"
+  s3_dev_bucket_suffix = "dev"
+  s3_data_lake_suffix  = "data-lake"
+  s3_bucket_suffixes   = toset([local.s3_dev_bucket_suffix, local.s3_data_lake_suffix])
+}
 provider "aws" {
-  region = "ap-southeast-1" # Singapore
+  region = local.aws_region
 }
 
 # IAM
@@ -61,30 +69,9 @@ resource "aws_iam_user_policy_attachment" "providence_ci_redshiftdata" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftDataFullAccess"
 }
 
-# iam user to authenticate Airflow data pipelines
-resource "aws_iam_user" "airflow" {
-  name = "mrzzy-airflow-pipeline"
-}
-# allow CRUD on S3 objects
-resource "aws_iam_user_policy_attachment" "airflow_s3" {
-  user       = aws_iam_user.airflow.name
-  policy_arn = aws_iam_policy.s3_crud.arn
-}
-# allow access to Redshift data warehouse
-resource "aws_iam_user_policy_attachment" "airflow_redshift" {
-  user       = aws_iam_user.airflow.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftFullAccess"
-}
-resource "aws_iam_user_policy_attachment" "airflow_redshiftdata" {
-  user       = aws_iam_user.airflow.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftDataFullAccess"
-}
-
-
 # iam policy to allow AWS services to assume iam role
 data "aws_iam_policy_document" "assume_role" {
   for_each = toset([
-    "redshift.amazonaws.com",
     "glue.amazonaws.com",
   ])
   statement {
@@ -96,21 +83,6 @@ data "aws_iam_policy_document" "assume_role" {
     }
   }
 }
-# iam role to identify redshift when accessing other AWS services (eg. S3)
-resource "aws_iam_role" "warehouse" {
-  name               = "warehouse"
-  assume_role_policy = data.aws_iam_policy_document.assume_role["redshift.amazonaws.com"].json
-}
-# allow Redshift CRUD on S3 and Athena access to query S3 objects
-resource "aws_iam_role_policy_attachment" "warehouse_s3" {
-  for_each = toset([
-    aws_iam_policy.s3_crud.arn,
-    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
-  ])
-  role       = aws_iam_role.warehouse.name
-  policy_arn = each.key
-}
-
 # iam role to identify Glue Crawlers when accessing other AWS services
 resource "aws_iam_role" "lake_crawler" {
   # by default, Glue only allows iam roles with 'AWSGlueServiceRole' prefix to attached
@@ -128,46 +100,19 @@ resource "aws_iam_role_policy_attachment" "lake_crawler_s3" {
   policy_arn = aws_iam_policy.s3_crud.arn
 }
 
-# VPC
-# security group to redshift serverless workgroup
-resource "aws_security_group" "warehouse" {
-  name        = "warehouse"
-  description = "Security group attached to Redshift Serverless Workgroup warehouse."
-}
-# allow all egress traffic
-resource "aws_vpc_security_group_egress_rule" "warehouse" {
-  security_group_id = aws_security_group.warehouse.id
+# Providence infrastructure
+module "providence" {
+  source = "github.com/mrzzy/providence//infra/terraform?ref=94fadbc4ddcf6fe7bd6f7abed1babb8c5d1f1b8d"
 
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = -1 # any
-}
-# allow redshift traffic over port 5439
-resource "aws_vpc_security_group_ingress_rule" "warehouse" {
-  security_group_id = aws_security_group.warehouse.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = "tcp"
-  from_port   = 5439
-  to_port     = 5439
-}
-
-# S3
-# S3 bucket for development
-module "s3_dev" {
-  source = "./modules/aws/s3"
-  bucket = "mrzzy-co-dev"
-}
-# S3 bucket as a Data Lake
-module "s3_lake" {
-  source = "./modules/aws/s3"
-  bucket = "mrzzy-co-data-lake"
+  region            = local.aws_region
+  pipeline_aws_user = "mrzzy-airflow-pipeline"
+  s3_dev_bucket     = "${local.s3_bucket_prefix}-${local.s3_dev_bucket_suffix}"
+  s3_prod_bucket    = "${local.s3_bucket_prefix}-${local.s3_data_lake_suffix}"
+  redshift_prod_db  = "mrzzy"
 }
 
 # Glue
-locals {
-  s3_bucket_suffixes = toset(["dev", "data-lake"])
-}
-# Glue Data Catalogs for S3 buckets
+# Glue Data Catalogs for Providence's S3 buckets
 resource "aws_glue_catalog_database" "catalog" {
   for_each = local.s3_bucket_suffixes
   name     = each.key
@@ -181,32 +126,6 @@ resource "aws_glue_crawler" "crawler" {
 
   # crawl raw data ingested for mrzzy/providence project
   s3_target {
-    path = "s3://mrzzy-co-${each.key}/providence/grade=raw/"
+    path = "s3://${local.s3_bucket_prefix}-${each.key}/providence/grade=raw/"
   }
-}
-
-# Redshift Serverless Data Warehouse
-# namespace to segeregate our db objects within the redshift serverless
-resource "aws_redshiftserverless_namespace" "warehouse" {
-  namespace_name = "main"
-  db_name        = "mrzzy"
-  # default iam role must also be listed in iam roles
-  default_iam_role_arn = aws_iam_role.warehouse.arn
-  iam_roles            = [aws_iam_role.warehouse.arn]
-  lifecycle {
-    ignore_changes = [
-      iam_roles
-    ]
-  }
-}
-# workgroup of redshift serverless compute resources
-resource "aws_redshiftserverless_workgroup" "warehouse" {
-  namespace_name     = aws_redshiftserverless_namespace.warehouse.id
-  workgroup_name     = "main"
-  security_group_ids = [aws_security_group.warehouse.id]
-  # by default, redshift serverless runs with 128 RPUs, which is overkill.
-  # with our small use case the minimum of 8 RPUs should do.
-  base_capacity = 8
-  # public access needed for querying from GCP over the internet
-  publicly_accessible = true
 }
