@@ -45,3 +45,28 @@ moved {
   from = aws_s3_bucket.lake
   to   = module.s3_lake.aws_s3_bucket.bucket
 }
+
+moved {
+  from = module.s3_lake.aws_s3_bucket.bucket
+  to   = module.providence.module.s3_lake.aws_s3_bucket.bucket
+}
+
+moved {
+  from = module.s3_dev.aws_s3_bucket.bucket
+  to   = module.providence.module.s3_dev.aws_s3_bucket.bucket
+}
+
+moved {
+  from = aws_iam_user.airflow
+  to   = module.providence.aws_iam_user.airflow
+}
+
+moved {
+  from = aws_redshiftserverless_workgroup.warehouse
+  to   = module.providence.aws_redshiftserverless_workgroup.warehouse
+}
+
+moved {
+  from = aws_redshiftserverless_namespace.warehouse
+  to   = module.providence.aws_redshiftserverless_namespace.warehouse
+}
