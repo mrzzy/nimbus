@@ -68,6 +68,10 @@ resource "aws_iam_user_policy_attachment" "providence_ci_redshiftdata" {
   user       = aws_iam_user.providence_ci.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonRedshiftDataFullAccess"
 }
+resource "aws_iam_user_policy_attachment" "name" {
+  user       = aws_iam_user.providence_ci.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess"
+}
 
 # iam policy to allow AWS services to assume iam role
 data "aws_iam_policy_document" "assume_role" {
