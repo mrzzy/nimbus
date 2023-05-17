@@ -47,6 +47,9 @@ resource "google_container_node_pool" "primary" {
   autoscaling {
     total_min_node_count = var.n_min_workers
     total_max_node_count = var.n_max_workers
+    # optimize new nodes created by autoscaler for utilisation & lower spot
+    # vm preemption risk
+    location_policy = "ANY"
   }
 
   node_config {
@@ -54,7 +57,7 @@ resource "google_container_node_pool" "primary" {
     disk_type       = "pd-balanced"
     disk_size_gb    = 30
     service_account = var.service_account_email
-    spot            = true
+    spot            = var.use_spot_workers
   }
 
   upgrade_settings {
