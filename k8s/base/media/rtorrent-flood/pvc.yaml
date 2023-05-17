@@ -1,0 +1,18 @@
+#
+# Nimbus
+# RTorrent Flood
+# Shared Session PVC
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rtorrent-flood-shared
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 70Gi
+  # use pd-standard gce persistent disk class for cheaper HDD backed storage
+  storageClassName: standard
