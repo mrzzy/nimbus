@@ -163,9 +163,11 @@ module "gke" {
   region      = local.gcp_region
   k8s_version = "1.24"
 
+  # K8s workers
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
-  n_workers             = 1
-  n_spot_workers        = 0
+  n_min_workers         = 1
+  n_max_workers         = 3
+  use_spot_workers      = true
   service_account_email = module.iam.gke_service_account_email
 
   # K8s Namespaces to deploy
