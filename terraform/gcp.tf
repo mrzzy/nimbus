@@ -165,8 +165,8 @@ module "gke" {
 
   # K8s workers
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
-  n_min_workers         = 1
-  n_max_workers         = 3
+  n_min_workers         = 2
+  n_max_workers         = 5
   use_spot_workers      = true
   service_account_email = module.iam.gke_service_account_email
 
