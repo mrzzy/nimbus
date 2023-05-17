@@ -42,32 +42,12 @@ resource "google_container_node_pool" "primary" {
   version = (
     data.google_container_engine_versions.k8s.release_channel_latest_version["STABLE"]
   )
-  node_count = var.n_workers
 
-  node_config {
-    machine_type    = var.machine_type
-    disk_type       = "pd-balanced"
-    disk_size_gb    = 30
-    service_account = var.service_account_email
+  # node pool autoscaling between min & max nodes
+  autoscaling {
+    total_min_node_count = var.n_min_workers
+    total_max_node_count = var.n_max_workers
   }
-
-  upgrade_settings {
-    # allow GKE to create 1 extra node in the pool to perform rolling upgrades of k8s version
-    max_surge = 1
-  }
-}
-
-# Surge GKE Worker node pool to support load surges with spot nodes
-resource "google_container_node_pool" "surge" {
-  cluster  = google_container_cluster.main.name
-  location = google_container_cluster.main.location
-  name     = "surge"
-  # deploy latest version from stable channel matching given k8s_version
-  version = (
-    data.google_container_engine_versions.k8s.release_channel_latest_version["STABLE"]
-  )
-
-  node_count = var.n_spot_workers
 
   node_config {
     machine_type    = var.machine_type
