@@ -71,6 +71,7 @@ spec:
           persistentVolumeClaim:
             claimName: media-data
         - name: shared
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: rtorrent-flood-shared
       securityContext:
         fsGroup: 1001
