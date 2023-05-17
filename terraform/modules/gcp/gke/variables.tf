@@ -19,15 +19,20 @@ variable "machine_type" {
   description = "GCE VM instance type to use when creating workers for K8s."
 }
 
-variable "n_workers" {
+variable "n_min_workers" {
   type        = number
-  description = "No. of worker nodes to create for K8s."
+  description = "Minimum No. of worker nodes to create for K8s."
 }
 
-variable "n_spot_workers" {
+variable "n_max_workers" {
   type        = number
-  description = "No. of spot worker nodes to create for to support load surges."
-  default     = 0
+  description = "Max No. of worker nodes to create for to support load surges."
+}
+
+variable "use_spot_workers" {
+  type        = bool
+  description = "Whether to use GCE spot VMs for worker nodes"
+  default     = false
 }
 
 variable "service_account_email" {
