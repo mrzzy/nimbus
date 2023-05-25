@@ -10,7 +10,7 @@ helmCharts:
   - namespace: monitoring
     releaseName: prometheus-operator-crds
     name: prometheus-operator-crds
-    version: 3.0.0
+    version: 3.0.1
     repo: https://prometheus-community.github.io/helm-charts
   # Monitoring: Prometheus, Grafana & Prometheus Operator
   - namespace: monitoring
