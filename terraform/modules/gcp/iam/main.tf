@@ -75,7 +75,7 @@ resource "google_service_account" "warp_ci" {
 resource "google_project_iam_member" "warp_ci_gce_role" {
   project = var.project
   role    = "roles/compute.instanceAdmin.v1"
-  member  = google_service_account.warp_builder.member
+  member  = google_service_account.warp_ci.member
 }
 
 # Workload Identity Pool & Service Account to authenticate Github Action's runners
