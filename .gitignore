@@ -65,3 +65,4 @@ vendor/
 # secret env files
 .*.env
 /k8s/**/*.env
+/k8s/base/storage/postgresql-initdb.sql
