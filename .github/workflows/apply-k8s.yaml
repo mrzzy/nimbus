@@ -25,8 +25,8 @@ jobs:
       - name: "Setup kubectl access to GKE"
         uses: ./.github/actions/setup-gke
       - name: "Template K8s secret .env files"
-        uses: ./.github/actions/template-k8s-secret-env
-        with:
+        working-directory: . # project root
+        env:
           K8S_OAUTH2_PROXY_CLIENT_ID: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_ID }}"
           K8S_OAUTH2_PROXY_CLIENT_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_CLIENT_SECRET }}"
           K8S_OAUTH2_PROXY_COOKIE_SECRET: "${{ secrets.K8S_OAUTH2_PROXY_COOKIE_SECRET }}"
@@ -41,6 +41,7 @@ jobs:
           K8S_AIRFLOW__SMTP__SMTP_PASSWORD: "${{ secrets.K8S_AIRFLOW__SMTP__SMTP_PASSWORD }}"
           K8S_SUPERSET_POSTGRESQL_PASSWORD: "${{ secrets.K8S_SUPERSET_POSTGRESQL_PASSWORD }}"
           K8S_SUPERSET_SECRET_KEY: "${{ secrets.K8S_SUPERSET_SECRET_KEY }}"
+        run: make k8s-secrets
       - name: "Apply current K8s manifests to GKE"
         run: >
           kubectl kustomize --enable-helm ./base |
