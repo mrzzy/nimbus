@@ -48,6 +48,27 @@ helmCharts:
             editable: false
             type: loki
             url: http://loki-gateway.monitoring.svc.cluster.local
+      # prometheus persistence needed to retain metrics across prometheus restarts
+      prometheus:
+        prometheusSpec:
+          storageSpec:
+            volumeClaimTemplate:
+              spec:
+                accessModes: [ReadWriteOnce]
+                resources:
+                  requests:
+                    storage: 10Gi
+
+      # alertmanager persistence stores alert silences across alertmanager restartsa
+      alertmanager:
+        alertmanagerSpec:
+          storage:
+            volumeClaimTemplate:
+              spec:
+                accessModes: [ReadWriteOnce]
+                resources:
+                  requests:
+                    storage: 1Gi
 patches:
   # patch kube-promtheus-stack's Jobs with to ttl to be cleaned up once they finish executing
   - path: patch-job-ttl.yaml
