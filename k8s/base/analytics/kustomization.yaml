@@ -19,10 +19,15 @@ helmCharts:
         # TODO(mrzzy): upgrade with renovate
         pip install sqlalchemy-redshift==0.8.13
         if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
-      # override default db credentials with custom secret
+      supersetNode:
+        connections:
+          # fix redis k8s service name that superset tries to connect to
+          redis_host: analytics-redis-headless
+          # direct superset to use shared postgresql in 'storage' namespace
+          db_host: storage-postgresql.storage
+      # disable the bundled postgresql deployment
       postgresql:
-        auth:
-          existingSecret: analytics-postgresql
+        enabled: false
       extraEnvRaw:
         - name: DB_PASS
           valueFrom:
@@ -58,11 +63,6 @@ helmCharts:
           # https://superset.apache.org/docs/security/#roles
           AUTH_USER_REGISTRATION = True
           AUTH_USER_REGISTRATION_ROLE = "Admin"
-      # fix postgresql & redis k8s service name that superset tries to connect to
-      supersetNode:
-        connections:
-          redis_host: analytics-redis-headless
-          db_host: analytics-postgresql
       # expose superset with ingress
       ingress:
         enabled: true
