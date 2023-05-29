@@ -23,6 +23,8 @@ helmCharts:
 secretGenerator:
   - name: postgresql-admin
     env: postgresql-admin.env
+  - name: postgresql-admin
+    files: [postgresql-initdb.sql]
 commonLabels:
   app.kubernetes.io/part-of: storage
   app.kubernetes.io/created-by: kustomize
