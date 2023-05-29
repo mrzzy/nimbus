@@ -1,0 +1,13 @@
+--
+-- Nimbus
+-- Storage
+-- PostgreSQL Initdb script
+--
+
+-- Apache Airflow deployment
+CREATE USER airflow WITH PASSWORD '${K8S_AIRFLOW_POSTGRESQL_PASSWORD}';
+CREATE DATABASE airflow WITH owner = airflow;
+
+-- Apache Superset deployment
+CREATE USER superset WITH PASSWORD '${K8S_SUPERSET_POSTGRESQL_PASSWORD}';
+CREATE DATABASE superset WITH owner = superset;

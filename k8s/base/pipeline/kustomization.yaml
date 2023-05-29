@@ -28,12 +28,9 @@ helmCharts:
       # override default db credentials with custom secret
       data:
         metadataSecretName: pipeline-postgresql
+      # disable bundled postgresql deployment
       postgresql:
-        auth:
-          existingSecret: pipeline-postgresql
-          # disable creation of custom user
-          username: ""
-          password: ""
+        enabled: false
       # deploy sync dags from git repository perodically
       dags:
         gitSync:
