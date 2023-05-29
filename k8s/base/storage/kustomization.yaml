@@ -19,8 +19,10 @@ helmCharts:
       # initdb: setup users & databases
       primary:
         initdb:
-          scriptsSecret: postgresql-initdbq
-
+          scriptsSecret: postgresql-initdb
+secretGenerator:
+  - name: postgresql-admin
+    env: postgresql-admin.env
 commonLabels:
   app.kubernetes.io/part-of: storage
   app.kubernetes.io/created-by: kustomize
