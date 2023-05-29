@@ -16,6 +16,9 @@ inputs:
   K8S_OAUTH2_PROXY_COOKIE_SECRET:
     description: >-
       Secret used by OAuth2 Proxy to encrypt its session cookies.
+  K8S_STORAGE_POSTGRESQL_PASSWORD:
+    description: >-
+      Password used by PostgreSQL DB's 'postgres' admin user.
   K8S_AIRFLOW_POSTGRESQL_PASSWORD:
     description: >-
       Password used by Airflow deployment to authenticate with its PostgreSQL DB.
