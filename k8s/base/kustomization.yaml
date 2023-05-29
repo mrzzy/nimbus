@@ -8,6 +8,8 @@ resources:
   # Nginx Ingress Controller
   # Ingress: Nginx
   - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+  # Storage: PostgreSQL
+  - ./storage
   # Authentication: oauth2-proxy
   - ./auth
   # Media Server: Jellyfin & Rtorrent
