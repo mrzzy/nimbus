@@ -66,6 +66,17 @@ helmCharts:
           value: "465"
         - name: AIRFLOW__SMTP__SMTP_MAIL_FROM
           value: "Airflow <airflow@pipelines.mrzzy.co>"
+        # use in cluster credentials for k8s executor
+        - name: AIRFLOW_CONN_KUBERNETES_DEFAULT
+          value: |
+            {
+              "conn_type": "kubernetes",
+              "extra": {
+                "in_cluster": true
+                "namespace": "pipeline"
+              }
+            }
+
 
       extraEnvFrom: |
         # obtain smtp credentials from secret
