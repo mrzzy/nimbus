@@ -6,3 +6,8 @@
 
 resources:
   - ../base
+
+# add (eg. deployments, statefulsets) with safe-to-evict annotation to allow
+# the cluster autoscaler to evict pods to scale down the GKE cluster.
+commonAnnotations:
+  cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
