@@ -1,0 +1,8 @@
+#
+# Nimbus
+# K8s Deployment
+# GCP GKE Overrides
+#
+
+resources:
+  - ../base
