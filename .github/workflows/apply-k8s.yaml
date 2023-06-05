@@ -44,5 +44,5 @@ jobs:
         run: make k8s-secrets
       - name: "Apply current K8s manifests to GKE"
         run: >
-          kubectl kustomize --enable-helm ./base |
+          kubectl kustomize --enable-helm ./gcp |
           kubectl apply --server-side --force-conflicts -f -
