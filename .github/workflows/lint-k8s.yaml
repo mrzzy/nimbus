@@ -43,12 +43,12 @@ jobs:
         run: make k8s-secrets
       - name: "Perform server-side Dry Run of K8s manifests"
         run: >
-          kubectl kustomize --enable-helm ./gke |
+          kubectl kustomize --enable-helm ./gcp |
           kubectl apply ${KUBECTL_FLAGS} --dry-run=server -f -
       - name: "Diff K8s manifests with current K8s Cluster's configuration"
         run: |
           # kubectl diff returns status code = 1 when changes are detected,
           # >1 if an actual error occurs
-          kubectl kustomize --enable-helm ./gke | \
+          kubectl kustomize --enable-helm ./gcp | \
             kubectl diff ${KUBECTL_FLAGS} -f - || EXIT_CODE=$?
           test ${EXIT_CODE:-1} -eq 1
