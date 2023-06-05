@@ -69,11 +69,3 @@ helmCharts:
                 resources:
                   requests:
                     storage: 1Gi
-patches:
-  # patch kube-promtheus-stack's Jobs with to ttl to be cleaned up once they finish executing
-  - path: patch-job-ttl.yaml
-    target:
-      group: batch
-      version: v1
-      kind: Job
-      labelSelector: "app.kubernetes.io/part-of=kube-prometheus-stack"
