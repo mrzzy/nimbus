@@ -76,8 +76,16 @@ helmCharts:
                 "namespace": "pipeline"
               }
             }
-
-
+        # write logs remotely to GCS where they can be retrieved even if k8s pods are deleted.
+        # remote logs are needed as we use k8s pod executors that are deleted
+        # upon completion and will airflow try to retrieve logs from deleted pods.
+        - name: AIRFLOW__LOGGING__REMOTE_LOGGING
+          value: "True"
+        - name: AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER
+          value: "gs://mrzzy-co-pipeline-logs/airflow"
+        # delete redundant local copy of the logs
+        - name: AIRFLOW__LOGGING__DELETE_LOCAL_LOGS
+          value: "True"
       extraEnvFrom: |
         # obtain smtp credentials from secret
         - secretRef:
