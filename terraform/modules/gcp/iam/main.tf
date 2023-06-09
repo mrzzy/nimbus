@@ -114,3 +114,9 @@ resource "google_service_account" "gke" {
   account_id  = "gke-workload"
   description = "Service Account to authenticate K8s workloads on GKE."
 }
+# allow gke workers to write pipeline logs to gcs bucket
+resource "google_storage_bucket_iam_member" "gke_pipeline_logs" {
+  bucket = var.pipeline_logs_bucket
+  member = google_service_account.gke.member
+  role   = "roles/storage.objectAdmin"
+}
