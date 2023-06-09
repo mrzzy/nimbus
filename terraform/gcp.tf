@@ -16,6 +16,9 @@ locals {
   warp_allow_http_tag = "warp-allow-http"
   warp_allow_dev_tag  = "warp-allow-dev"
 
+  # GCS buckets
+  gcs_bucket_prefix = local.domain_slug
+
   # mrzzy's SSH public key
   ssh_public_key = "mrzzy:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrfd982D9iQVTe2VecUncbgysh/XsZb4YyOhCSSAAtr mrzzy"
 
@@ -43,8 +46,9 @@ resource "google_project_service" "svc" {
 module "iam" {
   source = "./modules/gcp/iam"
 
-  project          = local.gcp_project_id
-  allow_gh_actions = [local.gh_repo]
+  project              = local.gcp_project_id
+  allow_gh_actions     = [local.gh_repo]
+  pipeline_logs_bucket = google_storage_bucket.pipeline_logs.name
 }
 
 # enroll project-wide ssh key for ssh access to VMs
@@ -224,4 +228,11 @@ module "gke" {
       }
     },
   }
+}
+
+# GCS
+# storage bucket to store Airflow pipeline remote logs
+resource "google_storage_bucket" "pipeline_logs" {
+  name     = "${local.gcs_bucket_prefix}-pipeline-logs"
+  location = upper(local.gcp_region)
 }
