@@ -12,4 +12,4 @@ testcontainers==3.7.1
 urllib3==1.26.16
 websocket-client==1.4.2
 wrapt==1.14.1
-black==22.10.0
+black==22.12.0
