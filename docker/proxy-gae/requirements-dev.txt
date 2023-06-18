@@ -9,7 +9,7 @@ packaging==21.3
 pyparsing==3.0.9
 requests==2.31.0
 testcontainers==3.7.1
-urllib3==1.26.13
+urllib3==1.26.16
 websocket-client==1.4.2
 wrapt==1.14.1
 black==22.10.0
