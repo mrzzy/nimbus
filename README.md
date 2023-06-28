@@ -25,13 +25,9 @@ flowchart LR
 
     subgraph gcp[Google Cloud Platform]
         direction LR
-        subgraph gae[App Engine]
-            proxy[Nginx Proxy]
-        end
         subgraph gce[Compute Engine]
             dev-env[WARP Dev Environment]
         end
-        proxy <--> dev-env
 
         subgraph k8s[Kubernetes Engine]
             direction LR

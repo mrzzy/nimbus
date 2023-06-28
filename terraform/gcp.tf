@@ -131,24 +131,6 @@ module "warp_vm" {
   ssh_public_key = local.ssh_public_key
 }
 
-
-# Google App Engine (GAE) Proxy
-resource "google_app_engine_application" "app" {
-  project        = local.gcp_project_id
-  location_id    = local.gcp_region
-  serving_status = var.has_gae_proxy ? "SERVING" : "USER_DISABLED"
-
-  timeouts {
-    update = "6m"
-  }
-}
-
-module "proxy_service" {
-  source     = "./modules/gcp/proxy_gae"
-  container  = "${module.registry.repo_prefix}/proxy-gae@sha256:6cdfba6b7366c9c0f1897565cef1ddaad4ef4ee2a7af99824c254bba00b0c4ed"
-  proxy_spec = var.has_gae_proxy ? var.gae_proxy_spec : ""
-}
-
 # Google Kubernetes Engine Cluster
 locals {
   tls_secret = {
