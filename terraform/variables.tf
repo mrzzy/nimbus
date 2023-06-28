@@ -46,18 +46,6 @@ variable "warp_allow_ports" {
   default     = ""
 }
 
-variable "has_gae_proxy" {
-  type        = bool
-  description = "Whether to deploy Google App Engine Proxy."
-  default     = false
-}
-
-variable "gae_proxy_spec" {
-  type        = string
-  description = "Specify routes that should be proxied by GAE Proxy."
-  default     = ""
-}
-
 variable "acme_server_url" {
   type        = string
   description = "URL of the ACME server to use to obtain TLS certificates from."
