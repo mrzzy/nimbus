@@ -1,0 +1,10 @@
+#
+# Nimbus
+# K8s Deployment
+# Proxy
+#
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: proxy

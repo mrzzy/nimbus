@@ -6,6 +6,9 @@
 
 resources:
   - ../base
+  # add pod distruption budget to allow gke to evict k8s system pods
+  - ./pdb
+
 # add (eg. deployments, statefulsets) with safe-to-evict annotation to allow
 # the cluster autoscaler to evict pods to scale down the GKE cluster.
 commonAnnotations:

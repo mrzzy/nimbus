@@ -1,0 +1,43 @@
+#
+# Nimbus
+# K8s Deployment
+# Shadowsocks Proxy
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shadowsocks
+spec:
+  replicas: 1
+  selector: {} # to be templated by kustomize
+  template:
+    spec:
+      containers:
+        - name: shadowsocks
+          image: shadowsocks
+          command:
+            - "ssserver"
+            - "--encrypt-method"
+            - "2022-blake3-aes-128-gcm"
+            - "--dns"
+            - "cloudflare"
+            - "--server-addr"
+            - "0.0.0.0:9000"
+            # mode: tcp_and_udp
+            - "-U"
+          env:
+            - name: SS_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: shadowsocks
+                  key: SS_SERVER_PASSWORD
+          ports:
+            - containerPort: 9000
+              name: shadowsocks
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: shadowsocks

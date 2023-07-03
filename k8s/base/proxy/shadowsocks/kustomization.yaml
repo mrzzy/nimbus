@@ -1,0 +1,22 @@
+#
+# Nimbus
+# K8s Deployment
+# Shadowsocks Proxy
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - deployment.yaml
+  - service.yaml
+commonLabels:
+    app.kubernetes.io/name: shadowsocks
+    app.kubernetes.io/instance: proxy-shadowsocks
+    app.kubernetes.io/component: proxy
+secretGenerator:
+  - name: shadowsocks
+    envs:
+      - shadowsocks.env
+images:
+  - name: shadowsocks
+    newName: ghcr.io/shadowsocks/ssserver-rust
+    newTag: v1.15.3
