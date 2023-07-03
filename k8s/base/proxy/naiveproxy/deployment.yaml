@@ -1,0 +1,51 @@
+#
+# Nimbus
+# K8s Deployment
+# Naiveproxy Proxy
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: naiveproxy
+spec:
+  replicas: 1
+  selector: {} # to be templated by kustomize
+  template:
+    spec:
+      containers:
+        - name: naiveproxy
+          image: naiveproxy
+          imagePullPolicy: Always
+          env:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: naiveproxy
+                  key: USERNAME
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: naiveproxy
+                  key: PASSWORD
+            - name: TLS_CERT
+              value: "/tls/tls.crt"
+            - name: TLS_KEY
+              value: "/tls/tls.key"
+          ports:
+            - containerPort: 443
+              name: https
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: https
+          volumeMounts:
+           - name: tls
+             mountPath: "/tls"
+             readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: mrzzy-co-tls

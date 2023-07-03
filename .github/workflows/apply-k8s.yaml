@@ -41,6 +41,9 @@ jobs:
           K8S_AIRFLOW__SMTP__SMTP_PASSWORD: "${{ secrets.K8S_AIRFLOW__SMTP__SMTP_PASSWORD }}"
           K8S_SUPERSET_POSTGRESQL_PASSWORD: "${{ secrets.K8S_SUPERSET_POSTGRESQL_PASSWORD }}"
           K8S_SUPERSET_SECRET_KEY: "${{ secrets.K8S_SUPERSET_SECRET_KEY }}"
+          K8S_SS_SERVER_PASSWORD: "${{ secrets.K8S_SS_SERVER_PASSWORD }}"
+          K8S_NAIVEPROXY_USERNAME: "${{ secrets.K8S_NAIVEPROXY_USERNAME }}"
+          K8S_NAIVEPROXY_PASSWORD: "${{ secrets.K8S_NAIVEPROXY_PASSWORD }}"
         run: make k8s-secrets
       - name: "Apply current K8s manifests to GKE"
         run: >

@@ -25,6 +25,8 @@ resources:
   - ./pipeline
   # Analytics & Visualisation: Apache Superset
   - ./analytics
+  # Proxies & VPN
+  - ./proxy
 # patch all jobs with ttl 0 to be automatically cleaned up upon completion
 patches:
   - path: ./patches/patch-job-ttl.yaml

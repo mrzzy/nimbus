@@ -1,0 +1,17 @@
+#
+# Nimbus
+# K8s Deployment
+# Naiveproxy Proxy
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: naiveproxy
+spec:
+  type: LoadBalancer
+  ports:
+    - name: naiveproxy
+      port: 443
+      protocol: TCP
+      targetPort: https

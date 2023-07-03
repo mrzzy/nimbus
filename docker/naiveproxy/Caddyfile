@@ -1,0 +1,24 @@
+#
+# Hydra
+# Naiveproxy
+# caddyfile
+#
+
+# global options
+{
+  order forward_proxy before file_server
+}
+
+:443 {
+  # use manually provisioned tls credentials
+  tls {$TLS_CERT:/etc/ssl/private/tls.crt} {$TLS_KEY:/etc/ssl/private/tls.key}
+  forward_proxy {
+    basic_auth {$USERNAME} {$PASSWORD}
+    hide_ip
+    hide_via
+    probe_resistance
+  }
+  file_server {
+    root /var/www/html
+  }
+}
