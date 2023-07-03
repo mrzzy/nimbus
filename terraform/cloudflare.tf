@@ -28,10 +28,10 @@ module "dns" {
     pipelines = { subdomain = "pipelines", value = local.ingress_ip }, # Apache Airflow pipeline ochestrator
     analytics = { subdomain = "analytics", value = local.ingress_ip }, # Apache Superset analytics
     shadowsocks = {
-      subdomain = "ss.p", value = module.gke.exported_ips["proxy::shadowsocks"],
+      subdomain = "ss", value = module.gke.exported_ips["proxy::shadowsocks"],
     },
     naiveproxy = {
-      subdomain = "naive.p", value = module.gke.exported_ips["proxy::naiveproxy"]
+      subdomain = "naive", value = module.gke.exported_ips["proxy::naiveproxy"]
     },
     # dns routes for mrzzy.co mail routing
     mx1    = { type = "MX", subdomain = "@", value = "mx1.simplelogin.co.", priority = 10 },
