@@ -81,19 +81,6 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(local.master_auth.cluster_ca_certificate)
 }
 
-# K8s namespaces to deploy
-resource "kubernetes_namespace" "name" {
-  for_each = toset(var.namespaces)
-  metadata {
-    name   = each.value
-    labels = local.k8s_labels
-  }
-  lifecycle {
-    ignore_changes = [
-      metadata
-    ]
-  }
-}
 # K8s Opaque secrets
 resource "kubernetes_secret" "opaque" {
   for_each = toset(var.secret_keys)
@@ -106,11 +93,11 @@ resource "kubernetes_secret" "opaque" {
   data = var.secrets[each.value].data
 }
 
-
-# obtain K8s ingress service's info
-data "kubernetes_service" "ingress" {
+# K8s Service data sources
+data "kubernetes_service" "exports" {
+  for_each = toset(var.export_service_ips)
   metadata {
-    name      = "ingress-nginx-controller"
-    namespace = "ingress-nginx"
+    namespace = split("::", each.value)[0]
+    name      = split("::", each.value)[1]
   }
 }

@@ -40,18 +40,13 @@ variable "service_account_email" {
   description = "Email of the GCP service account used to authenticate K8s workloads on GCP."
 }
 
-variable "namespaces" {
-  type        = set(string)
-  description = "List of Kubernetes namespaces to create on the GKE cluster."
-  default     = []
-}
-
 variable "secret_keys" {
   type        = set(string)
   description = <<-EOF
     Keys used to identify secrets specified in 'secrets' var.
     Each key should correspond to an entry in the 'secrets' var.
-    These keys are used to iterate over 'secrets' as secret values cannot be iterated over with terraform's for_each.
+    These keys are used to iterate over 'secrets' as secret values cannot be iterated o
+    over with terraform's for_each.
   EOF
   default     = []
 }
@@ -66,4 +61,12 @@ variable "secrets" {
   sensitive   = true
   description = "Map of K8s Secrets to create in the cluster within the given namespace."
   default     = {}
+}
+
+variable "export_service_ips" {
+  type        = set(string)
+  description = <<-EOF
+    List of K8s services <namespace>::<name> pairs to export externally accessible ips for.
+  EOF
+  default     = []
 }

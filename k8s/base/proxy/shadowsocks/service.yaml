@@ -1,0 +1,17 @@
+#
+# Nimbus
+# K8s Deployment
+# Shadowsocks Proxy
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: shadowsocks
+spec:
+  type: LoadBalancer
+  ports:
+    - name: shadowsocks
+      port: 9000
+      protocol: TCP
+      targetPort: shadowsocks

@@ -156,15 +156,6 @@ module "gke" {
   use_spot_workers      = true
   service_account_email = module.iam.gke_service_account_email
 
-  # K8s Namespaces to deploy
-  namespaces = [
-    "csi-rclone",
-    "monitoring",
-    # uncomment on fresh install
-    # "media",
-    # "library",
-  ]
-
   # K8s Secrets to deploy
   # NOTE: remember to add a key here for every entry added to secrets below
   secret_keys = [
@@ -175,6 +166,7 @@ module "gke" {
     "library-${local.domain_slug}-tls",
     "pipeline-${local.domain_slug}-tls",
     "analytics-${local.domain_slug}-tls",
+    "proxy-${local.domain_slug}-tls",
     "rclone",
     "loki-s3",
   ]
@@ -187,6 +179,7 @@ module "gke" {
     "library-${local.domain_slug}-tls"    = merge(local.tls_secret, { namespace = "library" }),
     "pipeline-${local.domain_slug}-tls"   = merge(local.tls_secret, { namespace = "pipeline" }),
     "analytics-${local.domain_slug}-tls"  = merge(local.tls_secret, { namespace = "analytics" }),
+    "proxy-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "proxy" }),
     # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
     "rclone" = {
       name      = "rclone-secret"
@@ -210,6 +203,13 @@ module "gke" {
       }
     },
   }
+
+  # Export external ips of k8s service
+  export_service_ips = [
+    "ingress-nginx::ingress-nginx-controller",
+    "proxy::shadowsocks",
+    "proxy::naiveproxy",
+  ]
 }
 
 # GCS

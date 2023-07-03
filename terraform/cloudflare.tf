@@ -7,6 +7,7 @@
 locals {
   cf_account_id = "3a282e33c95eef3f663f0fc3e028b6df"
   warp_ip       = module.warp_vm.external_ip
+  ingress_ip    = module.gke.exported_ips["ingress-nginx::ingress-nginx-controller"]
 }
 
 # Cloudflare: expects access token provided via $CLOUDFLARE_API_TOKEN env var
@@ -20,12 +21,18 @@ module "dns" {
   domain     = local.domain
   routes = (merge({
     # dns routes for services served by gke's ingress
-    auth      = { subdomain = "auth", value = module.gke.ingress_ip },      # oauth2-proxy oauth callbacks / login page
-    media     = { subdomain = "media", value = module.gke.ingress_ip },     # jellyfin media server
-    monitor   = { subdomain = "monitor", value = module.gke.ingress_ip },   # Grafana monitoring
-    library   = { subdomain = "library", value = module.gke.ingress_ip },   # EBook Library
-    pipelines = { subdomain = "pipelines", value = module.gke.ingress_ip }, # Apache Airflow pipeline ochestrator
-    analytics = { subdomain = "analytics", value = module.gke.ingress_ip }, # Apache Superset analytics
+    auth      = { subdomain = "auth", value = local.ingress_ip },      # oauth2-proxy oauth callbacks / login page
+    media     = { subdomain = "media", value = local.ingress_ip },     # jellyfin media server
+    monitor   = { subdomain = "monitor", value = local.ingress_ip },   # Grafana monitoring
+    library   = { subdomain = "library", value = local.ingress_ip },   # EBook Library
+    pipelines = { subdomain = "pipelines", value = local.ingress_ip }, # Apache Airflow pipeline ochestrator
+    analytics = { subdomain = "analytics", value = local.ingress_ip }, # Apache Superset analytics
+    shadowsocks = {
+      subdomain = "ss.p", value = module.gke.exported_ips["proxy::shadowsocks"],
+    },
+    naiveproxy = {
+      subdomain = "naive.p", value = module.gke.exported_ips["proxy::naiveproxy"]
+    },
     # dns routes for mrzzy.co mail routing
     mx1    = { type = "MX", subdomain = "@", value = "mx1.simplelogin.co.", priority = 10 },
     mx2    = { type = "MX", subdomain = "@", value = "mx2.simplelogin.co.", priority = 20 },
