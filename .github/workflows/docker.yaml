@@ -39,7 +39,7 @@ jobs:
             # set latest tag for default branch (main)
             type=raw,value=latest,enable={{is_default_branch}}
       - name: "Build and Push ${{ matrix.container }} Container to GitHub Container Registry"
-        uses: docker/build-push-action@v4.0.0
+        uses: docker/build-push-action@v4.1.1
         with:
           context: "docker/${{ matrix.container }}"
           tags: ${{ steps.docker-metadata.outputs.tags }}
