@@ -1,0 +1,61 @@
+#
+# Nimbus
+# CI
+# Rotate Proxy IPs
+#
+
+name: "Rotate Proxy IPs"
+on:
+  # UTC 1800 - 2am in SGT
+  schedule: [ cron: "00 18 * * *" ]
+  # manual trigger
+  workflow_dispatch: {}
+jobs:
+  rotate-ips:
+    name: "Rotate Proxy IPs"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Setup kubectl access to GKE"
+        uses: ./.github/actions/setup-gke
+      - name: "Export proxy K8s services"
+        run: |
+          set -ex -o pipefail
+          kubectl get service -n proxy shadowsocks naiveproxy -o yaml | \
+          # clean up attributes from k8s services that will hamper their reimport
+          yq 'del(.metadata.annotations.["kubectl.kubernetes.io/last-applied-configuration"]) |
+              del(.status)  |
+              del(.spec.clusterIP) |
+              del(.spec.clusterIPs) |
+              del(.. |
+              select(has("nodePort")) | .nodePort)' > services.yaml
+      - name: "Delete proxy K8s services"
+        run: |
+          kubectl delete service -n proxy shadowsocks naiveproxy
+      - name: "Reapply Proxy K8s services"
+        run: |
+          wait_external_ip() {
+            while [ -z "$(kubectl get -n proxy -n proxy svc/$1  -o=jsonpath='{.status.loadBalancer}' |
+            grep 'ingress')" ]
+            do
+            echo "Waiting 5 seconds for service $1 to be assigned an external IP."
+            sleep 5
+            done
+          }
+          set -ex -o pipefail
+          kubectl apply -f services.yaml
+
+          # wait for services external ip of services to be assigned
+          wait_external_ip shadowsocks
+          wait_external_ip naiveproxy
+      - name: "Setup Terraform CLI"
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.2
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - name: "Update DNS records with Rotated IPs"
+        run: >
+          terraform apply
+          -auto-approve=true
+          -target='module.dns.cloudflare_record.route["naiveproxy"]'
+          -target='module.dns.cloudflare_record.route["shadowsocks"]'
