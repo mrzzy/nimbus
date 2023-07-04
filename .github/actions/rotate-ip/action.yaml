@@ -61,7 +61,7 @@ runs:
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.5.2
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        cli_config_credentials_token: ${{ inputs.TF_API_TOKEN }}
     - name: "Update DNS records with Rotated IP"
       shell: bash
       run: >
