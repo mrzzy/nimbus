@@ -45,7 +45,7 @@ runs:
         set -e -o pipefail
         wait_external_ip() {
           while [ -z "$(kubectl get -n $1 svc/$2 -o=jsonpath='{.status.loadBalancer}' |
-          grep 'Ingress')" ]
+          grep 'ingress')" ]
           do
           echo "Waiting 5 seconds for service $1 to be assigned an external IP."
           sleep 5
