@@ -55,6 +55,7 @@ runs:
         wait_external_ip ${{ inputs.namespace }} ${{ inputs.name }}
     - name: "Update DNS records with Rotated IP"
       shell: bash
+      working-directory: terraform
       run: >
         terraform apply
         -auto-approve=true
