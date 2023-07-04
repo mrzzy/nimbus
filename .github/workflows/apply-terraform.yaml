@@ -45,6 +45,7 @@ on:
         type: boolean
         description: "WARP VM: Publicly accessible Web Terminal (HTTP)?"
         required: true
+        default: false
       # ip range to allow traffic to warp VM for security
       warp_vm_allow_ip:
         type: string
