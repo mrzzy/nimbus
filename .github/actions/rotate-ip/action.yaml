@@ -15,16 +15,12 @@ inputs:
     default: default
   name:
     description: Name of the K8s service to be rotated.
-  tf_api_token:
-    description: Terraform API token credentials for authentication with Terraform Cloud.
   dns_record:
     description: Fully qualified reference to the Terraform DNS record resource
       to propagate IP changes to.
 runs:
   using: composite
   steps:
-    - name: "Setup kubectl access to GKE"
-      uses: ./.github/actions/setup-gke
     - name: "Export proxy K8s services"
       shell: bash
       run: |
@@ -57,11 +53,6 @@ runs:
         }
         # wait for services external ip of services to be assigned
         wait_external_ip ${{ inputs.namespace }} ${{ inputs.name }}
-    - name: "Setup Terraform CLI"
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.2
-        cli_config_credentials_token: ${{ inputs.TF_API_TOKEN }}
     - name: "Update DNS records with Rotated IP"
       shell: bash
       run: >
