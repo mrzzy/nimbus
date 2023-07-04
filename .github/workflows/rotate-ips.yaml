@@ -1,0 +1,31 @@
+#
+# Nimbus
+# CI
+# Rotate Proxy IPs
+#
+
+name: "Rotate Proxy IPs"
+on:
+  # UTC 1800 - 2am in SGT
+  schedule: [ cron: "00 18 * * *" ]
+  # manual trigger
+  workflow_dispatch: {}
+jobs:
+  rotate-ips:
+    strategy:
+      fail-fast: false
+      matrix:
+        proxy:
+          - shadowsocks
+          - naiveproxy
+    name: "${{ matrix.proxy }}: Rotate Proxy IP"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Rotate Proxy IP"
+        uses: ./.github/actions/rotate-ip
+        with:
+          namespace: proxy
+          name: "${{ matrix.proxy }}"
+          tf_api_token: "${{ secrets.TF_API_TOKEN }}"
+          dns_record: 'module.dns.cloudflare_record.route["${{ matrix.proxy }}"]'
