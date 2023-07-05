@@ -54,7 +54,7 @@ resource "google_container_node_pool" "primary" {
 
   node_config {
     machine_type    = var.machine_type
-    disk_type       = "pd-balanced"
+    disk_type       = var.storage_class
     disk_size_gb    = 30
     service_account = var.service_account_email
     spot            = var.use_spot_workers
