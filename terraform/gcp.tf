@@ -151,6 +151,7 @@ module "gke" {
 
   # K8s workers
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
+  storage_class         = "pd-standard"
   n_min_workers         = 1
   n_max_workers         = 5
   use_spot_workers      = true

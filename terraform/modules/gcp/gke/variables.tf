@@ -19,6 +19,11 @@ variable "machine_type" {
   description = "GCE VM instance type to use when creating workers for K8s."
 }
 
+variable "storage_class" {
+  type        = string
+  description = "GCE storage class to select for persistent disks provisioned for K8s workers."
+}
+
 variable "n_min_workers" {
   type        = number
   description = "Minimum No. of worker nodes to create for K8s."
