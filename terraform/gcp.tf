@@ -91,20 +91,6 @@ module "vpc" {
   )
 }
 
-# Container Registry to store containers built by CI
-data "google_service_account" "nimbus" {
-  account_id = module.iam.gh_actions_service_account_ids[local.gh_repo]
-}
-module "registry" {
-  source = "./modules/gcp/registry"
-
-  region = local.gcp_region
-  name   = "nimbus"
-  allow_writers = [
-    "serviceAccount:${data.google_service_account.nimbus.email}"
-  ]
-}
-
 # Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
