@@ -96,6 +96,8 @@ module "vpc" {
 module "warp_vm" {
   source = "github.com/mrzzy/warp//deploy/terraform/gcp_vm?ref=b2b6aa3910097ae894d65b2ecc3644471d44ae00"
 
+  gcp_project  = local.gcp_project_id
+  region_zone  = "asia-southeast1-c" # Singapore
   enabled      = var.has_warp_vm
   image        = var.warp_image
   machine_type = var.warp_machine_type
