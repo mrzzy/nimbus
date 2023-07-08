@@ -20,7 +20,7 @@ terraform {
 resource "google_container_cluster" "main" {
   name = "main"
   # create zonal cluster
-  location = "${var.region}-c"
+  location = var.region_zone
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
