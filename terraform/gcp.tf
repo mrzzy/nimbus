@@ -145,6 +145,15 @@ module "gke" {
   use_spot_workers      = true
   service_account_email = module.iam.gke_service_account_email
 
+  # K8s Namespaces to deploy
+  namespaces = [
+    "csi-rclone",
+    "monitoring",
+    # uncomment on fresh install
+    # "media",
+    # "library",
+  ]
+
   # K8s Secrets to deploy
   # NOTE: remember to add a key here for every entry added to secrets below
   secret_keys = [
