@@ -85,8 +85,7 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "name" {
   for_each = toset(var.namespaces)
   metadata {
-    name   = each.value
-    labels = local.k8s_labels
+    name = each.value
   }
   lifecycle {
     ignore_changes = [
