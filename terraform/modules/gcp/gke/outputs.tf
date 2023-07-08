@@ -11,7 +11,10 @@ locals {
 output "exported_ips" {
   value = {
     for key in keys(local.exports) : key =>
-    one(one(one(local.exports[key].status).load_balancer).ingress).ip
+    try(one(one(one(local.exports[key].status).load_balancer).ingress).ip, null)
   }
-  description = "External IP address of services exported with 'export_service_ips'."
+  description = <<-EOF
+  Map of External IP addresses of services exported with 'export_service_ips' or
+  null if the External IP of the service is not yet available.
+  EOF
 }
