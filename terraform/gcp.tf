@@ -147,11 +147,14 @@ module "gke" {
 
   # K8s Namespaces to deploy
   namespaces = [
+    "auth",
+    "analytics",
     "csi-rclone",
     "monitoring",
-    # uncomment on fresh install
-    # "media",
-    # "library",
+    "media",
+    "library",
+    "pipeline",
+    "proxy",
   ]
 
   # K8s Secrets to deploy
