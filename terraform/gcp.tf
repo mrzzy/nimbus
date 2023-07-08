@@ -134,8 +134,8 @@ locals {
 module "gke" {
   source = "./modules/gcp/gke"
 
-  region      = local.gcp_region
-  k8s_version = "1.25"
+  region_zone = "${local.gcp_region}-c"
+  k8s_version = "1.26"
 
   # K8s workers
   machine_type          = "n1-standard-2" # 2vCPU, 7.5GB RAM
