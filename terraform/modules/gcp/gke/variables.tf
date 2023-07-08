@@ -4,9 +4,9 @@
 # Input Variables
 #
 
-variable "region" {
+variable "region_zone" {
   type        = string
-  description = "GCP region to deploy the K8s cluster to "
+  description = "GCP region & zone to deploy the K8s cluster to "
 }
 
 variable "k8s_version" {
