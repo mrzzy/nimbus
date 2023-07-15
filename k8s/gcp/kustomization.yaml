@@ -8,6 +8,8 @@ resources:
   - ../base
   # add pod distruption budget to allow gke to evict k8s system pods
   - ./pdb
+  # switch default storage class to pd-standard instead of pd-balanced
+  - ./storageclass
 
 # add (eg. deployments, statefulsets) with safe-to-evict annotation to allow
 # the cluster autoscaler to evict pods to scale down the GKE cluster.
