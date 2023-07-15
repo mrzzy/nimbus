@@ -14,5 +14,3 @@ spec:
   resources:
     requests:
       storage: 70Gi
-  # use pd-standard gce persistent disk class for cheaper HDD backed storage
-  storageClassName: standard
