@@ -16,13 +16,35 @@ helmCharts:
     namespace: pipeline
     valuesInline:
       defaultAirflowTag: 2.5.3rc2-python3.10
-      # create of default admin user
       webserver:
+        # create default admin user
         defaultUser:
           enabled: true
-          password: '"${AIRFLOW_ADMIN_USER_PASSWORD}"'
+        # increase startup deadline so webserver pod is not constantly restarted
         livenessProbe:
           initialDelaySeconds: 60
+      # pass password to create default user job
+      createUserJob:
+        args:
+          - "bash"
+          - "-c"
+          # The format below is necessary to get `helm lint` happy
+          - |-
+            exec \
+            airflow users create "$@" -p "${AIRFLOW_ADMIN_USER_PASSWORD}"
+          - --
+          - "-r"
+          - "{{ .Values.webserver.defaultUser.role }}"
+          - "-u"
+          - "{{ .Values.webserver.defaultUser.username }}"
+          - "-e"
+          - "{{ .Values.webserver.defaultUser.email }}"
+          - "-f"
+          - "{{ .Values.webserver.defaultUser.firstName }}"
+          - "-l"
+          - "{{ .Values.webserver.defaultUser.lastName }}"
+          - "-p"
+          - "{{ .Values.webserver.defaultUser.password }}"
       # disable triggerer persistence as it creates a large persistence volume
       triggerer:
         persistence:
