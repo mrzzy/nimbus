@@ -43,6 +43,7 @@ jobs:
           K8S_SS_SERVER_PASSWORD: "${{ secrets.K8S_SS_SERVER_PASSWORD }}"
           K8S_NAIVEPROXY_USERNAME: "${{ secrets.K8S_NAIVEPROXY_USERNAME }}"
           K8S_NAIVEPROXY_PASSWORD: "${{ secrets.K8S_NAIVEPROXY_PASSWORD }}"
+          K8S_AIRFLOW_ADMIN_USER_PASSWORD: "${{ secrets.K8S_AIRFLOW_ADMIN_USER_PASSWORD }}"
         run: make k8s-secrets
       - name: "Perform server-side Dry Run of K8s manifests"
         run: >
