@@ -16,11 +16,11 @@ helmCharts:
     namespace: pipeline
     valuesInline:
       defaultAirflowTag: 2.5.3rc2-python3.10
-      # disable creation of default admin user for security
-      # manually create users with Airflow CLI: `airflow users create`
+      # create of default admin user
       webserver:
         defaultUser:
-          enabled: false
+          enabled: true
+          password: '"${AIRFLOW_ADMIN_USER_PASSWORD}"'
       # use k8s secret to supply airflow webserver with encryption key
       webserverSecretKeySecretName: airflow-webserver-key
       # override default airflow executor
@@ -87,6 +87,9 @@ helmCharts:
         - name: AIRFLOW__LOGGING__DELETE_LOCAL_LOGS
           value: "True"
       extraEnvFrom: |
+        # airflow admin user password
+        - secretRef:
+            name: airflow-admin
         # obtain smtp credentials from secret
         - secretRef:
             name: airflow-smtp
@@ -117,4 +120,9 @@ secretGenerator:
       disableNameSuffixHash: true
     envs:
       - airflow-smtp.env
+  - name: airflow-admin
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - airflow-admin.env
 namespace: pipeline
