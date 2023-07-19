@@ -21,6 +21,10 @@ helmCharts:
         defaultUser:
           enabled: true
           password: '"${AIRFLOW_ADMIN_USER_PASSWORD}"'
+      # disable triggerer persistence as it creates a large persistent volume
+      triggerer:
+        persistence:
+          enabled: false
       # use k8s secret to supply airflow webserver with encryption key
       webserverSecretKeySecretName: airflow-webserver-key
       # override default airflow executor
