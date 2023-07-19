@@ -21,7 +21,9 @@ helmCharts:
         defaultUser:
           enabled: true
           password: '"${AIRFLOW_ADMIN_USER_PASSWORD}"'
-      # disable triggerer persistence as it creates a large persistent volume
+        livenessProbe:
+          initialDelaySeconds: 60
+      # disable triggerer persistence as it creates a large persistence volume
       triggerer:
         persistence:
           enabled: false
