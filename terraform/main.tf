@@ -14,11 +14,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "< 4.75.1"
+      version = "4.76.0"
     }
     acme = {
       source  = "vancluever/acme"
-      version = "< 2.15.2"
+      version = "2.15.1"
     }
     b2 = {
       source  = "Backblaze/b2"
