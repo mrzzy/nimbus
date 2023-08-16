@@ -4,7 +4,7 @@
 # proxy-gae
 #
 
-FROM nginx:1.25.1-alpine
+FROM nginx:1.25.2-alpine
 
 RUN mkdir -p /app \
   # create log dir expected by Google App Engine
