@@ -64,6 +64,11 @@ resource "google_container_node_pool" "primary" {
     # allow GKE to create 1 extra node in the pool to perform rolling upgrades of k8s version
     max_surge = 1
   }
+
+  timeouts {
+    # reduce apply failures due k8s version updates taking long then timeout
+    update = "40m"
+  }
 }
 
 # Configure Terraform provider for Kubernetes access to GKE cluster
