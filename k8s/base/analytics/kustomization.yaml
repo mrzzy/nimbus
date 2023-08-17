@@ -41,7 +41,7 @@ helmCharts:
               name: analytics-superset
               key: SECRET_KEY
       configOverrides:
-        # enable proxy fix to ensure the redirect_uri is properly computed, even with SSL offloading
+        # enable proxy fix to ensure the redirect_uri is properly computed, even with SSL offloading to ingress
         proxy_fix: |
           ENABLE_PROXY_FIX = True
         # use oauth2-proxy authentication
