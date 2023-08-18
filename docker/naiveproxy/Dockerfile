@@ -5,7 +5,7 @@
 #
 
 ARG CADDY_VERSION=2.6.4
-FROM caddy:2.7.3 AS production
+FROM caddy:2.7.4 AS production
 # Add front page
 ADD http://example.com/ /var/www/html/index.html
 # Install caddy
