@@ -19,4 +19,4 @@ secretGenerator:
 images:
   - name: shadowsocks
     newName: ghcr.io/shadowsocks/ssserver-rust
-    newTag: v1.15.4
+    newTag: v1.16.0
