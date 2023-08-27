@@ -4,8 +4,6 @@
 #
 
 locals {
-  gh_repo = "mrzzy/nimbus"
-
   # GCP project
   gcp_project_id = "mrzzy-sandbox"
   gcp_region     = "asia-southeast1" # singapore
@@ -34,7 +32,6 @@ provider "google" {
 # GCP enabled APIs
 resource "google_project_service" "svc" {
   for_each = toset([
-    "artifactregistry.googleapis.com",
     "container.googleapis.com",
     "iam.googleapis.com",
     "appengine.googleapis.com"
@@ -46,9 +43,7 @@ resource "google_project_service" "svc" {
 module "iam" {
   source = "./modules/gcp/iam"
 
-  project              = local.gcp_project_id
-  allow_gh_actions     = [local.gh_repo]
-  pipeline_logs_bucket = google_storage_bucket.pipeline_logs.name
+  project = local.gcp_project_id
 }
 
 # enroll project-wide ssh key for ssh access to VMs
@@ -117,105 +112,4 @@ module "warp_vm" {
   web_tls_cert   = module.tls_cert.full_chain_cert
   web_tls_key    = module.tls_cert.private_key
   ssh_public_key = local.ssh_public_key
-}
-
-# Google Kubernetes Engine Cluster
-locals {
-  tls_secret = {
-    name = "${local.domain_slug}-tls",
-    type = "kubernetes.io/tls",
-    data = {
-      "tls.crt" = module.tls_cert.full_chain_cert,
-      "tls.key" = module.tls_cert.private_key,
-    },
-  }
-}
-
-module "gke" {
-  source = "./modules/gcp/gke"
-
-  region_zone = "${local.gcp_region}-c"
-  k8s_version = "1.26"
-
-  # K8s workers
-  machine_type          = "n1-standard-4" # 2vCPU, 15GB RAM
-  storage_class         = "pd-standard"
-  n_min_workers         = 1
-  n_max_workers         = 5
-  use_spot_workers      = true
-  service_account_email = module.iam.gke_service_account_email
-
-  # K8s Namespaces to deploy
-  namespaces = [
-    "auth",
-    "analytics",
-    "csi-rclone",
-    "monitoring",
-    "media",
-    "library",
-    "pipeline",
-    "proxy",
-  ]
-
-  # K8s Secrets to deploy
-  # NOTE: remember to add a key here for every entry added to secrets below
-  secret_keys = [
-    "default-${local.domain_slug}-tls",
-    "auth-${local.domain_slug}-tls",
-    "monitoring-${local.domain_slug}-tls",
-    "media-${local.domain_slug}-tls",
-    "library-${local.domain_slug}-tls",
-    "pipeline-${local.domain_slug}-tls",
-    "analytics-${local.domain_slug}-tls",
-    "proxy-${local.domain_slug}-tls",
-    "rclone",
-    "loki-s3",
-  ]
-  secrets = {
-    # TLS credentials to add to the cluster as K8s secrets.
-    "default-${local.domain_slug}-tls"    = local.tls_secret,
-    "auth-${local.domain_slug}-tls"       = merge(local.tls_secret, { namespace = "auth" }),
-    "monitoring-${local.domain_slug}-tls" = merge(local.tls_secret, { namespace = "monitoring" }),
-    "media-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "media" }),
-    "library-${local.domain_slug}-tls"    = merge(local.tls_secret, { namespace = "library" }),
-    "pipeline-${local.domain_slug}-tls"   = merge(local.tls_secret, { namespace = "pipeline" }),
-    "analytics-${local.domain_slug}-tls"  = merge(local.tls_secret, { namespace = "analytics" }),
-    "proxy-${local.domain_slug}-tls"      = merge(local.tls_secret, { namespace = "proxy" }),
-    # CSI-Rclone credentials: csi-rclone implements persistent volumes on Backblaze B2
-    "rclone" = {
-      name      = "rclone-secret"
-      namespace = "csi-rclone"
-      data = {
-        "remote"               = "s3",
-        "s3-provider"          = "Other", # any other S3 compatible provider
-        "s3-endpoint"          = local.b2_endpoint,
-        "s3-access-key-id"     = b2_application_key.k8s_csi.application_key_id, #gitleaks:allow
-        "s3-secret-access-key" = b2_application_key.k8s_csi.application_key,    #gitleaks:allow
-      }
-    },
-    "loki-s3" = {
-      name      = "loki-s3-credentials"
-      namespace = "monitoring"
-      data = {
-        "S3_ENDPOINT"          = local.b2_endpoint,
-        "S3_ACCESS_KEY_ID"     = b2_application_key.k8s_loki.application_key_id, #gitleaks:allow
-        "S3_SECRET_ACCESS_KEY" = b2_application_key.k8s_loki.application_key,    #gitleaks:allow
-        "LOKI_LOG_BUCKET"      = b2_bucket.logs.bucket_name,
-      }
-    },
-  }
-
-  # Export external ips of k8s service
-  export_service_ips = [
-    "ingress-nginx::ingress-nginx-controller",
-    "proxy::shadowsocks",
-    "proxy::naiveproxy",
-  ]
-}
-
-# GCS
-# storage bucket to store Airflow pipeline remote logs
-resource "google_storage_bucket" "pipeline_logs" {
-  name     = "${local.gcs_bucket_prefix}-pipeline-logs"
-  location = upper(local.gcp_region)
 }
