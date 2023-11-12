@@ -68,6 +68,18 @@ resource "b2_bucket" "volt_bkp" {
     mode      = "SSE-B2"
   }
 }
+
+# off-site backup location for pickle (laptop)
+resource "b2_bucket" "backup_pickle" {
+  bucket_name = "${local.domain_slug}-backup-pickle"
+  bucket_type = "allPrivate"
+
+  default_server_side_encryption {
+    algorithm = "AES256"
+    mode      = "SSE-B2"
+  }
+}
+
 # bucket for storing media files for Media Streaming Service (Jellyfin + rTorrent-flood)
 resource "b2_bucket" "media" {
   bucket_name = "${local.domain_slug}-media"
