@@ -51,6 +51,12 @@ resource "google_service_account" "nimbus_ci" {
   EOF
 }
 
+resource "google_project_iam_member" "nimbus_ci_roles" {
+  project = var.project
+  role    = "roles/compute.instanceAdmin"
+  member  = google_service_account.nimbus_ci.member
+}
+
 # account for WARP CI pipeline's packer to build on GCE
 resource "google_service_account" "warp_builder" {
   project      = var.project
