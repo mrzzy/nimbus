@@ -7,7 +7,7 @@
 name: "Cleanup Costly Resources"
 on:
   # UTC 1500 - 11pm in SGT
-  schedule: [ cron: "00 15 * * *" ]
+  schedule: [cron: "00 15 * * *"]
 jobs:
   cleanup-terraform:
     name: "Apply lean Terraform deployment"
@@ -29,3 +29,26 @@ jobs:
         env:
           TF_VAR_has_warp_vm: false
         run: terraform apply -auto-approve
+
+  # Packer sometimes fails to clean up GCE persistent disks it creates when
+  # the box build fails. Routinely clean up any disks that disks left by packer.
+  cleanup-orphan-gcp-pd:
+    name: "Cleanup orphaned GCE Persistent Disks"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GCP_NIMBUS_CI_KEY }}"
+      - name: "Set up Cloud SDK"
+        uses: google-github-actions/setup-gcloud@v2
+      - name: "Delete orphaned GCE PDs"
+        env:
+          CLOUDSDK_CORE_PROJECT: mrzzy-sandbox
+          CLOUDSDK_COMPUTE_ZONE: asia-southeast-1c
+        run: >-
+          gcloud compute disks delete $(
+            gcloud compute disks list
+            --quiet
+            --filter="-users:*"
+            --filter="name~'packer-.*'"
+            --format "value(name)")
