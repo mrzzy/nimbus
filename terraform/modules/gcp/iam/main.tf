@@ -41,6 +41,16 @@ resource "google_project_iam_member" "terraform_roles" {
   }
 }
 
+# service account for Nimbus CI pipeline to cleanup orphaned GCP disks
+resource "google_service_account" "nimbus_ci" {
+  project      = var.project
+  account_id   = "nimbus-ci"
+  display_name = "Nimbus CI pipeline"
+  description  = <<-EOF
+  Service account used by Nimbus CI pipeline to clean up orphaned GCE persistent disk(s).
+  EOF
+}
+
 # account for WARP CI pipeline's packer to build on GCE
 resource "google_service_account" "warp_builder" {
   project      = var.project
