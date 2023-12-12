@@ -43,13 +43,18 @@ jobs:
       - name: "Set up Cloud SDK"
         uses: google-github-actions/setup-gcloud@v2
       - name: "Delete orphaned GCE PDs"
+        shell: bash
         env:
           CLOUDSDK_CORE_PROJECT: mrzzy-sandbox
           CLOUDSDK_COMPUTE_ZONE: asia-southeast-1c
-        run: >-
-          gcloud compute disks delete $(
-            gcloud compute disks list
-            --quiet
-            --filter="-users:*"
-            --filter="name~'packer-.*'"
+        run: |
+          ORPHANED_DISKS=$(
+            gcloud compute disks list --quiet \
+            --filter="-users:*" \
+            --filter="name~'packer-.*'" \
             --format "value(name)")
+
+          if [ -n "$ORPHANED_DISKS" ]
+          then
+            gcloud compute disks delete $ORPHANED_DISKS
+          fi
