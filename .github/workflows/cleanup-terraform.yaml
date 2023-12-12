@@ -7,7 +7,8 @@
 name: "Cleanup Costly Resources"
 on:
   # UTC 1500 - 11pm in SGT
-  schedule: [cron: "00 15 * * *"]
+  # schedule: [cron: "00 15 * * *"]
+  push
 jobs:
   cleanup-terraform:
     name: "Apply lean Terraform deployment"
