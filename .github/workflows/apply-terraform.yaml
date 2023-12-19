@@ -26,7 +26,7 @@ on:
         type: choice
         description: "WARM VM: Machine Type (CPU & RAM)"
         required: true
-        default: "e2-medium - 1CPU, 4GB"
+        default: "e2-standard-2 - 2CPU, 8GB"
         options:
           - "e2-micro - 0.25CPU, 1GB"
           - "e2-small - 0.5CPU, 2GB"
