@@ -46,7 +46,7 @@ jobs:
         shell: bash
         env:
           CLOUDSDK_CORE_PROJECT: mrzzy-sandbox
-          CLOUDSDK_COMPUTE_ZONE: asia-southeast-1c
+          CLOUDSDK_COMPUTE_ZONE: asia-southeast1-c
         run: |
           ORPHANED_DISKS=$(
             gcloud compute disks list --quiet \
