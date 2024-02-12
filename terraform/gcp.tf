@@ -89,7 +89,7 @@ module "vpc" {
 # Deploy WARP Box development VM on GCP
 # https://github.com/mrzzy/warp
 module "warp_vm" {
-  source = "github.com/mrzzy/warp//deploy/terraform/gcp_vm?ref=7844f53e35055b86a0244feacfabf9778ce1ffb1"
+  source = "github.com/mrzzy/warp//deploy/terraform/gcp_vm?ref=e3d9ed62d6ff826423247bd76a12b62c9ec6accf"
 
   gcp_project  = local.gcp_project_id
   region_zone  = "asia-southeast1-c" # Singapore
