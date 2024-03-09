@@ -30,3 +30,27 @@ resource "aws_iam_user_policy_attachment" "nimbus_ci_admin" {
     prevent_destroy = true
   }
 }
+
+# resources for ntu-sc1015 project
+# S3 bucket to host Yelp dataset for project
+resource "aws_s3_bucket" "yelp_dataset" {
+  bucket = "ntu-sc1015-yelp"
+}
+
+data "aws_iam_policy_document" "s3_public_read" {
+  statement {
+    sid = "S3BucketPublicAccess"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    resources = ["${aws_s3_bucket.yelp_dataset.arn}/*"]
+    actions   = ["s3:GetObject"]
+    effect    = "Allow"
+  }
+}
+
+resource "aws_s3_bucket_policy" "yelp_dataset" {
+  bucket = aws_s3_bucket.yelp_dataset.id
+  policy = data.aws_iam_policy_document.s3_public_read.json
+}
