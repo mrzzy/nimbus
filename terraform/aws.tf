@@ -32,25 +32,30 @@ resource "aws_iam_user_policy_attachment" "nimbus_ci_admin" {
 }
 
 # resources for ntu-sc1015 project
-# S3 bucket to host Yelp dataset for project
-resource "aws_s3_bucket" "yelp_dataset" {
+# iam user to identify service account for the project
+resource "aws_iam_user" "ntu_sc1015" {
+  name = "ntu-sc1015"
+}
+
+# S3 bucket to host data (both row & staging) for the project
+resource "aws_s3_bucket" "data" {
   bucket = "ntu-sc1015-yelp"
 }
 
-data "aws_iam_policy_document" "s3_public_read" {
+data "aws_iam_policy_document" "allow_ntu_sc1015" {
   statement {
-    sid = "S3BucketPublicAccess"
+    sid = "AllowNTUSC1015S3Data"
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type        = "AWS"
+      identifiers = [aws_iam_user.ntu_sc1015.arn]
     }
-    resources = ["${aws_s3_bucket.yelp_dataset.arn}/*"]
-    actions   = ["s3:GetObject"]
+    resources = [aws_s3_bucket.data.arn, "${aws_s3_bucket.data.arn}/*"]
+    actions   = ["s3:*"]
     effect    = "Allow"
   }
 }
 
 resource "aws_s3_bucket_policy" "yelp_dataset" {
-  bucket = aws_s3_bucket.yelp_dataset.id
-  policy = data.aws_iam_policy_document.s3_public_read.json
+  bucket = aws_s3_bucket.data.id
+  policy = data.aws_iam_policy_document.allow_ntu_sc1015.json
 }
