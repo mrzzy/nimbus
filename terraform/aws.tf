@@ -42,6 +42,7 @@ resource "aws_s3_bucket" "data" {
   bucket = "ntu-sc1015-yelp"
 }
 
+# allow ntu_sc1015 iam user full access to data bucket
 data "aws_iam_policy_document" "allow_ntu_sc1015" {
   statement {
     sid = "AllowNTUSC1015S3Data"
@@ -58,4 +59,23 @@ data "aws_iam_policy_document" "allow_ntu_sc1015" {
 resource "aws_s3_bucket_policy" "yelp_dataset" {
   bucket = aws_s3_bucket.data.id
   policy = data.aws_iam_policy_document.allow_ntu_sc1015.json
+}
+
+# allow public read access to bucket objects
+data "aws_iam_policy_document" "allow_public_read" {
+  statement {
+    sid = "AllowS3DataPublicRead"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    resources = ["${aws_s3_bucket.data.arn}/*"]
+    actions   = ["s3:GetObject"]
+    effect    = "Allow"
+  }
+}
+
+resource "aws_s3_bucket_policy" "yelp_dataset_public_read" {
+  bucket = aws_s3_bucket.data.id
+  policy = data.aws_iam_policy_document.allow_public_read.json
 }
