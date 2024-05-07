@@ -68,3 +68,15 @@ resource "b2_bucket" "backup_pickle" {
     mode      = "SSE-B2"
   }
 }
+
+# Data Lake: raw and staging data
+# used by mrzzy/providence project
+resource "b2_bucket" "data_lake" {
+  bucket_name = "${local.domain_slug}-data-lake"
+  bucket_type = "allPrivate"
+
+  default_server_side_encryption {
+    algorithm = "AES256"
+    mode      = "SSE-B2"
+  }
+}
