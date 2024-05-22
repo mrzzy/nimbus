@@ -67,6 +67,12 @@ resource "b2_bucket" "backup_pickle" {
     algorithm = "AES256"
     mode      = "SSE-B2"
   }
+
+  file_lock_configuration {
+    default_retention {
+      mode = "none"
+    }
+  }
 }
 
 # Data Lake: raw and staging data
@@ -78,5 +84,11 @@ resource "b2_bucket" "data_lake" {
   default_server_side_encryption {
     algorithm = "AES256"
     mode      = "SSE-B2"
+  }
+
+  file_lock_configuration {
+    default_retention {
+      mode = "none"
+    }
   }
 }
