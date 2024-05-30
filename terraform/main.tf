@@ -32,6 +32,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "4.67.0"
     }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "3.105.0"
+    }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "2.50.0"
+    }
   }
 
   # terraform cloud workspace to store terraform state
