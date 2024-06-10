@@ -6,11 +6,7 @@
 
 
 locals {
-  aws_region           = "ap-southeast-1" # Singapore
-  s3_bucket_prefix     = local.domain_slug
-  s3_dev_bucket_suffix = "dev"
-  s3_data_lake_suffix  = "data-lake"
-  s3_bucket_suffixes   = toset([local.s3_dev_bucket_suffix, local.s3_data_lake_suffix])
+  aws_region = "ap-southeast-1" # Singapore
 }
 provider "aws" {
   region = local.aws_region
