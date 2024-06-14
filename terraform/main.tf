@@ -78,9 +78,8 @@ resource "b2_bucket" "backup_pickle" {
 
   lifecycle_rules {
     # apply to all files
-    file_name_prefix              = ""
-    days_from_hiding_to_deleting  = 0
-    days_from_uploading_to_hiding = 0
+    file_name_prefix             = ""
+    days_from_hiding_to_deleting = 1
   }
 }
 
@@ -97,8 +96,7 @@ resource "b2_bucket" "data_lake" {
 
   lifecycle_rules {
     # apply to all files
-    file_name_prefix              = ""
-    days_from_hiding_to_deleting  = 0
-    days_from_uploading_to_hiding = 0
+    file_name_prefix             = ""
+    days_from_hiding_to_deleting = 1
   }
 }
