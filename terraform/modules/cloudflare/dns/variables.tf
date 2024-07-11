@@ -20,6 +20,7 @@ variable "routes" {
     subdomain = string,
     value     = string,
     proxied   = optional(bool, false),
+    ttl       = optional(number, 60),
     priority  = optional(number, 0),
   }))
   description = "List of DNS routes to create with subdomain prefix as key & given value."
