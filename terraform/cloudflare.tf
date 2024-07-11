@@ -9,13 +9,14 @@ locals {
   # static ips to expose via dns
   warp_ip         = module.warp_vm.external_ip
   art_bucket_host = "f004.backblazeb2.com"
+  art_subdomain   = "art"
+  art_domain      = "${local.art_subdomain}.${local.domain}"
 }
 
 # Cloudflare: expects access token provided via $CLOUDFLARE_API_TOKEN env var
 provider "cloudflare" {}
 
-# Cloudflare settings for domain
-data "cloudflare_zone" "domain" {
+data "cloudflare_zone" "mrzzy_co" {
   account_id = local.cf_account_id
   name       = local.domain
 }
@@ -38,7 +39,7 @@ module "dns" {
     # dns routes for mrzzy.co site
     art_site = {
       type      = "CNAME",
-      subdomain = "art",
+      subdomain = local.art_subdomain
       # serve static files from b2 bucket
       value   = local.art_bucket_host
       proxied = true
@@ -48,4 +49,34 @@ module "dns" {
     # only create dns route for WARP VM if its deployed
     var.has_warp_vm ? { warp = { subdomain = "warp", value = local.warp_ip } } : {}
   ))
+}
+
+resource "cloudflare_zone_settings_override" "mrzzy_co" {
+  zone_id = data.cloudflare_zone.mrzzy_co.id
+  settings {
+    # enable full TLS/SSL onf
+    ssl = "full"
+  }
+}
+
+resource "cloudflare_ruleset" "art_mrzzy_co_http_transform" {
+  zone_id = data.cloudflare_zone.mrzzy_co.id
+  name    = "${local.art_domain} Transform"
+  kind    = "zone"
+  phase   = "http_request_transform"
+
+  rules {
+    description = "Add bucket name suffix to path to serve ${local.art_domain} from B2 bucket "
+    enabled     = true
+    action      = "rewrite"
+    action_parameters {
+      uri {
+        path {
+          expression = "concat(\"/file/${b2_bucket.art_mrzzy_co.bucket_name}\", http.request.uri.path)"
+        }
+      }
+    }
+
+    expression = "(http.host eq \"${local.art_domain}\")"
+  }
 }
