@@ -46,6 +46,11 @@ resource "b2_bucket" "data_lake" {
 resource "b2_bucket" "art_mrzzy_co" {
   bucket_name = "art-${local.domain_slug}-site"
   bucket_type = "allPublic"
+  bucket_info = {
+    # enable full caching since website is fully static
+    "Cache-Control" = "public, max-age=86400"
+  }
+
 
   lifecycle_rules {
     # apply to all files
