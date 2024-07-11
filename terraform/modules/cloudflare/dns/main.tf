@@ -24,7 +24,7 @@ resource "cloudflare_record" "route" {
   zone_id  = cloudflare_zone.domain.id
 
   type     = each.value.type
-  ttl      = 60 # 1 min
+  ttl      = each.value.ttl
   name     = each.value.subdomain
   value    = each.value.value
   proxied  = each.value.proxied
