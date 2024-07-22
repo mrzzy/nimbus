@@ -48,7 +48,7 @@ resource "b2_bucket" "art_mrzzy_co" {
   bucket_type = "allPublic"
   bucket_info = {
     # enable full caching since website is fully static
-    "Cache-Control" = "public, max-age=86400"
+    "cache-control" = "public, max-age=86400"
   }
 
 
