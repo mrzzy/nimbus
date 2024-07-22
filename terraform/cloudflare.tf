@@ -73,7 +73,7 @@ resource "cloudflare_ruleset" "art_mrzzy_co_http_transform" {
     action_parameters {
       uri {
         path {
-          expression = "concat(\"/file/${b2_bucket.art_mrzzy_co.bucket_name}\", http.request.uri.path)"
+          expression = "concat(\"/file/${b2_bucket.art_mrzzy_co.bucket_name}\", http.request.uri.path, \".html\")"
         }
       }
     }
