@@ -65,11 +65,12 @@ resource "cloudflare_ruleset" "art_mrzzy_co_http_transform" {
   kind    = "zone"
   phase   = "http_request_transform"
 
+  // html files
   rules {
-    description = "Add bucket name suffix to path to serve ${local.art_domain} from B2 bucket."
+    description = "Add bucket prefix & '.html' suffix to path to serve ${local.art_domain} HTML from B2 bucket."
     enabled     = true
     action      = "rewrite"
-    expression  = "(http.host eq \"${local.art_domain}\")"
+    expression  = "((http.host eq \"${local.art_domain}\") and (http.request.uri.path.extension eq \"\"))"
     action_parameters {
       uri {
         path {
@@ -79,6 +80,22 @@ resource "cloudflare_ruleset" "art_mrzzy_co_http_transform" {
     }
   }
 
+  // non-html assets
+  rules {
+    description = "Add bucket name prefix to path to serve ${local.art_domain} from B2 bucket."
+    enabled     = true
+    action      = "rewrite"
+    expression  = "((http.host eq \"${local.art_domain}\") and (http.request.uri.path.extension ne \"\"))"
+    action_parameters {
+      uri {
+        path {
+          expression = "concat(\"/file/${b2_bucket.art_mrzzy_co.bucket_name}\", http.request.uri.path)"
+        }
+      }
+    }
+  }
+
+  // serve index.html at root
   rules {
     description = "Rewrite '/' to 'index.html'"
     enabled     = true
