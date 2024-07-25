@@ -54,8 +54,10 @@ module "dns" {
 resource "cloudflare_zone_settings_override" "mrzzy_co" {
   zone_id = data.cloudflare_zone.mrzzy_co.id
   settings {
-    # enable full TLS/SSL onf
-    ssl = "full"
+    # enforce https
+    ssl                      = "strict"
+    always_use_https         = "on"
+    automatic_https_rewrites = "on"
   }
 }
 
