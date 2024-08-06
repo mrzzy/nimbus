@@ -1,13 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":dependencyDashboard",
-    ":automergeMinor"
-  ],
-  "reviewers": [
-    "mrzzy"
-  ],
+  "extends": ["config:base", ":dependencyDashboard", ":automergeMinor"],
+  "reviewers": ["mrzzy"],
+  "ignoreDeps": ["aiobotocore"],
   "regexManagers": [
     {
       "fileMatch": "^k8s/.*/kustomization.yaml$",
@@ -29,9 +24,7 @@
     },
     {
       "fileMatch": "^\\.github/workflows/.*\\.yaml",
-      "matchStrings": [
-        "terraform_version: (?<currentValue>.*)"
-      ],
+      "matchStrings": ["terraform_version: (?<currentValue>.*)"],
       "depNameTemplate": "hashicorp/terraform",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "hashicorp",
