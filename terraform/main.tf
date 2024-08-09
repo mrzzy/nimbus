@@ -34,7 +34,7 @@ terraform {
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.114.0"
+      version = "3.115.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
