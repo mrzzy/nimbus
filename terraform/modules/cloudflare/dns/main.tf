@@ -26,7 +26,7 @@ resource "cloudflare_record" "route" {
   type     = each.value.type
   ttl      = each.value.ttl
   name     = each.value.subdomain
-  value    = each.value.value
+  content  = each.value.value
   proxied  = each.value.proxied
   priority = each.value.priority
 }
