@@ -37,11 +37,27 @@ module "dns" {
     dkim03 = { type = "CNAME", subdomain = "dkim03._domainkey", value = "dkim03._domainkey.simplelogin.co." },
     dmarc  = { type = "TXT", subdomain = "_dmarc", value = "v=DMARC1; p=quarantine; pct=100; adkim=s; aspf=s" },
     # dns routes for mrzzy.co site
+    site_www = {
+      type      = "CNAME"
+      subdomain = "www"
+      value     = "${local.domain}."
+    },
+    # server mrzzy.co site from vercel
+    site = {
+      type      = "A"
+      subdomain = "@"
+      value     = "76.76.21.21"
+      # proxy requests through cloudflare for caching
+      proxied = true
+      ttl     = 1
+    },
+    # dns routes for art.mrzzy.co site
     art_site = {
-      type      = "CNAME",
+      type      = "CNAME"
       subdomain = local.art_subdomain
       # serve static files from b2 bucket
-      value   = local.art_bucket_host
+      value = local.art_bucket_host
+      # proxy requests through cloudflare for caching
       proxied = true
       ttl     = 1
     },
