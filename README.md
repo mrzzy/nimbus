@@ -32,6 +32,7 @@ flowchart LR
 
     subgraph b2[Blackblaze B2]
         art[art.mrzzy.co site]
+        lake[(Providence Data Lake)]
     end
 
     subgraph vercel[Vercel]
