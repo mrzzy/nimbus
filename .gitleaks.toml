@@ -15,3 +15,9 @@ regexes = [
   '''B2_APPLICATION_KEY_ID=''',
   '''B2_APPLICATION_KEY=''',
 ]
+# false positives in past usage of sealed secrets
+commits = [
+    "df354e5cd40a8ef41ee450078fda59799242e15f",
+    "8a2f65e95c66ade9abe519dd8c2228bc89048953",
+    "e53d54fccdf3c81d5912e15d2b7289ac6a284e21"
+]
