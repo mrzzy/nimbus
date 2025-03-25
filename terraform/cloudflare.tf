@@ -7,10 +7,10 @@
 locals {
   cf_account_id = "3a282e33c95eef3f663f0fc3e028b6df"
   # static ips to expose via dns
-  warp_ip         = module.warp_vm.external_ip
-  art_bucket_host = "f004.backblazeb2.com"
-  art_subdomain   = "art"
-  art_domain      = "${local.art_subdomain}.${local.domain}"
+  warp_ip       = module.warp_vm.external_ip
+  bucket_host   = "f004.backblazeb2.com"
+  art_subdomain = "art"
+  art_domain    = "${local.art_subdomain}.${local.domain}"
 }
 
 # Cloudflare: expects access token provided via $CLOUDFLARE_API_TOKEN env var
@@ -51,12 +51,22 @@ module "dns" {
       proxied = true
       ttl     = 1
     },
-    # dns routes for art.mrzzy.co site
+    # dns route for art.mrzzy.co site
     art_site = {
       type      = "CNAME"
       subdomain = local.art_subdomain
       # serve static files from b2 bucket
-      value = local.art_bucket_host
+      value = local.bucket_host
+      # proxy requests through cloudflare for caching
+      proxied = true
+      ttl     = 1
+    },
+    # dns route b2.mrzzy.co to proxy request to b2 store via cloudflare cdn for caching
+    b2_proxy = {
+      type      = "CNAME"
+      subdomain = "b2"
+      # serve static files from b2 bucket
+      value = local.bucket_host
       # proxy requests through cloudflare for caching
       proxied = true
       ttl     = 1
