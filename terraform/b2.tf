@@ -58,20 +58,3 @@ resource "b2_bucket" "art_mrzzy_co" {
     days_from_hiding_to_deleting = 1
   }
 }
-
-# ntuhpc-workshops files
-# used by mrzzy/ntuhpc-workshops project
-resource "b2_bucket" "ntuhpc-workshops" {
-  bucket_name = "ntuhpc-workshops"
-  bucket_type = "allPublic"
-  bucket_info = {
-    # enable full caching since files are expected to be static
-    "cache-control" = "public, max-age=86400"
-  }
-
-  lifecycle_rules {
-    # apply to all files
-    file_name_prefix             = ""
-    days_from_hiding_to_deleting = 1
-  }
-}
