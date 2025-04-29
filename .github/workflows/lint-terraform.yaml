@@ -9,7 +9,7 @@ on: push
 jobs:
   lint-terraform:
     name: "Lint Terraform deployment"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: terraform
@@ -29,7 +29,7 @@ jobs:
 
   plan-terraform:
     name: "Plan Terraform deployment"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: terraform
