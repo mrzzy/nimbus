@@ -25,9 +25,6 @@ flowchart LR
 
     subgraph gcp[Google Cloud Platform]
         direction LR
-        subgraph gce[Compute Engine]
-            dev-env[WARP Dev Env]
-        end
     end
 
     subgraph b2[Blackblaze B2]
@@ -44,7 +41,6 @@ flowchart LR
 
 User-facing services hosted on Nimbus:
 
-- [WARP](https://github.com/mrzzy/warp): portable development environment based on Cloud VM.
 - [mrzzy.co](https://mrzzy.co): Coding Portfolio website hosted on Vercel.
 - [art.mrzzy.co](https://art.mrzzy.co): Art website hosted on Blackblaze B2.
 

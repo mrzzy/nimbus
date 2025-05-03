@@ -7,7 +7,6 @@
 locals {
   cf_account_id = "3a282e33c95eef3f663f0fc3e028b6df"
   # static ips to expose via dns
-  warp_ip       = module.warp_vm.external_ip
   bucket_host   = "f004.backblazeb2.com"
   art_subdomain = "art"
   art_domain    = "${local.art_subdomain}.${local.domain}"
@@ -72,8 +71,6 @@ module "dns" {
       ttl     = 1
     },
     },
-    # only create dns route for WARP VM if its deployed
-    var.has_warp_vm ? { warp = { subdomain = "warp", value = local.warp_ip } } : {}
   ))
 }
 
