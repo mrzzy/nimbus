@@ -9,7 +9,7 @@ Nimbus centralises Infrastructure (eg. Terraform deployments, Docker Containers)
 ## Features
 
 - **Infrastructure as Code (IaC)** Expressing IaC makes infrastructure dynamic & malleable to changes. Dependencies between Multiple Cloud providers can be expressed explicitly in code. Checking IaC into Git provides checkpoints for rollbacks if something goes wrong.
-- **Multi Cloud** Consolidates deployments on multiple Cloud Platforms (GCP, Cloudflare &amp; Blackblaze) in one place.
+- **Multi Cloud** Consolidates deployments on multiple Cloud Platforms (Cloudflare &amp; Blackblaze) in one place.
 
 ## Architecture
 
@@ -21,11 +21,7 @@ flowchart LR
         CDN
     end
 
-    cf[Cloudflare] <--> dev-env & art & site
-
-    subgraph gcp[Google Cloud Platform]
-        direction LR
-    end
+    cf[Cloudflare] <--> art & site
 
     subgraph b2[Blackblaze B2]
         art[art.mrzzy.co site]
