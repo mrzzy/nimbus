@@ -58,6 +58,7 @@ provider "registry.terraform.io/hashicorp/aws" {
   version     = "4.67.0"
   constraints = "4.67.0"
   hashes = [
+    "h1:DWVybabEz2gCyQkRM9zop1SKTG1tkH7+ruekC9KQM5w=",
     "h1:dCRc4GqsyfqHEMjgtlM1EympBcgTmcTkWaJmtd91+KA=",
     "zh:0843017ecc24385f2b45f2c5fce79dc25b258e50d516877b3affee3bef34f060",
     "zh:19876066cfa60de91834ec569a6448dab8c2518b8a71b5ca870b2444febddac6",
@@ -142,6 +143,7 @@ provider "registry.terraform.io/hashicorp/google" {
   constraints = ">= 4.22.0, 4.85.0"
   hashes = [
     "h1:aSRZcEKF2wOi/v24IA+k9J2Y7aKVV1cHi/R0V3EhxXQ=",
+    "h1:ttfGvbBrugSAftA+ei22MUjXn5xj0O8HOhor44XlHXc=",
     "zh:17d60a6a6c1741cf1e09ac6731433a30950285eac88236e623ab4cbf23832ca3",
     "zh:1c70254c016439dbb75cab646b4beace6ceeff117c75d81f2cc27d41c312f752",
     "zh:35e2aa2cc7ac84ce55e05bb4de7b461b169d3582e56d3262e249ff09d64fe008",
@@ -189,7 +191,7 @@ provider "registry.terraform.io/hashicorp/tls" {
 
 provider "registry.terraform.io/vancluever/acme" {
   version     = "2.32.0"
-  constraints = "< 2.24.3, 2.32.0"
+  constraints = "2.32.0, < 2.32.1"
   hashes = [
     "h1:/wIcXrlhkI9gQqH0gakTizDkYbY9vOXVQWG87GhRSwo=",
     "h1:2b8q7YEvmxNCjY5hIKk8aw/qfIqH4cpbY6tDU4dmtck=",
