@@ -7,7 +7,7 @@ terraform {
   required_providers {
     acme = {
       source  = "vancluever/acme"
-      version = "< 2.45.2"
+      version = "< 2.48.2"
     }
     tls = {
       source  = "hashicorp/tls"
